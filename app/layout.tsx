@@ -5,6 +5,7 @@ import Nav from "@/components/layout/Nav";
 import Footer from "@/components/layout/Footer";
 import Cursor from "@/components/layout/Cursor";
 import LoadingProvider from "@/components/layout/LoadingProvider";
+import PageTransition from "@/components/layout/PageTransition";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,7 +41,9 @@ export default function RootLayout({
         <LoadingProvider>
           <Cursor />
           <Nav />
-          <div className="flex-1">{children}</div>
+          <div className="flex-1">
+            <PageTransition>{children}</PageTransition>
+          </div>
           <Footer />
         </LoadingProvider>
       </body>
