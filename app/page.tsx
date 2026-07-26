@@ -1,10 +1,30 @@
+"use client";
+
+import { motion } from "framer-motion";
+import Blob from "@/components/sections/Blob";
+import { useLoading } from "@/components/layout/LoadingProvider";
+
 export default function Home() {
+  const { isLoading } = useLoading();
+
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center gap-4">
-      <h1 className="font-serif text-6xl text-ink">Arunan Kavirajan</h1>
-      <p className="font-sans text-lg text-muted">
-        This is body text in Geist Sans.
-      </p>
+    <main className="min-h-screen relative overflow-hidden flex items-center justify-center">
+      <motion.div
+        className="absolute w-[500px] h-[500px]"
+        initial={{ scale: 0, opacity: 0 }}
+        animate={
+          !isLoading
+            ? { scale: 1, opacity: 1 }
+            : { scale: 0, opacity: 0 }
+        }
+        transition={{ type: "spring", stiffness: 120, damping: 12 }}
+      >
+        <Blob />
+      </motion.div>
+
+      <h1 className="relative z-10 font-serif text-6xl text-ink pointer-events-none">
+        Arunan Kavirajan
+      </h1>
     </main>
   );
 }

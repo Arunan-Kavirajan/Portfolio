@@ -13,3 +13,9 @@
   --font-sans: var(--font-geist-sans);
   --font-serif: var(--font-fraunces);
 }
+
+@media (min-width: 768px) {
+  * {
+    cursor: none !important;
+  }
+}
