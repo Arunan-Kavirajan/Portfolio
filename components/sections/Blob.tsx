@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { getSmoothPath } from "@/lib/blob-path";
+import { useReducedMotion } from "@/lib/hooks/useReducedMotion";
 
 const NUM_POINTS = 10;
 const CENTER = { x: 300, y: 300 };
@@ -17,6 +18,7 @@ export default function Blob() {
   const mouseRef = useRef({ x: -9999, y: -9999 });
   const currentPoints = useRef<[number, number][]>([]);
   const seeds = useRef<{ speed: number; phase: number }[]>([]);
+  const prefersReduced = useReducedMotion();
 
   useEffect(() => {
     // set up base ring of points + random idle wobble per point
@@ -35,6 +37,14 @@ export default function Blob() {
     }
     currentPoints.current = pts;
     seeds.current = sds;
+
+    // If the user prefers reduced motion, draw one static frame and stop here
+    if (prefersReduced) {
+      if (pathRef.current) {
+        pathRef.current.setAttribute("d", getSmoothPath(currentPoints.current));
+      }
+      return;
+    }
 
     const handleMouseMove = (e: MouseEvent) => {
       const svg = svgRef.current;
@@ -57,14 +67,12 @@ export default function Blob() {
         const angle = (i / NUM_POINTS) * Math.PI * 2;
         const { speed, phase } = seeds.current[i];
 
-        // idle breathing wobble
         const idleOffset = IDLE_AMPLITUDE * Math.sin(t * speed + phase);
-        let radius = BASE_RADIUS + idleOffset;
+        const radius = BASE_RADIUS + idleOffset;
 
         const baseX = CENTER.x + radius * Math.cos(angle);
         const baseY = CENTER.y + radius * Math.sin(angle);
 
-        // cursor pull
         const dx = mouseRef.current.x - baseX;
         const dy = mouseRef.current.y - baseY;
         const dist = Math.sqrt(dx * dx + dy * dy);
@@ -81,7 +89,6 @@ export default function Blob() {
           targetY += ny * pull;
         }
 
-        // spring-like lerp toward target
         const cur = currentPoints.current[i];
         cur[0] += (targetX - cur[0]) * SMOOTHING;
         cur[1] += (targetY - cur[1]) * SMOOTHING;
@@ -100,7 +107,7 @@ export default function Blob() {
       window.removeEventListener("mousemove", handleMouseMove);
       cancelAnimationFrame(frame);
     };
-  }, []);
+  }, [prefersReduced]);
 
   return (
     <svg
