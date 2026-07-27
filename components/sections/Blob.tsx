@@ -12,23 +12,39 @@ const CURSOR_INFLUENCE_RADIUS = 240;
 const CURSOR_PULL_STRENGTH = 55;
 const SMOOTHING = 0.08;
 
+// A handful of hand-tuned irregular radius multipliers per point.
+// Randomly picking one on each load gives the blob a different
+// silhouette every refresh, while still feeling organic (not spiky).
+const SHAPE_PRESETS: number[][] = [
+  [1.0, 1.1, 0.9, 1.15, 0.85, 1.05, 0.95, 1.2, 0.8, 1.0],
+  [0.9, 1.2, 1.0, 0.85, 1.1, 0.95, 1.15, 0.9, 1.05, 0.8],
+  [1.05, 0.85, 1.15, 1.0, 0.9, 1.2, 0.8, 1.1, 0.95, 1.0],
+  [0.95, 1.15, 0.85, 1.1, 1.0, 0.8, 1.2, 0.9, 1.05, 0.85],
+  [1.1, 0.9, 1.0, 1.2, 0.8, 1.05, 0.85, 0.95, 1.15, 1.0],
+];
+
 export default function Blob() {
   const svgRef = useRef<SVGSVGElement>(null);
   const pathRef = useRef<SVGPathElement>(null);
   const mouseRef = useRef({ x: -9999, y: -9999 });
   const currentPoints = useRef<[number, number][]>([]);
   const seeds = useRef<{ speed: number; phase: number }[]>([]);
+  const shape = useRef<number[]>(SHAPE_PRESETS[0]);
   const prefersReduced = useReducedMotion();
 
   useEffect(() => {
-    // set up base ring of points + random idle wobble per point
+    // pick a random shape preset for this load
+    shape.current =
+      SHAPE_PRESETS[Math.floor(Math.random() * SHAPE_PRESETS.length)];
+
     const pts: [number, number][] = [];
     const sds: { speed: number; phase: number }[] = [];
     for (let i = 0; i < NUM_POINTS; i++) {
       const angle = (i / NUM_POINTS) * Math.PI * 2;
+      const radius = BASE_RADIUS * shape.current[i];
       pts.push([
-        CENTER.x + BASE_RADIUS * Math.cos(angle),
-        CENTER.y + BASE_RADIUS * Math.sin(angle),
+        CENTER.x + radius * Math.cos(angle),
+        CENTER.y + radius * Math.sin(angle),
       ]);
       sds.push({
         speed: 0.4 + Math.random() * 0.6,
@@ -38,7 +54,6 @@ export default function Blob() {
     currentPoints.current = pts;
     seeds.current = sds;
 
-    // If the user prefers reduced motion, draw one static frame and stop here
     if (prefersReduced) {
       if (pathRef.current) {
         pathRef.current.setAttribute("d", getSmoothPath(currentPoints.current));
@@ -80,7 +95,6 @@ export default function Blob() {
     window.addEventListener("touchend", handleTouchEnd);
     window.addEventListener("touchcancel", handleTouchEnd);
 
-
     let frame: number;
     const animate = (time: number) => {
       const t = time / 1000;
@@ -90,7 +104,7 @@ export default function Blob() {
         const { speed, phase } = seeds.current[i];
 
         const idleOffset = IDLE_AMPLITUDE * Math.sin(t * speed + phase);
-        const radius = BASE_RADIUS + idleOffset;
+        const radius = BASE_RADIUS * shape.current[i] + idleOffset;
 
         const baseX = CENTER.x + radius * Math.cos(angle);
         const baseY = CENTER.y + radius * Math.sin(angle);
