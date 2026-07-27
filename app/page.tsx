@@ -8,9 +8,9 @@ export default function Home() {
   const { isLoading } = useLoading();
 
   return (
-    <main className="min-h-screen relative overflow-hidden flex items-center justify-center">
+    <main className="h-full relative overflow-hidden flex items-center justify-center">
       <motion.div
-        className="absolute w-[500px] h-[500px]"
+        className="absolute w-[80vw] h-[80vw] max-w-[500px] max-h-[500px] aspect-square"
         initial={{ scale: 0, opacity: 0 }}
         animate={
           !isLoading

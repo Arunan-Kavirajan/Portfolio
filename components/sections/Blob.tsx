@@ -57,7 +57,29 @@ export default function Blob() {
         y: (e.clientY - rect.top) * scaleY,
       };
     };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      const svg = svgRef.current;
+      if (!svg || e.touches.length === 0) return;
+      const touch = e.touches[0];
+      const rect = svg.getBoundingClientRect();
+      const scaleX = 600 / rect.width;
+      const scaleY = 600 / rect.height;
+      mouseRef.current = {
+        x: (touch.clientX - rect.left) * scaleX,
+        y: (touch.clientY - rect.top) * scaleY,
+      };
+    };
+
+    const handleTouchEnd = () => {
+      mouseRef.current = { x: -9999, y: -9999 };
+    };
+
     window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("touchmove", handleTouchMove, { passive: true });
+    window.addEventListener("touchend", handleTouchEnd);
+    window.addEventListener("touchcancel", handleTouchEnd);
+
 
     let frame: number;
     const animate = (time: number) => {
@@ -105,6 +127,9 @@ export default function Blob() {
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("touchmove", handleTouchMove);
+      window.removeEventListener("touchend", handleTouchEnd);
+      window.removeEventListener("touchcancel", handleTouchEnd);
       cancelAnimationFrame(frame);
     };
   }, [prefersReduced]);

@@ -37,11 +37,11 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} ${fraunces.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-bg text-ink">
+      <body className="h-[100dvh] flex flex-col bg-bg text-ink overflow-hidden">
         <LoadingProvider>
           <Cursor />
           <Nav />
-          <div className="flex-1">
+          <div className="flex-1 overflow-y-auto">
             <PageTransition>{children}</PageTransition>
           </div>
           <Footer />
