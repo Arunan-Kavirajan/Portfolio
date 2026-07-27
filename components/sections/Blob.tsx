@@ -157,8 +157,8 @@ export default function Blob() {
     >
       <defs>
         <linearGradient id="blobGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#FF8F65" />
-          <stop offset="100%" stopColor="#FFD3AC" />
+          <stop offset="0%" stopColor="#5B21B6" />
+          <stop offset="100%" stopColor="#C4B5FD" />
         </linearGradient>
       </defs>
       <path ref={pathRef} fill="url(#blobGradient)" />

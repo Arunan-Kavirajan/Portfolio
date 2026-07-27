@@ -37,7 +37,7 @@ export default function Home() {
         </h1>
         <ul className="flex flex-col gap-2">
           {highlights.map((line) => (
-            <li key={line} className="font-sans text-sm text-muted">
+            <li key={line} className="font-sans text-sm text-ink/80">
               {line}
             </li>
           ))}
