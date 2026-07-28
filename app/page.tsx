@@ -16,9 +16,10 @@ const highlights = [
 
 type Phase = "idle" | "shrink" | "explode" | "slide";
 
-const SHRINK_MS = 250;
-const EXPLODE_MS = 550;
-const SLIDE_MS = 450;
+const SHRINK_MS = 400;
+const EXPLODE_MS = 700;
+const SLIDE_MS = 600;
+const SMOOTH_EASE: [number, number, number, number] = [0.65, 0, 0.35, 1];
 
 export default function Home() {
   const { isLoading } = useLoading();
@@ -33,7 +34,9 @@ export default function Home() {
     setPhase("shrink");
 
     setTimeout(() => setPhase("explode"), SHRINK_MS);
-    setTimeout(() => setPhase("slide"), SHRINK_MS + EXPLODE_MS);
+    // Slide starts slightly before explode fully finishes, so the two
+    // overlap instead of handing off with a hard cut.
+    setTimeout(() => setPhase("slide"), SHRINK_MS + EXPLODE_MS - 150);
     setTimeout(() => {
       router.push("/about");
     }, SHRINK_MS + EXPLODE_MS + SLIDE_MS);
@@ -53,7 +56,7 @@ export default function Home() {
         }
         transition={
           phase !== "idle"
-            ? { duration: SHRINK_MS / 1000, ease: "easeIn" }
+            ? { duration: SHRINK_MS / 1000, ease: SMOOTH_EASE }
             : { type: "spring", stiffness: 120, damping: 12 }
         }
       >
@@ -67,14 +70,23 @@ export default function Home() {
       <HomeToAboutTransition phase={phase} />
 
       <motion.div
-        className="relative z-50 max-w-sm ml-[30%] pointer-events-none"
-        initial={{ opacity: 0, y: 12 }}
-        animate={!isLoading ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
-        transition={{ delay: 0.4, duration: 0.5, ease: "easeOut" }}
+        layout
+        transition={{ type: "spring", stiffness: 170, damping: 22 }}
+        className={`z-40 pointer-events-none ${
+          isHeroHovering
+            ? "fixed left-[42%] top-[68%] -translate-x-1/2 text-center max-w-xs"
+            : "relative ml-[30%] max-w-sm"
+        }`}
       >
-        <h1 className="font-serif text-5xl text-ink mb-6">
+        <motion.h1
+          animate={!isLoading ? { opacity: 1 } : { opacity: 0 }}
+          transition={{ delay: 0.4, duration: 0.5, ease: "easeOut" }}
+          className={`font-serif text-ink transition-all ${
+            isHeroHovering ? "text-2xl mb-2" : "text-5xl mb-6"
+          }`}
+        >
           IT Undergrad &amp; Developer
-        </h1>
+        </motion.h1>
         <motion.ul
           className="flex flex-col gap-2"
           animate={{ opacity: isHeroHovering ? 0 : 1 }}

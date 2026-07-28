@@ -13,14 +13,29 @@ export default function Nav() {
 
   return (
     <nav className="fixed top-0 left-0 w-full flex items-center justify-between px-8 py-6 z-50">
-      <Link
-        href="/"
-        className={`font-serif tracking-wide transition-all ${
-          isHome ? "text-2xl" : "text-sm font-sans"
-        }`}
+      <motion.div
+        layout
+        transition={{ type: "spring", stiffness: 170, damping: 22 }}
+        className={
+          hideRest
+            ? "fixed left-[42%] top-[14%] -translate-x-1/2 z-[80]"
+            : "relative"
+        }
       >
-        arunan kavirajan
-      </Link>
+        <Link
+          href="/"
+          className={`font-serif tracking-wide transition-all block ${
+            isHome
+              ? hideRest
+                ? "text-5xl"
+                : "text-2xl"
+              : "text-sm font-sans"
+          }`}
+        >
+          Arunan Kavirajan
+        </Link>
+      </motion.div>
+
       <motion.ul
         className="flex gap-8 font-sans text-sm"
         animate={{ opacity: hideRest ? 0 : 1 }}
