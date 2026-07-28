@@ -6,7 +6,7 @@ export default function ResumePage() {
         <a
           href="/arunan-kavirajan-resume.pdf"
           download
-          className="font-sans text-sm hover:text-coral transition-colors"
+          className="font-sans text-sm"
         >
           download pdf →
         </a>

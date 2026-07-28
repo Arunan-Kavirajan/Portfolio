@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getSmoothPath } from "@/lib/blob-path";
 import { useReducedMotion } from "@/lib/hooks/useReducedMotion";
 
@@ -12,9 +12,6 @@ const CURSOR_INFLUENCE_RADIUS = 240;
 const CURSOR_PULL_STRENGTH = 55;
 const SMOOTHING = 0.08;
 
-// A handful of hand-tuned irregular radius multipliers per point.
-// Randomly picking one on each load gives the blob a different
-// silhouette every refresh, while still feeling organic (not spiky).
 const SHAPE_PRESETS: number[][] = [
   [1.0, 1.1, 0.9, 1.15, 0.85, 1.05, 0.95, 1.2, 0.8, 1.0],
   [0.9, 1.2, 1.0, 0.85, 1.1, 0.95, 1.15, 0.9, 1.05, 0.8],
@@ -23,17 +20,26 @@ const SHAPE_PRESETS: number[][] = [
   [1.1, 0.9, 1.0, 1.2, 0.8, 1.05, 0.85, 0.95, 1.15, 1.0],
 ];
 
-export default function Blob() {
+export default function Blob({
+  onHoverChange,
+  onClick,
+  imageSrc,
+}: {
+  onHoverChange?: (hovering: boolean) => void;
+  onClick?: () => void;
+  imageSrc?: string;
+} = {}) {
   const svgRef = useRef<SVGSVGElement>(null);
   const pathRef = useRef<SVGPathElement>(null);
+  const clipPathRef = useRef<SVGPathElement>(null);
   const mouseRef = useRef({ x: -9999, y: -9999 });
   const currentPoints = useRef<[number, number][]>([]);
   const seeds = useRef<{ speed: number; phase: number }[]>([]);
   const shape = useRef<number[]>(SHAPE_PRESETS[0]);
   const prefersReduced = useReducedMotion();
+  const [isHovering, setIsHovering] = useState(false);
 
   useEffect(() => {
-    // pick a random shape preset for this load
     shape.current =
       SHAPE_PRESETS[Math.floor(Math.random() * SHAPE_PRESETS.length)];
 
@@ -54,10 +60,14 @@ export default function Blob() {
     currentPoints.current = pts;
     seeds.current = sds;
 
+    const applyPath = () => {
+      const d = getSmoothPath(currentPoints.current);
+      if (pathRef.current) pathRef.current.setAttribute("d", d);
+      if (clipPathRef.current) clipPathRef.current.setAttribute("d", d);
+    };
+
     if (prefersReduced) {
-      if (pathRef.current) {
-        pathRef.current.setAttribute("d", getSmoothPath(currentPoints.current));
-      }
+      applyPath();
       return;
     }
 
@@ -130,10 +140,7 @@ export default function Blob() {
         cur[1] += (targetY - cur[1]) * SMOOTHING;
       }
 
-      if (pathRef.current) {
-        pathRef.current.setAttribute("d", getSmoothPath(currentPoints.current));
-      }
-
+      applyPath();
       frame = requestAnimationFrame(animate);
     };
 
@@ -152,7 +159,7 @@ export default function Blob() {
     <svg
       ref={svgRef}
       viewBox="0 0 600 600"
-      className="w-full h-full"
+      className="w-full h-full pointer-events-none"
       aria-hidden="true"
     >
       <defs>
@@ -160,8 +167,42 @@ export default function Blob() {
           <stop offset="0%" stopColor="#5B21B6" />
           <stop offset="100%" stopColor="#C4B5FD" />
         </linearGradient>
+        <clipPath id="blobClip">
+          <path ref={clipPathRef} />
+        </clipPath>
       </defs>
-      <path ref={pathRef} fill="url(#blobGradient)" />
+
+      <path
+        ref={pathRef}
+        fill="url(#blobGradient)"
+        style={{ pointerEvents: "auto", cursor: onClick ? "pointer" : undefined }}
+        onMouseEnter={() => {
+          setIsHovering(true);
+          onHoverChange?.(true);
+        }}
+        onMouseLeave={() => {
+          setIsHovering(false);
+          onHoverChange?.(false);
+        }}
+        onClick={onClick}
+      />
+
+      {imageSrc && (
+        <image
+          href={imageSrc}
+          x="0"
+          y="0"
+          width="600"
+          height="600"
+          preserveAspectRatio="xMidYMid slice"
+          clipPath="url(#blobClip)"
+          style={{
+            opacity: isHovering ? 1 : 0,
+            transition: "opacity 0.3s ease",
+            pointerEvents: "none",
+          }}
+        />
+      )}
     </svg>
   );
 }

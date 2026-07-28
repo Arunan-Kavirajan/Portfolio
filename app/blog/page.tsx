@@ -13,7 +13,7 @@ export default function BlogPage() {
           <Reveal key={post.slug} delay={i * 0.08}>
             <Link
               href={`/blog/${post.slug}`}
-              className="group py-6 border-b border-border hover:text-coral transition-colors block"
+              className="group py-6 border-b border-border block"
             >
               <span className="font-sans text-sm text-muted">{post.date}</span>
               <h2 className="font-serif text-2xl mt-1">{post.title}</h2>

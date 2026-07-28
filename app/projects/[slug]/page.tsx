@@ -46,7 +46,7 @@ export default async function ProjectPage({
             href={project.liveUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="font-sans text-sm hover:text-coral transition-colors"
+            className="font-sans text-sm"
           >
             view live →
           </a>
@@ -56,7 +56,7 @@ export default async function ProjectPage({
             href={project.githubUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="font-sans text-sm hover:text-coral transition-colors"
+            className="font-sans text-sm"
           >
             github →
           </a>

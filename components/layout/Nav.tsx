@@ -2,10 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
+import { useHeroHover } from "./HeroHoverProvider";
 
 export default function Nav() {
   const pathname = usePathname();
   const isHome = pathname === "/";
+  const { isHeroHovering } = useHeroHover();
+  const hideRest = isHome && isHeroHovering;
 
   return (
     <nav className="fixed top-0 left-0 w-full flex items-center justify-between px-8 py-6 z-50">
@@ -17,28 +21,22 @@ export default function Nav() {
       >
         arunan kavirajan
       </Link>
-      <ul className="flex gap-8 font-sans text-sm">
+      <motion.ul
+        className="flex gap-8 font-sans text-sm"
+        animate={{ opacity: hideRest ? 0 : 1 }}
+        transition={{ duration: 0.35, ease: "easeOut" }}
+        style={{ pointerEvents: hideRest ? "none" : "auto" }}
+      >
         <li>
-          <Link href="/projects" className="hover:text-coral transition-colors">
-            projects
-          </Link>
+          <Link href="/projects">projects</Link>
         </li>
         <li>
-          <Link href="/blog" className="hover:text-coral transition-colors">
-            blog
-          </Link>
+          <Link href="/blog">blog</Link>
         </li>
         <li>
-          <Link href="/about" className="hover:text-coral transition-colors">
-            about
-          </Link>
+          <Link href="/resume">resume</Link>
         </li>
-        <li>
-          <Link href="/resume" className="hover:text-coral transition-colors">
-            resume
-          </Link>
-        </li>
-      </ul>
+      </motion.ul>
     </nav>
   );
 }

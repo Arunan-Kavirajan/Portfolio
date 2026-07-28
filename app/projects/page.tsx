@@ -11,7 +11,7 @@ export default function ProjectsPage() {
           <Reveal key={project.slug} delay={i * 0.08}>
             <Link
               href={`/projects/${project.slug}`}
-              className="group flex items-baseline justify-between py-6 border-b border-border hover:text-coral transition-colors"
+              className="group flex items-baseline justify-between py-6 border-b border-border"
             >
               <div>
                 <h2 className="font-serif text-3xl">{project.title}</h2>

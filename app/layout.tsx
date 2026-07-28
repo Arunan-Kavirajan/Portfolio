@@ -5,6 +5,7 @@ import Nav from "@/components/layout/Nav";
 import Footer from "@/components/layout/Footer";
 import Cursor from "@/components/layout/Cursor";
 import LoadingProvider from "@/components/layout/LoadingProvider";
+import HeroHoverProvider from "@/components/layout/HeroHoverProvider";
 import PageTransition from "@/components/layout/PageTransition";
 
 const geistSans = Geist({
@@ -39,12 +40,14 @@ export default function RootLayout({
     >
       <body className="h-[100dvh] flex flex-col bg-bg text-ink overflow-hidden">
         <LoadingProvider>
-          <Cursor />
-          <Nav />
-          <div className="flex-1 overflow-y-auto">
-            <PageTransition>{children}</PageTransition>
-          </div>
-          <Footer />
+          <HeroHoverProvider>
+            <Cursor />
+            <Nav />
+            <div className="flex-1 overflow-y-auto">
+              <PageTransition>{children}</PageTransition>
+            </div>
+            <Footer />
+          </HeroHoverProvider>
         </LoadingProvider>
       </body>
     </html>
