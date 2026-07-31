@@ -31,7 +31,7 @@ export default function Footer() {
           linkedin
         </a>
       </div>
-      <a href="mailto:YOUR_EMAIL@example.com" className="no-underline">
+      <a href="mailto:arunan.kavirajan@gmail.com" className="no-underline">
         arunan.kavirajan@gmail.com
       </a>
     </motion.footer>
