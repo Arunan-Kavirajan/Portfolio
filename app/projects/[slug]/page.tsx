@@ -1,8 +1,14 @@
 import { notFound } from "next/navigation";
-import { projects, getProjectBySlug } from "@/lib/projects";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { db } from "@/lib/firebase";
+import { Project } from "@/lib/projects";
 
-export function generateStaticParams() {
-  return projects.map((project) => ({ slug: project.slug }));
+// Next.js App Router static params for dynamic routes
+export async function generateStaticParams() {
+  const snapshot = await getDocs(collection(db, "projects"));
+  return snapshot.docs.map((doc) => ({
+    slug: doc.data().slug,
+  }));
 }
 
 export default async function ProjectPage({
@@ -11,11 +17,16 @@ export default async function ProjectPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const project = getProjectBySlug(slug);
-
-  if (!project) {
+  
+  // Fetch project from Firestore based on slug
+  const q = query(collection(db, "projects"), where("slug", "==", slug));
+  const snapshot = await getDocs(q);
+  
+  if (snapshot.empty) {
     notFound();
   }
+  
+  const project = snapshot.docs[0].data() as Project;
 
   return (
     <main className="min-h-screen px-8 py-32 max-w-3xl mx-auto">
@@ -27,7 +38,7 @@ export default async function ProjectPage({
         {project.description}
       </p>
 
-      {project.tech.length > 0 && (
+      {project.tech && project.tech.length > 0 && (
         <div className="flex flex-wrap gap-2 mb-10">
           {project.tech.map((t) => (
             <span

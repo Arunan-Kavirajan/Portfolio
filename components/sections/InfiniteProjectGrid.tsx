@@ -2,7 +2,9 @@
 
 import { useEffect, useRef, useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
-import { projects } from "@/lib/projects";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "@/lib/firebase";
+import { Project } from "@/lib/projects";
 
 /* ── Grid geometry ──────────────────────────────────────── */
 const CELL_W = 300;
@@ -11,7 +13,7 @@ const GAP = 24;
 const STEP_X = CELL_W + GAP;
 const STEP_Y = CELL_H + GAP;
 const GRID_COLS = 4;
-const GRID_ROWS = Math.ceil(projects.length / GRID_COLS);
+// GRID_ROWS will be calculated dynamically once projects are fetched
 
 /* ── Centre-proximity scaling ───────────────────────────── */
 const MIN_SCALE = 0.75;
@@ -71,19 +73,41 @@ export default function InfiniteProjectGrid() {
   const rafRef = useRef(0);
   const readyRef = useRef(false);
 
+  /* ── data state ───────────────────────────────────────── */
+  const [dbProjects, setDbProjects] = useState<Project[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
   /* only React state: the visible tile set (updated every frame) */
   const [tiles, setTiles] = useState<TileData[]>([]);
+
+  /* ── fetch projects from firestore ────────────────────── */
+  useEffect(() => {
+    async function loadProjects() {
+      try {
+        const snapshot = await getDocs(collection(db, "projects"));
+        const data = snapshot.docs.map(doc => doc.data() as Project);
+        setDbProjects(data);
+      } catch (error) {
+        console.error("Failed to load projects", error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadProjects();
+  }, []);
 
   /* ── centre the viewport on the tile pattern ─────────── */
   useEffect(() => {
     const el = containerRef.current;
-    if (!el || readyRef.current) return;
+    if (!el || readyRef.current || dbProjects.length === 0) return;
     readyRef.current = true;
     const vw = el.clientWidth;
     const vh = el.clientHeight;
+    
+    const gridRows = Math.ceil(dbProjects.length / GRID_COLS);
     offsetRef.current.x = (GRID_COLS * STEP_X) / 2 - vw / 2;
-    offsetRef.current.y = (GRID_ROWS * STEP_Y) / 2 - vh / 2;
-  }, []);
+    offsetRef.current.y = (gridRows * STEP_Y) / 2 - vh / 2;
+  }, [dbProjects.length]);
 
   /* ── compute which tiles are visible + their transforms ─ */
   const computeTiles = useCallback((): TileData[] => {
@@ -108,13 +132,15 @@ export default function InfiniteProjectGrid() {
 
     const result: TileData[] = [];
 
+    const gridRows = Math.ceil(dbProjects.length / GRID_COLS);
+
     for (let row = startRow; row <= endRow; row++) {
       for (let col = startCol; col <= endCol; col++) {
         /* map infinite grid position → project index */
         const c = mod(col, GRID_COLS);
-        const r = mod(row, GRID_ROWS);
-        const idx = mod(r * GRID_COLS + c, projects.length);
-        const p = projects[idx];
+        const r = mod(row, gridRows);
+        const idx = mod(r * GRID_COLS + c, dbProjects.length);
+        const p = dbProjects[idx];
 
         /* pixel position relative to viewport */
         const x = col * STEP_X - ox;
@@ -145,6 +171,10 @@ export default function InfiniteProjectGrid() {
 
   /* ── animation loop ──────────────────────────────────── */
   const tick = useCallback(() => {
+    if (dbProjects.length === 0) {
+      rafRef.current = requestAnimationFrame(tick);
+      return;
+    }
     /* apply momentum when not dragging */
     if (!draggingRef.current) {
       const { x: vx, y: vy } = velRef.current;
@@ -281,6 +311,22 @@ export default function InfiniteProjectGrid() {
   );
 
   /* ── render ──────────────────────────────────────────── */
+  if (isLoading) {
+    return (
+      <div className="w-full h-full flex items-center justify-center bg-bg text-muted font-sans">
+        Loading projects...
+      </div>
+    );
+  }
+
+  if (dbProjects.length === 0) {
+    return (
+      <div className="w-full h-full flex items-center justify-center bg-bg text-muted font-sans">
+        No projects found. Add some from the admin panel.
+      </div>
+    );
+  }
+
   return (
     <div
       ref={containerRef}

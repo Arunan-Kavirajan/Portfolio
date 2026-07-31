@@ -1,15 +1,13 @@
-import fs from "fs";
-import path from "path";
-import matter from "gray-matter";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { db } from "@/lib/firebase";
+import { PostMeta } from "@/lib/blog";
 
-const BLOG_DIR = path.join(process.cwd(), "content/blog");
-
-export function generateStaticParams() {
-  const files = fs.readdirSync(BLOG_DIR).filter((f) => f.endsWith(".mdx"));
-  return files.map((filename) => ({
-    slug: filename.replace(/\.mdx$/, ""),
+export async function generateStaticParams() {
+  const snapshot = await getDocs(collection(db, "blog_posts"));
+  return snapshot.docs.map((doc) => ({
+    slug: doc.data().slug,
   }));
 }
 
@@ -19,20 +17,23 @@ export default async function BlogPostPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const filePath = path.join(BLOG_DIR, `${slug}.mdx`);
+  
+  const q = query(collection(db, "blog_posts"), where("slug", "==", slug));
+  const snapshot = await getDocs(q);
 
-  if (!fs.existsSync(filePath)) {
+  if (snapshot.empty) {
     notFound();
   }
 
-  const { data, content } = matter(fs.readFileSync(filePath, "utf-8"));
+  const postData = snapshot.docs[0].data() as PostMeta & { content: string };
 
   return (
     <main className="min-h-screen px-8 py-32 max-w-2xl mx-auto">
-      <span className="font-sans text-sm text-muted">{data.date}</span>
-      <h1 className="font-serif text-5xl mt-2 mb-10">{data.title}</h1>
-      <article className="font-sans text-base leading-relaxed prose">
-        <MDXRemote source={content} />
+      <span className="font-sans text-sm text-muted">{postData.date}</span>
+      <h1 className="font-serif text-5xl mt-2 mb-10">{postData.title}</h1>
+      <article className="font-sans text-base leading-relaxed prose prose-invert">
+        {/* We use next-mdx-remote to render the markdown content string from Firestore */}
+        <MDXRemote source={postData.content || ""} />
       </article>
     </main>
   );
