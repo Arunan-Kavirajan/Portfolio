@@ -15,9 +15,9 @@ const STEP_Y = CELL_H + GAP;
 const GRID_COLS = 4;
 // GRID_ROWS will be calculated dynamically once projects are fetched
 
-/* ── Centre-proximity scaling ───────────────────────────── */
-const MIN_SCALE = 0.75;
-const MAX_SCALE = 1.15;
+/* ── Centre-proximity scaling (Fisheye Lens) ──────────────── */
+const MIN_SCALE = 0.5;
+const MAX_SCALE = 1.4;
 
 /* ── Momentum / physics ─────────────────────────────────── */
 const FRICTION = 0.94;
@@ -146,12 +146,13 @@ export default function InfiniteProjectGrid() {
         const x = col * STEP_X - ox;
         const y = row * STEP_Y - oy;
 
-        /* centre-proximity scale */
+        /* centre-proximity scale (fisheye curve) */
         const tcx = x + CELL_W / 2;
         const tcy = y + CELL_H / 2;
         const dist = Math.sqrt((tcx - cx) ** 2 + (tcy - cy) ** 2);
         const t = Math.min(dist / maxDist, 1);
-        const scale = MAX_SCALE - t * (MAX_SCALE - MIN_SCALE);
+        const easeT = Math.pow(1 - t, 2.5); // Steep falloff for fisheye effect
+        const scale = MIN_SCALE + (MAX_SCALE - MIN_SCALE) * easeT;
 
         result.push({
           key: `${col}_${row}`,
@@ -167,7 +168,7 @@ export default function InfiniteProjectGrid() {
     }
 
     return result;
-  }, []);
+  }, [dbProjects]);
 
   /* ── animation loop ──────────────────────────────────── */
   const tick = useCallback(() => {
@@ -191,7 +192,7 @@ export default function InfiniteProjectGrid() {
 
     setTiles(computeTiles());
     rafRef.current = requestAnimationFrame(tick);
-  }, [computeTiles]);
+  }, [computeTiles, dbProjects.length]);
 
   useEffect(() => {
     rafRef.current = requestAnimationFrame(tick);
@@ -343,8 +344,8 @@ export default function InfiniteProjectGrid() {
           href={`/projects/${tile.slug}`}
           onClick={(e) => onTileClick(e, tile.slug)}
           draggable={false}
-          className="absolute top-0 left-0 rounded-[20px] bg-surface border border-border
-                     flex flex-col justify-end p-6 overflow-hidden
+          className="absolute top-0 left-0 rounded-[48px] bg-surface border border-border
+                     flex flex-col justify-end p-8 overflow-hidden
                      hover:border-muted/50"
           style={{
             width: CELL_W,
@@ -352,13 +353,21 @@ export default function InfiniteProjectGrid() {
             transform: `translate(${tile.x}px, ${tile.y}px) scale(${tile.scale.toFixed(4)})`,
             transformOrigin: "center center",
             willChange: "transform",
-            backgroundImage: `linear-gradient(135deg, ${ACCENTS[tile.idx % ACCENTS.length]} 0%, transparent 60%)`,
+            // Gradient is drawn via DOM below.
           }}
         >
-          <h2 className="font-serif text-2xl text-ink leading-tight">
-            {tile.title}
-          </h2>
-          <p className="font-sans text-sm text-muted mt-1">{tile.tagline}</p>
+          <div 
+            className="absolute inset-0 z-10 pointer-events-none"
+            style={{
+              backgroundImage: `linear-gradient(135deg, ${ACCENTS[tile.idx % ACCENTS.length]} 0%, transparent 60%)`
+            }}
+          />
+          <div className="relative z-20">
+            <h2 className="font-serif text-3xl text-ink leading-tight drop-shadow-md">
+              {tile.title}
+            </h2>
+            <p className="font-sans text-sm text-muted mt-2 drop-shadow-md">{tile.tagline}</p>
+          </div>
         </a>
       ))}
     </div>

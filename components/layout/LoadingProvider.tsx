@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import LoadingScreen from "./LoadingScreen";
 
 type LoadingContextType = {
@@ -20,8 +21,14 @@ export default function LoadingProvider({
 }) {
   const [isLoading, setIsLoading] = useState(true);
   const [count, setCount] = useState(0);
+  const pathname = usePathname();
 
   useEffect(() => {
+    if (pathname.startsWith("/admin")) {
+      setIsLoading(false);
+      return;
+    }
+
     const duration = 1800;
     const intervalMs = 16;
     const totalSteps = duration / intervalMs;
