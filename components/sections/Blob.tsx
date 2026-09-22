@@ -39,6 +39,9 @@ export default function Blob({
   const prefersReduced = useReducedMotion();
   const [isHovering, setIsHovering] = useState(false);
 
+  const pointerDownTime = useRef<number>(0);
+  const pointerDownPos = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+
   useEffect(() => {
     shape.current =
       SHAPE_PRESETS[Math.floor(Math.random() * SHAPE_PRESETS.length)];
@@ -94,10 +97,17 @@ export default function Blob({
         x: (touch.clientX - rect.left) * scaleX,
         y: (touch.clientY - rect.top) * scaleY,
       };
+
+      // Detect if dragging over the blob from outside
+      const elUnderFinger = document.elementFromPoint(touch.clientX, touch.clientY);
+      const isOverBlob = elUnderFinger?.id === "mainBlobPath";
+      setIsHovering(isOverBlob);
+      onHoverChange?.(isOverBlob);
     };
 
     const handleTouchEnd = () => {
       mouseRef.current = { x: -9999, y: -9999 };
+      // Note: we don't reset hover here so tap/click logic can finish in onPointerUp
     };
 
     window.addEventListener("mousemove", handleMouseMove);
@@ -153,7 +163,7 @@ export default function Blob({
       window.removeEventListener("touchcancel", handleTouchEnd);
       cancelAnimationFrame(frame);
     };
-  }, [prefersReduced]);
+  }, [prefersReduced, onHoverChange]);
 
   return (
     <svg
@@ -174,15 +184,48 @@ export default function Blob({
         fill="var(--color-ink)"
         data-blob-hover="true"
         style={{ pointerEvents: "auto", touchAction: "none", cursor: onClick ? "pointer" : undefined }}
-        onMouseEnter={() => {
+        onPointerEnter={(e) => {
+          if (e.pointerType === "mouse") {
+            setIsHovering(true);
+            onHoverChange?.(true);
+          }
+        }}
+        onPointerLeave={(e) => {
+          if (e.pointerType === "mouse") {
+            setIsHovering(false);
+            onHoverChange?.(false);
+          }
+        }}
+        onPointerDown={(e) => {
+          pointerDownTime.current = performance.now();
+          pointerDownPos.current = { x: e.clientX, y: e.clientY };
           setIsHovering(true);
           onHoverChange?.(true);
+          try { (e.target as Element).setPointerCapture(e.pointerId); } catch {}
         }}
-        onMouseLeave={() => {
-          setIsHovering(false);
-          onHoverChange?.(false);
+        onPointerUp={(e) => {
+          const elapsed = performance.now() - pointerDownTime.current;
+          const dx = e.clientX - pointerDownPos.current.x;
+          const dy = e.clientY - pointerDownPos.current.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+
+          if (e.pointerType !== "mouse") {
+            setIsHovering(false);
+            onHoverChange?.(false);
+          }
+
+          if (elapsed < 300 && dist < 15) {
+            onClick?.();
+          }
+          try { (e.target as Element).releasePointerCapture(e.pointerId); } catch {}
         }}
-        onClick={onClick}
+        onPointerCancel={(e) => {
+          if (e.pointerType !== "mouse") {
+            setIsHovering(false);
+            onHoverChange?.(false);
+          }
+          try { (e.target as Element).releasePointerCapture(e.pointerId); } catch {}
+        }}
       />
 
       {imageSrc && (

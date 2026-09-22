@@ -12,7 +12,7 @@ export default function HomeToAboutTransition({ phase }: { phase: Phase }) {
       <motion.div
         className="fixed z-[70] rounded-full pointer-events-none"
         style={{
-          left: "50%",
+          left: "25%",
           top: "50%",
           width: "680px",
           height: "680px",

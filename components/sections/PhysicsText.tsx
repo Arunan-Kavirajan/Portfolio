@@ -168,7 +168,11 @@ export default function PhysicsText() {
   const [wordsData, setWordsData] = useState<WordPhysics[]>([]);
 
   useEffect(() => {
-    const data = BUZZWORDS.map((w) => {
+    const isMobile = window.innerWidth < 768;
+    // On mobile, take only half the words to reduce clutter, skipping every other word to preserve the categorical mix
+    const activeWords = isMobile ? BUZZWORDS.filter((_, i) => i % 2 === 0) : BUZZWORDS;
+
+    const data = activeWords.map((w) => {
       const speed = 0.5 + Math.random() * 0.7;
       const angle = Math.random() * Math.PI * 2;
 

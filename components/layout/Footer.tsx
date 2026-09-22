@@ -8,7 +8,7 @@ export default function Footer() {
 
   return (
     <motion.footer
-      className="w-full flex items-center justify-between px-8 py-6 border-t border-border font-sans text-sm text-ink"
+      className="w-full flex items-center justify-between px-8 py-6 font-sans text-sm text-ink"
       animate={{ opacity: isHeroHovering ? 0 : 1 }}
       transition={{ duration: 0.35, ease: "easeOut" }}
       style={{ pointerEvents: isHeroHovering ? "none" : "auto" }}
