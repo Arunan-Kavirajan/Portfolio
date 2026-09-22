@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useScroll, useTransform, useSpring, type Transition } from "framer-motion";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useMemo } from "react";
 import Image from "next/image";
 
 import type { MotionValue } from "framer-motion";
@@ -160,194 +160,254 @@ function HeroSection() {
 }
 
 // 2. CURIOUS
-const shapesData = [
-  // S0: Foundation Rect
-  {
-    type: "rect", width: 120, height: 10, rx: 2,
-    x: [0, 0, -20, -150, 0],
-    y: [200, 60, 90, -100, 0],
-    rot: [0, 0, 12, 0, 90],
-    scale: [0, 1, 1, 1, 1.5],
-    op: [0, 1, 1, 1, 1]
-  },
-  // S1: Core Block Rect
-  {
-    type: "rect", width: 60, height: 60, rx: 4,
-    x: [0, -30, -60, 0, 0],
-    y: [-200, 15, 30, -100, 0],
-    rot: [0, 0, -25, 0, 45],
-    scale: [0, 1, 1, 1, 1],
-    op: [0, 1, 1, 1, 1]
-  },
-  // S2: Node Circle 1
-  {
-    type: "circle", r: 15,
-    x: [200, 45, 90, 150, 0],
-    y: [0, 15, 50, -100, -100],
-    rot: [0, 0, 0, 0, 0],
-    scale: [0, 1, 1, 1, 1],
-    op: [0, 1, 1, 1, 1]
-  },
-  // S3: Pillar Rect
-  {
-    type: "rect", width: 10, height: 80, rx: 2,
-    x: [0, 25, 40, -150, 0],
-    y: [200, -40, -80, 100, 100],
-    rot: [0, 0, 45, 0, 90],
-    scale: [0, 1, 1, 1, 1],
-    op: [0, 1, 1, 1, 1]
-  },
-  // S4: Small Accent Rect
-  {
-    type: "rect", width: 15, height: 15, rx: 2,
-    x: [-200, -45, -80, 0, -100],
-    y: [-100, -20, -60, 100, 0],
-    rot: [0, 0, -15, 0, 45],
-    scale: [0, 1, 1, 1, 1],
-    op: [0, 1, 1, 1, 1]
-  },
-  // S5: Outer Frame Rect
-  {
-    type: "rect", width: 140, height: 140, rx: 8, fill: "none", stroke: "#69737D", strokeWidth: 1,
-    x: [0, 0, 10, 150, 0],
-    y: [0, 10, 20, 100, 0],
-    rot: [0, 0, 8, 0, 45],
-    scale: [1.5, 1, 1.1, 0.4, 1.2],
-    op: [0, 1, 0.5, 1, 0.2]
-  },
-  // S6: Node Circle 2
-  {
-    type: "circle", r: 10,
-    x: [200, -15, -30, 0, 100],
-    y: [200, -60, -100, 0, 0],
-    rot: [0, 0, 0, 0, 0],
-    scale: [0, 1, 1, 1, 1],
-    op: [0, 1, 1, 1, 1]
-  }
-];
-
-function ShapeSystem({ config, scrollYProgress }: { config: any, scrollYProgress: MotionValue<number> }) {
-  const kf = [0, 0.15, 0.2, 0.35, 0.4, 0.55, 0.6, 0.75, 1];
-  const expand = (arr: number[]) => [arr[0], arr[1], arr[1], arr[2], arr[2], arr[3], arr[3], arr[4], arr[4]];
+// 2. CURIOUS WORLD SIMULATION
+function WorldCanvas({ scrollYProgress }: { scrollYProgress: MotionValue<number> }) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   
-  const x = useTransform(scrollYProgress, kf, expand(config.x));
-  const y = useTransform(scrollYProgress, kf, expand(config.y));
-  const rotate = useTransform(scrollYProgress, kf, expand(config.rot));
-  const scale = useTransform(scrollYProgress, kf, expand(config.scale));
-  const opacity = useTransform(scrollYProgress, kf, expand(config.op));
+  const N = 1200;
+  const particles = useMemo(() => {
+    const random = (seed: number) => {
+      const x = Math.sin(seed) * 10000;
+      return x - Math.floor(x);
+    };
 
-  if (config.type === "rect") {
-    return (
-      <motion.rect
-        x={-config.width / 2}
-        y={-config.height / 2}
-        width={config.width}
-        height={config.height}
-        rx={config.rx}
-        fill={config.fill || "#E8EDF2"}
-        stroke={config.stroke}
-        strokeWidth={config.strokeWidth}
-        style={{ x, y, rotate, scale, opacity }}
-      />
-    );
-  }
-  return (
-    <motion.circle
-      cx={0}
-      cy={0}
-      r={config.r}
-      fill={config.fill || "#E8EDF2"}
-      stroke={config.stroke}
-      strokeWidth={config.strokeWidth}
-      style={{ x, y, scale, opacity }}
-    />
-  );
+    const arr = [];
+    for (let i = 0; i < N; i++) {
+      // S0: Scattered field
+      const s0 = [
+        (random(i) - 0.5) * 4000,
+        (random(i + N) - 0.5) * 4000,
+        (random(i + N * 2) - 0.5) * 4000 + 1000
+      ];
+
+      // S1: Building (Sphere)
+      const phi = Math.acos(1 - 2 * (i + 0.5) / N);
+      const theta = Math.PI * (1 + Math.sqrt(5)) * i;
+      const R = 220;
+      const s1 = [
+        R * Math.sin(phi) * Math.cos(theta),
+        R * Math.cos(phi),
+        R * Math.sin(phi) * Math.sin(theta)
+      ];
+
+      // S2: Breaking (Cracked/Drifting by clusters)
+      const cx = Math.sign(s1[0]) || 1;
+      const cy = Math.sign(s1[1]) || 1;
+      const cz = Math.sign(s1[2]) || 1;
+      const s2 = [
+        s1[0] + cx * (150 + random(i + N * 3) * 200) + (random(i + N * 4) - 0.5) * 150,
+        s1[1] + cy * (150 + random(i + N * 5) * 200) + (random(i + N * 6) - 0.5) * 150,
+        s1[2] + cz * (150 + random(i + N * 7) * 200) + (random(i + N * 8) - 0.5) * 150
+      ];
+
+      // S3: Understanding (Ordered 10x10x12 grid)
+      const gx = (i % 10) - 4.5;
+      const gy = Math.floor((i / 10)) % 10 - 4.5;
+      const gz = Math.floor(i / 100) - 5.5; // up to 12 deep
+      const s3 = [gx * 45, gy * 45, gz * 45];
+
+      // S4: Rebuilding (Torus)
+      const tu = (i % 60) / 60 * Math.PI * 2;
+      const tv = Math.floor(i / 60) / 20 * Math.PI * 2;
+      const rMaj = 240;
+      const rMin = 70;
+      const s4 = [
+        (rMaj + rMin * Math.cos(tv)) * Math.cos(tu),
+        rMin * Math.sin(tv),
+        (rMaj + rMin * Math.cos(tv)) * Math.sin(tu)
+      ];
+
+      // S5: Exit (Dissolve upward & scatter)
+      const s5 = [
+        s4[0] * 3 + (random(i + N * 9) - 0.5) * 500,
+        s4[1] * 3 - 1500,
+        s4[2] * 3 + (random(i + N * 10) - 0.5) * 500
+      ];
+
+      arr.push({ s0, s1, s2, s3, s4, s5 });
+    }
+    return arr;
+  }, []);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    
+    let animationFrameId: number;
+    let currentProgress = 0;
+
+    const getInterpolatedState = (p: number, particle: { s0: number[], s1: number[], s2: number[], s3: number[], s4: number[], s5: number[] }) => {
+      let sA, sB, ratio;
+      if (p < 0.2) { sA = particle.s0; sB = particle.s1; ratio = p / 0.2; }
+      else if (p < 0.4) { sA = particle.s1; sB = particle.s2; ratio = (p - 0.2) / 0.2; }
+      else if (p < 0.6) { sA = particle.s2; sB = particle.s3; ratio = (p - 0.4) / 0.2; }
+      else if (p < 0.8) { sA = particle.s3; sB = particle.s4; ratio = (p - 0.6) / 0.2; }
+      else { sA = particle.s4; sB = particle.s5; ratio = Math.min(1, Math.max(0, (p - 0.8) / 0.15)); }
+      
+      const ease = ratio < 0.5 ? 4 * ratio * ratio * ratio : 1 - Math.pow(-2 * ratio + 2, 3) / 2;
+      
+      return {
+        x: sA[0] + (sB[0] - sA[0]) * ease,
+        y: sA[1] + (sB[1] - sA[1]) * ease,
+        z: sA[2] + (sB[2] - sA[2]) * ease,
+      };
+    };
+
+    const render = () => {
+      const targetProgress = scrollYProgress.get();
+      currentProgress += (targetProgress - currentProgress) * 0.08;
+
+      const width = canvas.clientWidth;
+      const height = canvas.clientHeight;
+      if (canvas.width !== width || canvas.height !== height) {
+        canvas.width = width;
+        canvas.height = height;
+      }
+
+      ctx.clearRect(0, 0, width, height);
+
+      const globalAlpha = currentProgress > 0.85 ? Math.max(0, 1 - (currentProgress - 0.85) / 0.1) : 1;
+      ctx.globalAlpha = globalAlpha;
+      if (globalAlpha <= 0) {
+        animationFrameId = requestAnimationFrame(render);
+        return;
+      }
+
+      const globalRotY = currentProgress * Math.PI * 3; 
+      const globalRotX = 0.2 + currentProgress * 0.5;
+
+      const projected = [];
+      const fov = 1000;
+
+      for (let i = 0; i < N; i++) {
+        const pt = getInterpolatedState(currentProgress, particles[i]);
+        
+        const cosX = Math.cos(globalRotX), sinX = Math.sin(globalRotX);
+        const y1 = pt.y * cosX - pt.z * sinX;
+        const z1 = pt.y * sinX + pt.z * cosX;
+
+        const cosY = Math.cos(globalRotY), sinY = Math.sin(globalRotY);
+        const x2 = pt.x * cosY + z1 * sinY;
+        const z2 = -pt.x * sinY + z1 * cosY;
+
+        const zFinal = z2 + 1200; 
+        let px = 0, py = 0, scale = 0;
+        if (zFinal > 0) {
+          scale = fov / zFinal;
+          px = width / 2 + x2 * scale;
+          py = height / 2 + y1 * scale;
+        }
+        
+        projected.push({ px, py, scale, z: z2 });
+      }
+
+      const lineOpacity = Math.max(0, 1 - Math.abs(currentProgress - 0.6) * 5);
+      if (lineOpacity > 0.01) {
+        ctx.strokeStyle = `rgba(54, 217, 230, ${lineOpacity * 0.3})`;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        for (let i = 0; i < N; i++) {
+          const p1 = projected[i];
+          if (p1.z < -1000) continue; 
+          const x = i % 10;
+          const y = Math.floor((i / 10)) % 10;
+          const z = Math.floor(i / 100);
+
+          if (x < 9) { const p2 = projected[i + 1]; if(p2) { ctx.moveTo(p1.px, p1.py); ctx.lineTo(p2.px, p2.py); } }
+          if (y < 9) { const p2 = projected[i + 10]; if(p2) { ctx.moveTo(p1.px, p1.py); ctx.lineTo(p2.px, p2.py); } }
+          if (z < 11) { const p2 = projected[i + 100]; if(p2) { ctx.moveTo(p1.px, p1.py); ctx.lineTo(p2.px, p2.py); } }
+        }
+        ctx.stroke();
+      }
+
+      const torusLineOpacity = Math.max(0, 1 - Math.abs(currentProgress - 0.8) * 5);
+      if (torusLineOpacity > 0.01) {
+        ctx.strokeStyle = `rgba(232, 237, 242, ${torusLineOpacity * 0.15})`;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        for (let i = 0; i < N; i++) {
+          const p1 = projected[i];
+          if (p1.z < -1000) continue;
+          const u = i % 60;
+          const v = Math.floor(i / 60);
+
+          const nextU = (u === 59) ? (i - 59) : (i + 1);
+          const p2 = projected[nextU];
+          if (p2) { ctx.moveTo(p1.px, p1.py); ctx.lineTo(p2.px, p2.py); }
+
+          const nextV = (v === 19) ? (i % 60) : (i + 60);
+          const p3 = projected[nextV];
+          if (p3) { ctx.moveTo(p1.px, p1.py); ctx.lineTo(p3.px, p3.py); }
+        }
+        ctx.stroke();
+      }
+
+      const sortedIndices = Array.from({ length: N }, (_, i) => i).sort((a, b) => projected[b].z - projected[a].z);
+      
+      ctx.fillStyle = '#E8EDF2';
+      for (let i = 0; i < N; i++) {
+        const p = projected[sortedIndices[i]];
+        if (p.scale > 0) {
+          ctx.beginPath();
+          ctx.arc(p.px, p.py, 1.5 * p.scale, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      animationFrameId = requestAnimationFrame(render);
+    };
+    
+    render();
+
+    return () => cancelAnimationFrame(animationFrameId);
+  }, [particles, scrollYProgress]);
+
+  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none" />;
 }
 
-function SchematicLines({ scrollYProgress }: { scrollYProgress: MotionValue<number> }) {
-  const opacity = useTransform(scrollYProgress, [0.35, 0.45, 0.55, 0.6], [0, 1, 1, 0]);
-  const pathLength = useTransform(scrollYProgress, [0.35, 0.45], [0, 1]);
-  return (
-    <motion.g style={{ opacity }}>
-      <motion.line x1="-150" y1="-100" x2="0" y2="-100" stroke="#36D9E6" strokeWidth="1" strokeDasharray="4 4" style={{ pathLength }} />
-      <motion.line x1="-150" y1="-100" x2="-150" y2="100" stroke="#36D9E6" strokeWidth="1" strokeDasharray="4 4" style={{ pathLength }} />
-      <motion.line x1="0" y1="-100" x2="0" y2="0" stroke="#36D9E6" strokeWidth="1" strokeDasharray="4 4" style={{ pathLength }} />
-      <motion.line x1="0" y1="0" x2="0" y2="100" stroke="#36D9E6" strokeWidth="1" strokeDasharray="4 4" style={{ pathLength }} />
-      <motion.line x1="0" y1="0" x2="150" y2="-100" stroke="#36D9E6" strokeWidth="1" strokeDasharray="4 4" style={{ pathLength }} />
-      <motion.line x1="150" y1="-100" x2="150" y2="100" stroke="#36D9E6" strokeWidth="1" strokeDasharray="4 4" style={{ pathLength }} />
-      <motion.line x1="0" y1="100" x2="150" y2="100" stroke="#36D9E6" strokeWidth="1" strokeDasharray="4 4" style={{ pathLength }} />
-    </motion.g>
-  );
-}
+function CinematicTypography({ scrollYProgress }: { scrollYProgress: MotionValue<number> }) {
+  const w1Op = useTransform(scrollYProgress, [0.1, 0.2, 0.25, 0.3], [0, 1, 1, 0]);
+  const w2Op = useTransform(scrollYProgress, [0.3, 0.4, 0.45, 0.5], [0, 1, 1, 0]);
+  const w3Op = useTransform(scrollYProgress, [0.5, 0.6, 0.65, 0.7], [0, 1, 1, 0]);
+  const w4Op = useTransform(scrollYProgress, [0.7, 0.8, 0.85, 0.9], [0, 1, 1, 0]);
 
-function RebuiltLines({ scrollYProgress }: { scrollYProgress: MotionValue<number> }) {
-  const opacity = useTransform(scrollYProgress, [0.65, 0.75, 1], [0, 1, 1]);
-  const pathLength = useTransform(scrollYProgress, [0.65, 0.75], [0, 1]);
-  return (
-    <motion.g style={{ opacity }}>
-      <motion.circle cx="0" cy="0" r="100" fill="none" stroke="#69737D" strokeWidth="0.5" style={{ pathLength }} />
-      <motion.line x1="-150" y1="0" x2="150" y2="0" stroke="#69737D" strokeWidth="0.5" strokeDasharray="2 4" style={{ pathLength }} />
-      <motion.line x1="0" y1="-150" x2="0" y2="150" stroke="#69737D" strokeWidth="0.5" strokeDasharray="2 4" style={{ pathLength }} />
-    </motion.g>
-  );
-}
-
-function SystemTypography({ scrollYProgress }: { scrollYProgress: MotionValue<number> }) {
-  const b1Op = useTransform(scrollYProgress, [0, 0.05, 0.15, 0.25], [0, 1, 1, 0]);
-  const b1Y = useTransform(scrollYProgress, [0, 0.05, 0.15, 0.25], [20, 0, 0, -20]);
-
-  const b2Op = useTransform(scrollYProgress, [0.2, 0.25, 0.35, 0.45], [0, 1, 1, 0]);
-  const b2Skew = useTransform(scrollYProgress, [0.25, 0.35], [0, -10]);
-  const b2X = useTransform(scrollYProgress, [0.25, 0.35], [0, 10]);
-  const b2Y = useTransform(scrollYProgress, [0.2, 0.25, 0.35, 0.45], [20, 0, 0, -20]);
-
-  const uOp = useTransform(scrollYProgress, [0.4, 0.45, 0.55, 0.65], [0, 1, 1, 0]);
-  const uY = useTransform(scrollYProgress, [0.4, 0.45, 0.55, 0.65], [20, 0, 0, -20]);
-  const uLs = useTransform(scrollYProgress, [0.4, 0.55], ["0em", "0.2em"]);
-
-  const rOp = useTransform(scrollYProgress, [0.6, 0.7, 0.85, 0.95], [0, 1, 1, 0]);
-  const rY = useTransform(scrollYProgress, [0.6, 0.7, 0.85, 0.95], [20, 0, 0, -20]);
+  const y1 = useTransform(scrollYProgress, [0.1, 0.3], [30, -30]);
+  const y2 = useTransform(scrollYProgress, [0.3, 0.5], [30, -30]);
+  const y3 = useTransform(scrollYProgress, [0.5, 0.7], [30, -30]);
+  const y4 = useTransform(scrollYProgress, [0.7, 0.9], [30, -30]);
 
   return (
     <div className="absolute inset-0 z-20 pointer-events-none flex items-center justify-center mix-blend-difference overflow-hidden">
-      <motion.div className="absolute font-serif text-[12vw] md:text-8xl text-[#E8EDF2] tracking-widest uppercase" style={{ opacity: b1Op, y: b1Y }}>BUILDING</motion.div>
-      <motion.div className="absolute font-serif text-[12vw] md:text-8xl text-[#E8EDF2] tracking-widest uppercase" style={{ opacity: b2Op, y: b2Y, skewX: b2Skew, x: b2X }}>BREAKING</motion.div>
-      <motion.div className="absolute font-serif text-[8vw] md:text-6xl text-[#E8EDF2] uppercase" style={{ opacity: uOp, y: uY, letterSpacing: uLs }}>UNDERSTANDING</motion.div>
-      <motion.div className="absolute font-serif text-[12vw] md:text-8xl text-[#E8EDF2] tracking-widest uppercase" style={{ opacity: rOp, y: rY }}>REBUILDING</motion.div>
+      <motion.div className="absolute font-serif text-[12vw] md:text-8xl text-[#E8EDF2] tracking-widest uppercase" style={{ opacity: w1Op, y: y1 }}>BUILDING</motion.div>
+      <motion.div className="absolute font-serif text-[12vw] md:text-8xl text-[#E8EDF2] tracking-widest uppercase" style={{ opacity: w2Op, y: y2 }}>BREAKING</motion.div>
+      <motion.div className="absolute font-serif text-[8vw] md:text-6xl text-[#E8EDF2] uppercase" style={{ opacity: w3Op, y: y3, letterSpacing: "0.1em" }}>UNDERSTANDING</motion.div>
+      <motion.div className="absolute font-serif text-[12vw] md:text-8xl text-[#E8EDF2] tracking-widest uppercase" style={{ opacity: w4Op, y: y4 }}>REBUILDING</motion.div>
     </div>
   );
 }
 
-// 2. CURIOUS
 function CuriousSection() {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
   
-  const pOp = useTransform(scrollYProgress, [0.9, 0.95, 1], [0, 1, 1]);
-  const pY = useTransform(scrollYProgress, [0.9, 1], [50, 0]);
+  const pOp = useTransform(scrollYProgress, [0.93, 0.98], [0, 1]);
+  const pY = useTransform(scrollYProgress, [0.93, 0.98], [40, 0]);
 
   return (
-    <section ref={ref} className="h-[500vh] relative z-20 bg-[#0B0E12]">
-      <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden">
+    <section ref={ref} className="h-[600vh] relative z-20 bg-[#0B0E12]">
+      <div className="sticky top-0 h-screen w-full flex flex-col items-center justify-center overflow-hidden">
         
-        <svg viewBox="-400 -300 800 600" className="w-full h-full max-w-5xl opacity-90 absolute inset-0 m-auto z-10">
-          <SchematicLines scrollYProgress={scrollYProgress} />
-          <RebuiltLines scrollYProgress={scrollYProgress} />
-          {shapesData.map((config, i) => (
-            <ShapeSystem key={i} config={config} scrollYProgress={scrollYProgress} />
-          ))}
-        </svg>
-
-        <SystemTypography scrollYProgress={scrollYProgress} />
+        <WorldCanvas scrollYProgress={scrollYProgress} />
+        <CinematicTypography scrollYProgress={scrollYProgress} />
         
         <motion.div 
-          className="absolute z-30 max-w-2xl text-center px-6 bottom-[10vh]"
+          className="absolute z-30 max-w-2xl text-center px-6"
           style={{ opacity: pOp, y: pY }}
         >
           <p className="font-sans text-xl md:text-3xl leading-relaxed text-[#69737D] font-light">
-            My curiosity lies at the intersection of <span className="text-[#E8EDF2]">software architecture</span>, 
-            <span className="text-[#36D9E6]">security</span>, and <span className="text-[#E8EDF2]">intelligent systems</span>. I 
-            am obsessed with understanding how complex things work—and how they fail.
+            I’ve always been curious about what happens beneath the surface. How things work, why they fail, and what you can build once you understand them.
           </p>
         </motion.div>
         

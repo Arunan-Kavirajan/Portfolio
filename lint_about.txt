@@ -4,9 +4,7 @@
 
 
 C:\Users\aruna\Projects\portfolio\app\about\page.tsx
-  229:51  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  267:46  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  283:44  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  241:56  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
 
 C:\Users\aruna\Projects\portfolio\app\projects\[id]\page.tsx
   43:9  warning  'params' is assigned a value but never used  @typescript-eslint/no-unused-vars
@@ -134,5 +132,5 @@ C:\Users\aruna\Projects\portfolio\lib\hooks\useReducedMotion.ts:10:5
   12 |     const handler = (e: MediaQueryListEvent) => setPrefersReduced(e.matches);
   13 |     query.addEventListener("change", handler);  react-hooks/set-state-in-effect
 
-✖ 25 problems (21 errors, 4 warnings)
+✖ 23 problems (19 errors, 4 warnings)
 
