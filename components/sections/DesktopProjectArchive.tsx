@@ -166,7 +166,7 @@ export default function DesktopProjectArchive() {
       
       {/* HUGE EDITORIAL TYPOGRAPHY */}
       <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 font-serif text-[20vw] leading-none text-[#E8EDF2] opacity-[0.015] pointer-events-none whitespace-nowrap select-none tracking-tighter z-0">
-        WORK
+        PROJECTS
       </div>
 
       {/* Layer 1: Grain texture */}
