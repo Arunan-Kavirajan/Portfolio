@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import ProjectField from "@/components/visuals/ProjectField";
 
 // Minimal Data Template
 const MOCK_DATA = {
@@ -66,11 +67,12 @@ export default function ProjectArchiveEditorial() {
         </div>
       </motion.div>
 
-      {/* 1. PROJECT HERO */}
-      <div className="max-w-[1400px] mx-auto px-6 md:px-12 mb-40">
+      {/* 1. PROJECT HERO (Asymmetric) */}
+      <div className="max-w-[1400px] mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-12 gap-20 lg:gap-8 mb-40">
         
+        {/* Left 45%: Typography & Metadata */}
         <motion.div 
-          className="max-w-4xl flex flex-col justify-center"
+          className="lg:col-span-5 flex flex-col justify-center"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
@@ -110,6 +112,16 @@ export default function ProjectArchiveEditorial() {
               </Link>
             ))}
           </div>
+        </motion.div>
+
+        {/* Right 55%: Visual Integration */}
+        <motion.div 
+          className="lg:col-span-7 flex items-center justify-center lg:justify-end"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 0.4 }}
+        >
+          <ProjectField projectId={MOCK_DATA.id} />
         </motion.div>
 
       </div>
