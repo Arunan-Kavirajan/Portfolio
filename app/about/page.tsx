@@ -63,17 +63,17 @@ function CuriousSection() {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
   
-  const w1 = useTransform(scrollYProgress, [0, 0.15, 0.25], [0, 1, 0]);
+  const w1 = useTransform(scrollYProgress, [0, 0.05, 0.25], [0, 1, 0]);
   const w2 = useTransform(scrollYProgress, [0.2, 0.35, 0.45], [0, 1, 0]);
   const w3 = useTransform(scrollYProgress, [0.4, 0.55, 0.65], [0, 1, 0]);
   const w4 = useTransform(scrollYProgress, [0.6, 0.75, 0.85], [0, 1, 0]);
   const pOp = useTransform(scrollYProgress, [0.8, 0.9, 1], [0, 1, 1]);
   const pY = useTransform(scrollYProgress, [0.8, 1], [50, 0]);
   
-  const y1 = useTransform(scrollYProgress, [0, 0.25], [100, -100]);
-  const y2 = useTransform(scrollYProgress, [0.2, 0.45], [100, -100]);
-  const y3 = useTransform(scrollYProgress, [0.4, 0.65], [100, -100]);
-  const y4 = useTransform(scrollYProgress, [0.6, 0.85], [100, -100]);
+  const y1 = useTransform(scrollYProgress, [0, 0.25], [50, -100]);
+  const y2 = useTransform(scrollYProgress, [0.2, 0.45], [50, -100]);
+  const y3 = useTransform(scrollYProgress, [0.4, 0.65], [50, -100]);
+  const y4 = useTransform(scrollYProgress, [0.6, 0.85], [50, -100]);
   
   const letterSpacing1 = useTransform(scrollYProgress, [0, 0.25], ["-0.05em", "0.2em"]);
   
@@ -173,12 +173,12 @@ function WhatIBuild() {
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
   
   // P1: 0 -> 0.4, P2: 0.5 -> 1.0
-  const p1Op = useTransform(scrollYProgress, [0, 0.1, 0.4, 0.5], [0, 1, 1, 0]);
-  const p1Y = useTransform(scrollYProgress, [0, 0.1, 0.4, 0.5], [100, 0, 0, -100]);
+  const p1Op = useTransform(scrollYProgress, [0, 0.05, 0.4, 0.5], [0, 1, 1, 0]);
+  const p1Y = useTransform(scrollYProgress, [0, 0.05, 0.4, 0.5], [50, 0, 0, -50]);
   const p1Scale = useTransform(scrollYProgress, [0, 0.4], [0.9, 1.05]);
 
-  const p2Op = useTransform(scrollYProgress, [0.5, 0.6, 0.9, 1], [0, 1, 1, 0]);
-  const p2Y = useTransform(scrollYProgress, [0.5, 0.6, 0.9, 1], [100, 0, 0, -100]);
+  const p2Op = useTransform(scrollYProgress, [0.5, 0.55, 0.9, 1], [0, 1, 1, 0]);
+  const p2Y = useTransform(scrollYProgress, [0.5, 0.55, 0.9, 1], [50, 0, 0, -50]);
   const p2Scale = useTransform(scrollYProgress, [0.5, 1], [0.9, 1.05]);
 
   return (
@@ -347,7 +347,7 @@ function FinalTransition() {
 
 export default function AboutPage() {
   return (
-    <main className="bg-[#0B0E12] text-[#E8EDF2] selection:bg-[#36D9E6]/30 overflow-hidden">
+    <main className="bg-[#0B0E12] text-[#E8EDF2] selection:bg-[#36D9E6]/30 overflow-x-hidden">
       <HeroSection />
       <CuriousSection />
       <MindVisual />
