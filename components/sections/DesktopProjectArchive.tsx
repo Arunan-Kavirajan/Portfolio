@@ -160,7 +160,7 @@ export default function DesktopProjectArchive() {
   }, [mouseX, mouseY]);
 
   return (
-    <main className="fixed inset-0 w-[100vw] h-[100vh] bg-[#0B0E12] overflow-hidden selection:bg-[#36D9E6]/30">
+    <main className="fixed inset-0 w-[100vw] h-[100vh] bg-[#0B0E12] overflow-hidden selection:bg-[#36D9E6]/30 cursor-none">
       
       {/* BACKGROUND ENVIRONMENT - Layered, Restrained, Technical */}
       
@@ -187,6 +187,8 @@ export default function DesktopProjectArchive() {
         />
       ))}
       
+      {/* CUSTOM CURSOR */}
+      <CustomCursor mouseX={mouseX} mouseY={mouseY} hoveredId={hoveredId} />
     </main>
   );
 }
@@ -537,11 +539,14 @@ function ProjectNode({ project, mouseX, mouseY, hoveredId, setHoveredId }: any) 
               {project.description}
             </p>
             
-            {/* Click to Navigate instruction (Non-interactive visual only, parent div handles click) */}
-            <div className="group font-mono text-[9px] text-[#36D9E6] tracking-[0.2em] flex items-center mt-2 pointer-events-none">
-              {isRightHalf && <span className="mr-3 transition-transform">←</span>}
+            {/* Click to Navigate instruction */}
+            <div 
+              className="group font-mono text-[9px] text-[#36D9E6] hover:text-[#E8EDF2] tracking-[0.2em] flex items-center mt-2 pointer-events-auto cursor-pointer transition-colors"
+              onClick={(e) => { e.stopPropagation(); handleClick(); }}
+            >
+              {isRightHalf && <span className="mr-3 group-hover:-translate-x-1 transition-transform">←</span>}
               ACCESS ARCHIVE 
-              {!isRightHalf && <span className="ml-3 transition-transform">→</span>}
+              {!isRightHalf && <span className="ml-3 group-hover:translate-x-1 transition-transform">→</span>}
             </div>
           </motion.div>
         )}
@@ -632,5 +637,55 @@ function TechNode({ tech, awakened, delay, mouseX, mouseY, parentX, parentY }: a
       <span className="text-[#36D9E6] text-[8px]">◇</span>
       {tech.name}
     </motion.div>
+  );
+}
+
+// --- MULTI-LAYER CURSOR ---
+function CustomCursor({ mouseX, mouseY, hoveredId }: { mouseX: any, mouseY: any, hoveredId: string | null }) {
+  const smoothX = useSpring(mouseX, { stiffness: 1000, damping: 40 });
+  const smoothY = useSpring(mouseY, { stiffness: 1000, damping: 40 });
+  
+  const outerX = useSpring(mouseX, { stiffness: 150, damping: 25 });
+  const outerY = useSpring(mouseY, { stiffness: 150, damping: 25 });
+
+  const isHoveringProject = hoveredId !== null;
+  const [isProximate, setIsProximate] = useState(false);
+
+  useAnimationFrame(() => {
+    const mx = mouseX.get();
+    const my = mouseY.get();
+    
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    
+    let minDist = 1000;
+    PROJECTS.forEach(p => {
+      const px = (p.x / 100) * w;
+      const py = (p.y / 100) * h;
+      const dist = Math.sqrt(Math.pow(mx - px, 2) + Math.pow(my - py, 2));
+      if (dist < minDist) minDist = dist;
+    });
+
+    setIsProximate(minDist < 280);
+  });
+
+  return (
+    <>
+      <motion.div 
+        className="fixed top-0 left-0 w-[3px] h-[3px] bg-[#E8EDF2] rounded-full pointer-events-none z-[100]"
+        style={{ x: smoothX, y: smoothY, translateX: "-50%", translateY: "-50%" }}
+      />
+      <motion.div
+        className="fixed top-0 left-0 rounded-full pointer-events-none z-[100]"
+        style={{ x: outerX, y: outerY, translateX: "-50%", translateY: "-50%" }}
+        animate={{
+          width: isHoveringProject ? 48 : isProximate ? 32 : 0,
+          height: isHoveringProject ? 48 : isProximate ? 32 : 0,
+          opacity: isHoveringProject ? 0.8 : isProximate ? 0.3 : 0,
+          border: isHoveringProject ? "1px solid rgba(54, 217, 230, 0.6)" : "1px solid #36D9E6",
+        }}
+        transition={{ duration: 0.3, ease: "easeOut" }}
+      />
+    </>
   );
 }
