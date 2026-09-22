@@ -28,9 +28,9 @@ const PROJECTS: Project[] = [
     inDevelopment: true,
     tech: [
       { name: "NEXT.JS", x: 0, y: -120 },
-      { name: "TYPESCRIPT", x: 140, y: -30 },
-      { name: "GITHUB API", x: 60, y: 120 },
-      { name: "TAILWIND CSS", x: -130, y: 30 },
+      { name: "TYPESCRIPT", x: 140, y: -40 },
+      { name: "GITHUB API", x: 150, y: 50 },
+      { name: "TAILWIND CSS", x: -130, y: -20 },
     ]
   },
   {
@@ -42,10 +42,10 @@ const PROJECTS: Project[] = [
     x: 55, y: 25,
     tech: [
       { name: "REACT", x: 0, y: -100 },
-      { name: "FRAMER MOTION", x: 160, y: 0 },
-      { name: "SUPABASE", x: 60, y: 100 },
-      { name: "POSTGRESQL", x: -140, y: -20 },
-      { name: "VITE", x: -80, y: 80 },
+      { name: "FRAMER MOTION", x: 140, y: -10 },
+      { name: "SUPABASE", x: -140, y: -20 },
+      { name: "POSTGRESQL", x: 120, y: -70 },
+      { name: "VITE", x: -110, y: -80 },
     ]
   },
   {
@@ -58,8 +58,8 @@ const PROJECTS: Project[] = [
     tech: [
       { name: "REACT", x: -120, y: -70 },
       { name: "VITE", x: 110, y: -60 },
-      { name: "PDF-LIB", x: 90, y: 90 },
-      { name: "TYPESCRIPT", x: -100, y: 80 },
+      { name: "PDF-LIB", x: 140, y: -10 },
+      { name: "TYPESCRIPT", x: -140, y: 0 },
     ]
   },
   {
@@ -71,10 +71,10 @@ const PROJECTS: Project[] = [
     x: 15, y: 75,
     inDevelopment: true,
     tech: [
-      { name: "FASTAPI", x: 0, y: -100 },
-      { name: "PYTHON", x: 120, y: 20 },
-      { name: "REACT", x: -120, y: 40 },
-      { name: "FRAMER MOTION", x: 0, y: 100 },
+      { name: "FASTAPI", x: 0, y: -110 },
+      { name: "PYTHON", x: 120, y: -30 },
+      { name: "REACT", x: -120, y: -40 },
+      { name: "FRAMER MOTION", x: -70, y: -90 },
     ]
   },
   {
@@ -87,8 +87,8 @@ const PROJECTS: Project[] = [
     tech: [
       { name: "FLUTTER", x: -110, y: -60 },
       { name: "DART", x: 120, y: -40 },
-      { name: "SQLITE", x: 80, y: 100 },
-      { name: "BLUETOOTH ESC/POS", x: -90, y: 90 },
+      { name: "SQLITE", x: 140, y: 20 },
+      { name: "BLUETOOTH ESC/POS", x: -150, y: 10 },
     ]
   },
   {
@@ -101,8 +101,8 @@ const PROJECTS: Project[] = [
     tech: [
       { name: "NEXT.JS", x: 0, y: -100 },
       { name: "FIREBASE", x: 130, y: -30 },
-      { name: "FRAMER MOTION", x: -110, y: 40 },
-      { name: "TAILWIND CSS", x: 80, y: 90 },
+      { name: "FRAMER MOTION", x: -110, y: -40 },
+      { name: "TAILWIND CSS", x: -60, y: -90 },
     ]
   },
   {
@@ -115,8 +115,8 @@ const PROJECTS: Project[] = [
     tech: [
       { name: "REACT", x: -100, y: -80 },
       { name: "DEXIE.JS", x: 140, y: -20 },
-      { name: "FIREBASE", x: 60, y: 100 },
-      { name: "TYPESCRIPT", x: -130, y: 40 },
+      { name: "FIREBASE", x: 60, y: -110 },
+      { name: "TYPESCRIPT", x: -130, y: 10 },
     ]
   },
   {
@@ -129,9 +129,9 @@ const PROJECTS: Project[] = [
     inDevelopment: true,
     tech: [
       { name: "REACT", x: 0, y: -110 },
-      { name: "FIREBASE", x: 140, y: 0 },
-      { name: "FRAMER MOTION", x: 80, y: 100 },
-      { name: "VITE", x: -120, y: -20 },
+      { name: "FIREBASE", x: 140, y: -10 },
+      { name: "FRAMER MOTION", x: -140, y: 0 },
+      { name: "VITE", x: -120, y: -60 },
     ]
   }
 ];
@@ -317,7 +317,7 @@ function ProjectNode({ project, mouseX, mouseY, hoveredId, setHoveredId, onSelec
           <div className="flex items-center gap-2 mb-1">
             <motion.span layoutId={`proj-num-${project.id}`} className="font-mono text-[9px] text-[#36D9E6] tracking-widest">{project.number}</motion.span>
             {project.inDevelopment && (
-              <span className="font-mono text-[7px] text-[#69737D] border border-[#69737D]/40 px-1 py-[1px] tracking-widest rounded-sm">IN DEV</span>
+              <span className="font-mono text-[8px] text-[#36D9E6] border border-[#36D9E6]/50 bg-[#36D9E6]/10 px-1.5 py-[2px] tracking-[0.15em] rounded-[2px]">IN DEV</span>
             )}
           </div>
           <motion.span layoutId={`proj-title-${project.id}`} className="font-serif text-sm tracking-widest text-[#E8EDF2] whitespace-nowrap">{project.title}</motion.span>
@@ -441,7 +441,7 @@ function ProjectDetails({ project, onClose }: any) {
                 className="w-[3px] h-[3px] bg-[#36D9E6] rounded-full" 
               />
               {project.inDevelopment && (
-                 <span className="font-mono text-[10px] text-[#69737D] border border-[#69737D]/30 px-2 py-1 tracking-[0.2em] rounded-sm">IN DEVELOPMENT</span>
+                 <span className="font-mono text-[10px] text-[#0B0E12] bg-[#36D9E6] px-2 py-1 tracking-[0.2em] rounded-sm font-bold">IN DEVELOPMENT</span>
               )}
             </div>
             <motion.span layoutId={`proj-num-${project.id}`} className="block font-mono text-sm text-[#36D9E6] tracking-widest mb-4">
