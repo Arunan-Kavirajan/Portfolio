@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, useMotionValue, useAnimationFrame, useSpring, AnimatePresence, useMotionTemplate, useTransform } from "framer-motion";
+import { motion, useMotionValue, useAnimationFrame, useSpring, AnimatePresence, useMotionTemplate } from "framer-motion";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 // --- TYPES ---
 type TechNode = { name: string; x: number; y: number };
@@ -20,6 +21,7 @@ type Project = {
 };
 
 // --- DATA ---
+// Adjusted tech node coordinates to ensure they NEVER overflow the viewport based on their anchor positions.
 const PROJECTS: Project[] = [
   {
     id: "koda",
@@ -27,14 +29,14 @@ const PROJECTS: Project[] = [
     title: "KODA",
     subtitle: "CODEBASE DETECTIVE",
     description: "An agentic system for understanding and navigating unfamiliar codebases. Ingests repositories and maps file structures.",
-    x: 20, y: 30,
+    x: 20, y: 30, // Top Left
     inDevelopment: true,
     primary: true,
     tech: [
-      { name: "NEXT.JS", x: 0, y: -100 },
-      { name: "TYPESCRIPT", x: 120, y: -30 },
-      { name: "GITHUB API", x: 100, y: 70 },
-      { name: "TAILWIND CSS", x: -110, y: 40 },
+      { name: "NEXT.JS", x: 140, y: 20 },
+      { name: "TYPESCRIPT", x: 80, y: 120 },
+      { name: "GITHUB API", x: -20, y: 140 },
+      { name: "TAILWIND CSS", x: 160, y: 80 },
     ]
   },
   {
@@ -43,12 +45,12 @@ const PROJECTS: Project[] = [
     title: "ECHOES",
     subtitle: "DRIFTING MESSAGES",
     description: "A public, anonymous message board where notes become part of a permanent, shared time capsule. No accounts, no algorithms.",
-    x: 55, y: 25,
+    x: 55, y: 25, // Top Center
     tech: [
-      { name: "REACT", x: 0, y: -80 },
-      { name: "FRAMER MOTION", x: 110, y: -10 },
-      { name: "SUPABASE", x: -100, y: 30 },
-      { name: "POSTGRESQL", x: 80, y: 60 },
+      { name: "REACT", x: -140, y: 40 },
+      { name: "FRAMER MOTION", x: 140, y: 30 },
+      { name: "SUPABASE", x: -80, y: 120 },
+      { name: "POSTGRESQL", x: 80, y: 100 },
     ]
   },
   {
@@ -57,13 +59,13 @@ const PROJECTS: Project[] = [
     title: "CERTIVA",
     subtitle: "CERTIFICATE AUTOMATION",
     description: "A browser-based certificate platform built to instantly map spreadsheet data onto PDF templates and generate personalized certificates in bulk.",
-    x: 85, y: 45,
+    x: 85, y: 45, // Right Center
     primary: true,
     tech: [
-      { name: "REACT", x: -100, y: -60 },
-      { name: "VITE", x: 80, y: -70 },
-      { name: "PDF-LIB", x: 110, y: 20 },
-      { name: "TYPESCRIPT", x: -90, y: 50 },
+      { name: "REACT", x: -140, y: -60 },
+      { name: "VITE", x: -160, y: 20 },
+      { name: "PDF-LIB", x: -120, y: 100 },
+      { name: "TYPESCRIPT", x: -80, y: 150 },
     ]
   },
   {
@@ -72,13 +74,13 @@ const PROJECTS: Project[] = [
     title: "ALGORITHM LABORATORY",
     subtitle: "VISUALIZATION ENGINE",
     description: "An interactive, physics-driven visualization laboratory for algorithms and data structures, featuring dynamic frontends.",
-    x: 15, y: 75,
+    x: 15, y: 75, // Bottom Left
     inDevelopment: true,
     tech: [
-      { name: "FASTAPI", x: 0, y: -90 },
-      { name: "PYTHON", x: 100, y: -20 },
-      { name: "REACT", x: -100, y: -10 },
-      { name: "FRAMER MOTION", x: -50, y: -80 },
+      { name: "FASTAPI", x: 140, y: -100 },
+      { name: "PYTHON", x: 80, y: -150 },
+      { name: "REACT", x: 160, y: -30 },
+      { name: "FRAMER MOTION", x: 20, y: -120 },
     ]
   },
   {
@@ -87,12 +89,12 @@ const PROJECTS: Project[] = [
     title: "ANDROID BILLING APP",
     subtitle: "RETAIL POS SYSTEM",
     description: "A Flutter-based billing and order management app built for small food stalls, handling the full lifecycle with Bluetooth printing.",
-    x: 40, y: 85,
+    x: 40, y: 85, // Bottom Center
     tech: [
-      { name: "FLUTTER", x: -90, y: -50 },
-      { name: "DART", x: 100, y: -30 },
-      { name: "SQLITE", x: 90, y: 40 },
-      { name: "ESC/POS", x: -110, y: 20 },
+      { name: "FLUTTER", x: -120, y: -100 },
+      { name: "DART", x: 120, y: -120 },
+      { name: "SQLITE", x: -60, y: -150 },
+      { name: "ESC/POS", x: 60, y: -160 },
     ]
   },
   {
@@ -101,12 +103,12 @@ const PROJECTS: Project[] = [
     title: "CHAT CLUB WEBSITE",
     subtitle: "OFFICIAL PLATFORM",
     description: "The official platform for the Computer Hardware and AI Technology (CHAT) Club, featuring dynamic event management.",
-    x: 75, y: 15,
+    x: 75, y: 15, // Top Right
     tech: [
-      { name: "NEXT.JS", x: 0, y: -80 },
-      { name: "FIREBASE", x: 100, y: -20 },
-      { name: "FRAMER MOTION", x: -90, y: 30 },
-      { name: "TAILWIND CSS", x: 60, y: 70 },
+      { name: "NEXT.JS", x: -160, y: 20 },
+      { name: "FIREBASE", x: -120, y: 80 },
+      { name: "FRAMER MOTION", x: -80, y: 140 },
+      { name: "TAILWIND CSS", x: -20, y: 120 },
     ]
   },
   {
@@ -115,12 +117,12 @@ const PROJECTS: Project[] = [
     title: "PALLAVAN MES",
     subtitle: "OFFLINE-FIRST MES",
     description: "An enterprise-grade Manufacturing Execution System designed for factory floors, featuring a rigorous offline-first architecture.",
-    x: 85, y: 80,
+    x: 85, y: 80, // Bottom Right
     tech: [
-      { name: "REACT", x: -80, y: -70 },
-      { name: "DEXIE.JS", x: 110, y: -10 },
-      { name: "FIREBASE", x: 50, y: -90 },
-      { name: "TYPESCRIPT", x: -100, y: 20 },
+      { name: "REACT", x: -150, y: -40 },
+      { name: "DEXIE.JS", x: -120, y: -100 },
+      { name: "FIREBASE", x: -80, y: -150 },
+      { name: "TYPESCRIPT", x: -40, y: -120 },
     ]
   },
   {
@@ -129,14 +131,14 @@ const PROJECTS: Project[] = [
     title: "ASCEND",
     subtitle: "GAMIFIED PRODUCTIVITY",
     description: "A gamified productivity and study session platform featuring active focus tracking, study cohorts, leaderboards, and a store.",
-    x: 55, y: 60,
+    x: 55, y: 60, // Center
     inDevelopment: true,
     primary: true,
     tech: [
-      { name: "REACT", x: 0, y: -100 },
-      { name: "FIREBASE", x: 110, y: -20 },
-      { name: "FRAMER MOTION", x: -110, y: 10 },
-      { name: "VITE", x: -80, y: -70 },
+      { name: "REACT", x: -160, y: -60 },
+      { name: "FIREBASE", x: 140, y: -100 },
+      { name: "FRAMER MOTION", x: -120, y: -120 },
+      { name: "VITE", x: 160, y: -40 },
     ]
   }
 ];
@@ -144,7 +146,9 @@ const PROJECTS: Project[] = [
 export default function DesktopProjectArchive() {
   const mouseX = useMotionValue(-1000);
   const mouseY = useMotionValue(-1000);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  
+  // Track globally which project is hovered so others can dim
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -155,51 +159,35 @@ export default function DesktopProjectArchive() {
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, [mouseX, mouseY]);
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setSelectedId(null);
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
-
   return (
-    <main 
-      className="fixed inset-0 w-[100vw] h-[100vh] bg-[#0B0E12] overflow-hidden cursor-none selection:bg-[#36D9E6]/30"
-      onClick={(e) => {
-        if ((e.target as HTMLElement).tagName === 'MAIN') {
-          setSelectedId(null);
-        }
-      }}
-    >
-      {/* BACKGROUND ENVIRONMENT */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(54,217,230,0.03)_0%,transparent_60%)] pointer-events-none" />
-      <div className="absolute inset-0 opacity-[0.12] mix-blend-overlay pointer-events-none" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
+    <main className="fixed inset-0 w-[100vw] h-[100vh] bg-[#0B0E12] overflow-hidden selection:bg-[#36D9E6]/30 cursor-none">
+      
+      {/* BACKGROUND ENVIRONMENT - Layered, Restrained, Technical */}
+      {/* Layer 1: Grain texture */}
+      <div className="absolute inset-0 opacity-[0.15] mix-blend-overlay pointer-events-none" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
 
-      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 font-serif text-[20vw] leading-none text-[#E8EDF2] opacity-[0.015] pointer-events-none whitespace-nowrap select-none tracking-tighter">
-        WORK
-      </div>
+      {/* Layer 2: Environment Constellations & Technical Markers */}
+      <TechnicalEnvironment mouseX={mouseX} mouseY={hoveredId} />
 
-      <ConstellationEnvironment mouseX={mouseX} mouseY={mouseY} selectedId={selectedId} />
-
+      {/* PROJECT FIELD */}
       {PROJECTS.map((proj) => (
         <ProjectNode 
           key={proj.id} 
           project={proj} 
           mouseX={mouseX} 
           mouseY={mouseY}
-          selectedId={selectedId}
-          onSelect={() => setSelectedId(selectedId === proj.id ? null : proj.id)}
+          hoveredId={hoveredId}
+          setHoveredId={setHoveredId}
         />
       ))}
-
+      
       <CustomCursor mouseX={mouseX} mouseY={mouseY} />
     </main>
   );
 }
 
 // --- CONSTANT BACKGROUND ECOSYSTEM ---
-function ConstellationEnvironment({ mouseX, mouseY, selectedId }: { mouseX: any, mouseY: any, selectedId: string | null }) {
+function TechnicalEnvironment({ mouseX, mouseY, hoveredId }: { mouseX: any, mouseY: any, hoveredId: string | null }) {
   const [size, setSize] = useState({ w: 0, h: 0 });
   
   useEffect(() => {
@@ -214,36 +202,39 @@ function ConstellationEnvironment({ mouseX, mouseY, selectedId }: { mouseX: any,
   return (
     <motion.div 
       className="absolute inset-0 pointer-events-none"
-      animate={{ opacity: selectedId ? 0.3 : 1, filter: selectedId ? "blur(4px)" : "blur(0px)" }}
+      animate={{ opacity: hoveredId ? 0.3 : 1, filter: hoveredId ? "blur(2px)" : "blur(0px)" }}
       transition={{ duration: 0.8 }}
     >
       <svg className="absolute inset-0 w-full h-full">
-        <path d={`M ${size.w*0.2} ${size.h*0.3} C ${size.w*0.3} ${size.h*0.1} ${size.w*0.5} ${size.h*0.2} ${size.w*0.55} ${size.h*0.25}`} stroke="#69737D" strokeWidth={0.5} fill="none" opacity={0.15} />
+        {/* Subtle coordinate arcs and routing lines */}
+        <path d={`M ${size.w*0.2} ${size.h*0.3} Q ${size.w*0.4} ${size.h*0.1} ${size.w*0.55} ${size.h*0.25}`} stroke="#69737D" strokeWidth={0.5} fill="none" opacity={0.15} />
         <path d={`M ${size.w*0.55} ${size.h*0.6} C ${size.w*0.7} ${size.h*0.7} ${size.w*0.8} ${size.h*0.6} ${size.w*0.85} ${size.h*0.45}`} stroke="#69737D" strokeWidth={0.5} fill="none" opacity={0.1} />
         <path d={`M ${size.w*0.15} ${size.h*0.75} C ${size.w*0.1} ${size.h*0.9} ${size.w*0.3} ${size.h*0.9} ${size.w*0.4} ${size.h*0.85}`} stroke="#36D9E6" strokeWidth={0.5} fill="none" opacity={0.05} />
         
-        <circle cx={size.w*0.5} cy={size.h*0.5} r={size.w*0.3} stroke="#69737D" strokeWidth={0.5} fill="none" opacity={0.03} strokeDasharray="4 8" />
-        <circle cx={size.w*0.5} cy={size.h*0.5} r={size.w*0.4} stroke="#69737D" strokeWidth={0.5} fill="none" opacity={0.02} />
+        {/* Geographic / Technical grid lines */}
+        <line x1={size.w*0.5} y1="0" x2={size.w*0.5} y2={size.h} stroke="#69737D" strokeWidth={0.5} opacity={0.03} strokeDasharray="4 8" />
+        <line x1="0" y1={size.h*0.5} x2={size.w} y2={size.h*0.5} stroke="#69737D" strokeWidth={0.5} opacity={0.03} strokeDasharray="4 8" />
       </svg>
       
-      <AtmosphericMarker x={15} y={20} mouseX={mouseX} mouseY={mouseY} />
+      {/* Ambient technical markers instead of generic stars */}
+      <AtmosphericMarker x={15} y={20} mouseX={mouseX} mouseY={mouseY} label="SYS.01" />
       <AtmosphericMarker x={85} y={15} mouseX={mouseX} mouseY={mouseY} type="bracket" />
       <AtmosphericMarker x={75} y={75} mouseX={mouseX} mouseY={mouseY} type="cross" />
-      <AtmosphericMarker x={25} y={85} mouseX={mouseX} mouseY={mouseY} />
-      <AtmosphericMarker x={50} y={10} mouseX={mouseX} mouseY={mouseY} type="dot" />
-      <AtmosphericMarker x={90} y={50} mouseX={mouseX} mouseY={mouseY} type="dot" />
+      <AtmosphericMarker x={25} y={85} mouseX={mouseX} mouseY={mouseY} label="LAT.22" />
+      <AtmosphericMarker x={50} y={10} mouseX={mouseX} mouseY={mouseY} type="cross" />
+      <AtmosphericMarker x={90} y={50} mouseX={mouseX} mouseY={mouseY} type="bracket" />
       <AtmosphericMarker x={10} y={50} mouseX={mouseX} mouseY={mouseY} type="cross" />
       <AtmosphericMarker x={50} y={90} mouseX={mouseX} mouseY={mouseY} type="bracket" />
     </motion.div>
   );
 }
 
-function AtmosphericMarker({ x, y, type = "line", mouseX, mouseY }: any) {
+function AtmosphericMarker({ x, y, type = "text", label, mouseX, mouseY }: any) {
   const ref = useRef<HTMLDivElement>(null);
   const cx = useMotionValue(0);
   const cy = useMotionValue(0);
-  const driftX = useSpring(0, { stiffness: 20, damping: 20 });
-  const driftY = useSpring(0, { stiffness: 20, damping: 20 });
+  const driftX = useSpring(0, { stiffness: 30, damping: 25 });
+  const driftY = useSpring(0, { stiffness: 30, damping: 25 });
 
   useEffect(() => {
     const measure = () => {
@@ -263,6 +254,7 @@ function AtmosphericMarker({ x, y, type = "line", mouseX, mouseY }: any) {
     const dy = mouseY.get() - cy.get();
     const dist = Math.sqrt(dx * dx + dy * dy);
     
+    // Magnetic distortion of background elements
     if (dist < 300) {
       const pull = Math.pow((300 - dist) / 300, 2);
       driftX.set((dx / dist) * 15 * pull);
@@ -276,10 +268,10 @@ function AtmosphericMarker({ x, y, type = "line", mouseX, mouseY }: any) {
   return (
     <motion.div 
       ref={ref}
-      className="absolute flex items-center justify-center opacity-20"
+      className="absolute flex items-center justify-center opacity-20 pointer-events-none"
       style={{ left: `${x}%`, top: `${y}%`, x: driftX, y: driftY }}
     >
-      {type === "line" && <div className="w-8 h-[1px] bg-[#69737D]" />}
+      {type === "text" && <div className="font-mono text-[8px] text-[#69737D] tracking-widest">{label || "+"}</div>}
       {type === "bracket" && <div className="font-mono text-[8px] text-[#69737D] tracking-widest">[ ]</div>}
       {type === "cross" && (
         <div className="relative w-3 h-3">
@@ -287,26 +279,28 @@ function AtmosphericMarker({ x, y, type = "line", mouseX, mouseY }: any) {
           <div className="absolute left-1/2 top-0 h-full w-[1px] bg-[#69737D] -translate-x-1/2" />
         </div>
       )}
-      {type === "dot" && <div className="w-[2px] h-[2px] bg-[#E8EDF2] rounded-full blur-[1px]" />}
     </motion.div>
   );
 }
 
 // --- PROJECT NODE ---
-function ProjectNode({ project, mouseX, mouseY, selectedId, onSelect }: any) {
+function ProjectNode({ project, mouseX, mouseY, hoveredId, setHoveredId }: any) {
+  const router = useRouter();
   const nodeRef = useRef<HTMLDivElement>(null);
   
   const centerX = useMotionValue(0);
   const centerY = useMotionValue(0);
   
-  const isSelected = selectedId === project.id;
-  const isOtherSelected = selectedId !== null && selectedId !== project.id;
+  const isHovered = hoveredId === project.id;
+  const isOtherHovered = hoveredId !== null && hoveredId !== project.id;
+  
+  // Staggered animation triggers
+  const [stage, setStage] = useState(0);
 
+  // Physics
   const distance = useMotionValue(1000);
-  const driftX = useSpring(0, { stiffness: 50, damping: 15, mass: 0.8 });
-  const driftY = useSpring(0, { stiffness: 50, damping: 15, mass: 0.8 });
-  const ringScale = useSpring(1, { stiffness: 100, damping: 20 });
-  const beaconOpacity = useSpring(0.3, { stiffness: 100, damping: 20 });
+  const driftX = useSpring(0, { stiffness: 40, damping: 12, mass: 0.8 });
+  const driftY = useSpring(0, { stiffness: 40, damping: 12, mass: 0.8 });
   
   useEffect(() => {
     const updateCenter = () => {
@@ -335,114 +329,144 @@ function ProjectNode({ project, mouseX, mouseY, selectedId, onSelect }: any) {
     const dist = Math.sqrt(dx * dx + dy * dy);
     distance.set(dist);
 
+    // 1. Magnetic Radius Check & Pull (Stage 0 to 1)
     const MAGNETIC_RADIUS = 280;
-    if (dist < MAGNETIC_RADIUS && !isSelected) {
-      const normalized = (MAGNETIC_RADIUS - dist) / MAGNETIC_RADIUS;
-      const pull = Math.pow(normalized, 1.5); 
-      driftX.set(dx * pull * 0.4);
-      driftY.set(dy * pull * 0.4);
-      
-      ringScale.set(1 + (pull * 0.5));
-      beaconOpacity.set(0.3 + (pull * 0.7));
+    
+    if (dist < MAGNETIC_RADIUS) {
+      if (!isHovered && hoveredId === null) {
+        // Only pull if we are not hovering something else
+        const normalized = (MAGNETIC_RADIUS - dist) / MAGNETIC_RADIUS;
+        const pull = Math.pow(normalized, 1.5); 
+        // Strong pull up to 45px
+        driftX.set(dx * pull * 0.45);
+        driftY.set(dy * pull * 0.45);
+      }
     } else {
-      driftX.set(0);
-      driftY.set(0);
-      ringScale.set(isSelected ? 1.5 : 1);
-      beaconOpacity.set(isSelected ? 1 : 0.3);
+      if (!isHovered) {
+        driftX.set(0);
+        driftY.set(0);
+      }
+    }
+
+    // Set Hovered based strictly on distance to center (avoids jitter)
+    if (dist < 60 && hoveredId === null) {
+      setHoveredId(project.id);
+    } else if (dist > 150 && isHovered) {
+      setHoveredId(null);
+    }
+    
+    // When hovered, strongly snap to cursor
+    if (isHovered) {
+      driftX.set(dx * 0.15);
+      driftY.set(dy * 0.15);
     }
   });
 
-  const bSize = project.primary ? 24 : 18;
+  // Staggered Hover Cascade
+  useEffect(() => {
+    let t1: NodeJS.Timeout, t2: NodeJS.Timeout, t3: NodeJS.Timeout, t4: NodeJS.Timeout;
+    if (isHovered) {
+      setStage(1); // Marker brightens
+      t1 = setTimeout(() => setStage(2), 150); // Title brightens
+      t2 = setTimeout(() => setStage(3), 300); // Tech lines draw
+      t3 = setTimeout(() => setStage(4), 500); // Tech labels appear
+      t4 = setTimeout(() => setStage(5), 700); // Description appears
+    } else {
+      setStage(0);
+    }
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); };
+  }, [isHovered]);
+
+  // Click Handler - Navigates to project
+  const handleClick = () => {
+    router.push(`/projects/${project.id}`);
+  };
+
+  const bSize = project.primary ? 18 : 14; 
   const innerDot = project.primary ? 4 : 3;
+
+  // SMART POSITIONING LOGIC
+  // Calculate description box position based on quadrant to prevent overflow
+  const isRightHalf = project.x > 50;
+  const isBottomHalf = project.y > 50;
+  
+  const descAlignX = isRightHalf ? "right-12" : "left-12";
+  const descAlignY = isBottomHalf ? "bottom-12" : "top-12";
+  const descTextAlign = isRightHalf ? "text-right items-end" : "text-left items-start";
 
   return (
     <motion.div
       ref={nodeRef}
       className="absolute flex items-center justify-center z-10"
       style={{ left: `${project.x}%`, top: `${project.y}%`, x: driftX, y: driftY }}
-      animate={{ 
-        opacity: isOtherSelected ? 0.05 : 1,
-        filter: isOtherSelected ? "blur(4px)" : "blur(0px)" 
-      }}
+      animate={{ opacity: isOtherHovered ? 0.05 : 1 }}
       transition={{ duration: 0.8, ease: "easeInOut" }}
     >
+      {/* Interaction Hitbox */}
       <div 
-        className="absolute w-[120px] h-[120px] rounded-full cursor-none z-20" 
-        onClick={onSelect}
+        className="absolute w-[140px] h-[140px] rounded-full cursor-pointer z-20" 
+        onClick={handleClick}
+        title="Open Project"
       />
 
-      {project.primary && (
-        <motion.div 
-          className="absolute pointer-events-none"
-          animate={{ rotate: 360 }}
-          transition={{ duration: 100, repeat: Infinity, ease: "linear" }}
-        >
-          <div className="w-[140px] h-[140px] rounded-full border border-[#69737D]/5 border-dashed" />
-          <div className="absolute top-2 left-1/2 w-[1px] h-[4px] bg-[#36D9E6]/30 -translate-x-1/2" />
-          <div className="absolute bottom-4 right-4 font-mono text-[6px] text-[#69737D]/40 rotate-90">SYS.ON</div>
-        </motion.div>
-      )}
-
+      {/* PROJECT BEACON / MARKER */}
       <motion.div 
         className="relative flex items-center justify-center pointer-events-none"
-        style={{ scale: ringScale, opacity: beaconOpacity }}
+        animate={{ opacity: stage >= 1 ? 1 : 0.4, scale: stage >= 1 ? 1.2 : 1 }}
+        transition={{ duration: 0.3 }}
       >
-        <div className="absolute border border-[#69737D]/10 rounded-full" style={{ width: bSize * 1.8, height: bSize * 1.8 }} />
-        <div className="absolute border border-[#69737D]/40" style={{ width: bSize, height: bSize, borderRadius: "45% 55% 40% 60% / 55% 45% 60% 40%" }} />
-        <div className="absolute border border-[#36D9E6]/30" style={{ width: bSize * 0.6, height: bSize * 0.6, borderRadius: "60% 40% 50% 50% / 40% 60% 50% 50%" }} />
-        <div className="bg-[#E8EDF2] rounded-full" style={{ width: innerDot, height: innerDot, boxShadow: isSelected ? "0 0 10px rgba(54,217,230,0.5)" : "none" }} />
-        <div className="absolute top-[-2px] right-[-4px] w-[2px] h-[2px] bg-[#36D9E6] opacity-70" />
+        <div className="absolute border border-[#69737D]/20 rounded-full" style={{ width: bSize * 1.5, height: bSize * 1.5 }} />
+        <div className="absolute border border-[#36D9E6]/30" style={{ width: bSize, height: bSize, borderRadius: "45% 55% 40% 60% / 55% 45% 60% 40%" }} />
+        <div className="bg-[#E8EDF2]" style={{ width: innerDot, height: innerDot, borderRadius: "50%" }} />
       </motion.div>
 
+      {/* PROJECT LABEL (Inactive / Stage 2) */}
       <motion.div 
-        className="absolute top-8 flex flex-col items-center pointer-events-none"
-        animate={{ 
-          opacity: isSelected ? 1 : 0.6,
-          y: isSelected ? 5 : 0,
-        }}
-        transition={{ duration: 0.5 }}
+        className={`absolute flex flex-col pointer-events-none whitespace-nowrap ${isBottomHalf ? 'bottom-8' : 'top-8'} ${isRightHalf ? 'right-0 items-end' : 'left-0 items-start'}`}
+        animate={{ opacity: stage >= 2 ? 0 : 0.7 }}
+        transition={{ duration: 0.3 }}
       >
-        <div className="flex items-center gap-2 mb-1">
-          <span className="font-mono text-[9px] text-[#36D9E6] tracking-widest">{project.number}</span>
-          {project.inDevelopment && (
-            <span className="font-mono text-[7px] text-[#36D9E6] border border-[#36D9E6]/50 bg-[#36D9E6]/10 px-1 py-[1px] tracking-[0.15em] rounded-[2px]">IN DEV</span>
-          )}
-        </div>
-        <span className={`font-serif tracking-widest whitespace-nowrap transition-all duration-500 ${isSelected ? 'text-[#E8EDF2] text-lg' : 'text-[#69737D] text-sm'}`}>
-          {project.title}
-        </span>
+        <div className="font-mono text-[9px] text-[#69737D] tracking-widest mb-1">{project.number}</div>
+        <div className="font-serif text-sm tracking-widest text-[#E8EDF2]">{project.title}</div>
       </motion.div>
 
+      {/* PROJECT ECOSYSTEM */}
       <svg className="absolute overflow-visible pointer-events-none" style={{ width: 1, height: 1 }}>
         {project.tech.map((t: any, i: number) => (
-          <TechLine key={i} target={t} awakened={isSelected} delay={i * 0.08} mouseX={mouseX} mouseY={mouseY} parentX={centerX} parentY={centerY} />
+          <TechLine key={i} target={t} awakened={stage >= 3} delay={i * 0.05} mouseX={mouseX} mouseY={mouseY} parentX={centerX} parentY={centerY} />
         ))}
       </svg>
       {project.tech.map((t: any, i: number) => (
-        <TechNode key={i} tech={t} awakened={isSelected} delay={i * 0.08} mouseX={mouseX} mouseY={mouseY} parentX={centerX} parentY={centerY} />
+        <TechNode key={i} tech={t} awakened={stage >= 4} delay={i * 0.05} mouseX={mouseX} mouseY={mouseY} parentX={centerX} parentY={centerY} />
       ))}
 
+      {/* ACTIVE PROJECT DESCRIPTION (Stage 5) */}
       <AnimatePresence>
-        {isSelected && (
+        {stage >= 5 && (
           <motion.div
-            className="absolute top-[80px] w-72 pointer-events-auto group cursor-pointer"
-            initial={{ opacity: 0, y: 10, filter: "blur(4px)" }}
-            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-            exit={{ opacity: 0, y: 5, filter: "blur(4px)" }}
-            transition={{ delay: 0.4, duration: 0.6, ease: "easeOut" }}
+            className={`absolute w-72 pointer-events-auto flex flex-col ${descAlignX} ${descAlignY} ${descTextAlign}`}
+            initial={{ opacity: 0, filter: "blur(4px)" }}
+            animate={{ opacity: 1, filter: "blur(0px)" }}
+            exit={{ opacity: 0, filter: "blur(4px)", transition: { duration: 0.3 } }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
           >
-            <div className="absolute left-[-20px] top-0 bottom-0 w-[1px] bg-gradient-to-b from-[#36D9E6]/50 to-transparent" />
-            <h3 className="font-mono text-[10px] text-[#E8EDF2] tracking-[0.2em] mb-3">{project.subtitle}</h3>
-            <p className="font-sans text-xs text-[#69737D] leading-relaxed mb-6">
+            <div className="font-mono text-[10px] text-[#36D9E6] tracking-widest mb-2 flex items-center gap-3">
+              {project.number}
+              {project.inDevelopment && (
+                <span className="text-[7px] border border-[#36D9E6]/30 px-1 py-[1px] tracking-[0.2em]">IN DEV</span>
+              )}
+            </div>
+            <h2 className="font-serif text-2xl text-[#E8EDF2] tracking-widest mb-1">{project.title}</h2>
+            <h3 className="font-mono text-[9px] text-[#69737D] tracking-[0.2em] mb-4">{project.subtitle}</h3>
+            
+            <p className={`font-sans text-xs text-[#E8EDF2]/80 leading-relaxed font-light mb-6 ${isRightHalf ? 'text-right' : 'text-left'}`}>
               {project.description}
             </p>
-            <div className="font-mono text-[9px] text-[#36D9E6] tracking-widest flex flex-wrap gap-2 mb-8 opacity-60">
-              {project.tech.map((t: any) => t.name).join(" · ")}
-            </div>
             
-            <Link href={`/projects/${project.id}`} className="font-mono text-[9px] text-[#E8EDF2] hover:text-[#36D9E6] tracking-widest transition-colors flex items-center">
+            <Link href={`/projects/${project.id}`} className="group font-mono text-[9px] text-[#36D9E6] hover:text-[#E8EDF2] tracking-[0.2em] transition-colors flex items-center">
+              {isRightHalf && <span className="mr-3 group-hover:-translate-x-1 transition-transform">←</span>}
               ACCESS ARCHIVE 
-              <span className="ml-3 w-4 h-[1px] bg-current inline-block relative after:absolute after:right-0 after:top-1/2 after:-translate-y-1/2 after:w-1.5 after:h-1.5 after:border-t after:border-r after:border-current after:rotate-45" />
+              {!isRightHalf && <span className="ml-3 group-hover:translate-x-1 transition-transform">→</span>}
             </Link>
           </motion.div>
         )}
@@ -468,7 +492,7 @@ function TechLine({ target, awakened, delay, mouseX, mouseY, parentX, parentY }:
     const dist = Math.sqrt(dx * dx + dy * dy);
 
     if (dist < 150) {
-      const push = (150 - dist) / 150;
+      const push = Math.pow((150 - dist) / 150, 2);
       controlX.set((target.x / 2) + (dx * -0.2 * push));
       controlY.set((target.y / 2) + (dy * -0.2 * push));
     } else {
@@ -485,17 +509,17 @@ function TechLine({ target, awakened, delay, mouseX, mouseY, parentX, parentY }:
       stroke="#69737D"
       strokeWidth={0.5}
       fill="none"
-      strokeOpacity={0.3}
+      strokeOpacity={0.4}
       initial={{ pathLength: 0 }}
       animate={{ pathLength: awakened ? 1 : 0 }}
-      transition={{ duration: 0.8, delay: awakened ? delay : 0, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.6, delay: awakened ? delay : 0, ease: "easeOut" }}
     />
   );
 }
 
 function TechNode({ tech, awakened, delay, mouseX, mouseY, parentX, parentY }: any) {
-  const driftX = useSpring(0, { stiffness: 40, damping: 25 });
-  const driftY = useSpring(0, { stiffness: 40, damping: 25 });
+  const driftX = useSpring(0, { stiffness: 40, damping: 20 });
+  const driftY = useSpring(0, { stiffness: 40, damping: 20 });
 
   useAnimationFrame(() => {
     if (!awakened) {
@@ -514,8 +538,8 @@ function TechNode({ tech, awakened, delay, mouseX, mouseY, parentX, parentY }: a
 
     if (dist < 100) {
       const push = (100 - dist) / 100;
-      driftX.set((dx / dist) * -10 * push); 
-      driftY.set((dy / dist) * -10 * push);
+      driftX.set((dx / dist) * -15 * push); 
+      driftY.set((dy / dist) * -15 * push);
     } else {
       driftX.set(0);
       driftY.set(0);
@@ -524,13 +548,13 @@ function TechNode({ tech, awakened, delay, mouseX, mouseY, parentX, parentY }: a
 
   return (
     <motion.div
-      className="absolute font-mono text-[9px] text-[#69737D] tracking-widest whitespace-nowrap pointer-events-none flex items-center gap-2"
+      className="absolute font-mono text-[10px] text-[#E8EDF2] tracking-widest whitespace-nowrap pointer-events-none flex items-center gap-2"
       style={{ left: tech.x, top: tech.y, x: driftX, y: driftY, translateX: "-50%", translateY: "-50%" }}
-      initial={{ opacity: 0, filter: "blur(4px)" }}
-      animate={{ opacity: awakened ? 1 : 0, filter: awakened ? "blur(0px)" : "blur(4px)" }}
-      transition={{ duration: 0.6, delay: awakened ? delay + 0.15 : 0 }}
+      initial={{ opacity: 0, filter: "blur(2px)" }}
+      animate={{ opacity: awakened ? 1 : 0, filter: awakened ? "blur(0px)" : "blur(2px)" }}
+      transition={{ duration: 0.4, delay: awakened ? delay : 0 }}
     >
-      <div className="w-1 h-1 border border-[#36D9E6]/40 rotate-45" />
+      <span className="text-[#36D9E6] text-[8px]">◇</span>
       {tech.name}
     </motion.div>
   );
