@@ -5,12 +5,12 @@ import { getSmoothPath } from "@/lib/blob-path";
 import { useReducedMotion } from "@/lib/hooks/useReducedMotion";
 
 const NUM_POINTS = 10;
-const CENTER = { x: 300, y: 300 };
-const BASE_RADIUS = 200;
-const IDLE_AMPLITUDE = 12;
-const CURSOR_INFLUENCE_RADIUS = 240;
-const CURSOR_PULL_STRENGTH = 55;
-const SMOOTHING = 0.08;
+const CENTER = { x: 400, y: 400 };
+const BASE_RADIUS = 280;
+const IDLE_AMPLITUDE = 16;
+const CURSOR_INFLUENCE_RADIUS = 300;
+const CURSOR_PULL_STRENGTH = 75;
+const SMOOTHING = 0.12;
 
 const SHAPE_PRESETS: number[][] = [
   [1.0, 1.1, 0.9, 1.15, 0.85, 1.05, 0.95, 1.2, 0.8, 1.0],
@@ -75,8 +75,8 @@ export default function Blob({
       const svg = svgRef.current;
       if (!svg) return;
       const rect = svg.getBoundingClientRect();
-      const scaleX = 600 / rect.width;
-      const scaleY = 600 / rect.height;
+      const scaleX = 800 / rect.width;
+      const scaleY = 800 / rect.height;
       mouseRef.current = {
         x: (e.clientX - rect.left) * scaleX,
         y: (e.clientY - rect.top) * scaleY,
@@ -88,8 +88,8 @@ export default function Blob({
       if (!svg || e.touches.length === 0) return;
       const touch = e.touches[0];
       const rect = svg.getBoundingClientRect();
-      const scaleX = 600 / rect.width;
-      const scaleY = 600 / rect.height;
+      const scaleX = 800 / rect.width;
+      const scaleY = 800 / rect.height;
       mouseRef.current = {
         x: (touch.clientX - rect.left) * scaleX,
         y: (touch.clientY - rect.top) * scaleY,
@@ -158,24 +158,22 @@ export default function Blob({
   return (
     <svg
       ref={svgRef}
-      viewBox="0 0 600 600"
+      viewBox="0 0 800 800"
       className="w-full h-full pointer-events-none"
       aria-hidden="true"
     >
       <defs>
-        <linearGradient id="blobGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#5B21B6" />
-          <stop offset="100%" stopColor="#C4B5FD" />
-        </linearGradient>
         <clipPath id="blobClip">
           <path ref={clipPathRef} />
         </clipPath>
       </defs>
 
       <path
+        id="mainBlobPath"
         ref={pathRef}
-        fill="url(#blobGradient)"
-        style={{ pointerEvents: "auto", cursor: onClick ? "pointer" : undefined }}
+        fill="var(--color-ink)"
+        data-blob-hover="true"
+        style={{ pointerEvents: "auto", touchAction: "none", cursor: onClick ? "pointer" : undefined }}
         onMouseEnter={() => {
           setIsHovering(true);
           onHoverChange?.(true);
@@ -192,8 +190,8 @@ export default function Blob({
           href={imageSrc}
           x="0"
           y="0"
-          width="600"
-          height="600"
+          width="800"
+          height="800"
           preserveAspectRatio="xMidYMid slice"
           clipPath="url(#blobClip)"
           style={{

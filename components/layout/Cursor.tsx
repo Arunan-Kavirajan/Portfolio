@@ -22,12 +22,16 @@ export default function Cursor() {
 
     const handleMouseOver = (e: MouseEvent) => {
       const target = e.target as Element;
-      if (target.closest("a") || target.closest("button")) setIsHoveringLink(true);
+      if (target.closest("a") || target.closest("button") || target.closest("[data-blob-hover]")) {
+        setIsHoveringLink(true);
+      }
     };
 
     const handleMouseOut = (e: MouseEvent) => {
       const target = e.target as Element;
-      if (target.closest("a") || target.closest("button")) setIsHoveringLink(false);
+      if (target.closest("a") || target.closest("button") || target.closest("[data-blob-hover]")) {
+        setIsHoveringLink(false);
+      }
     };
 
     window.addEventListener("mousemove", moveCursor);

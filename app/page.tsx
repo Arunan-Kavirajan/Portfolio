@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import Blob from "@/components/sections/Blob";
 import HomeToAboutTransition from "@/components/sections/HomeToAboutTransition";
+import PhysicsText from "@/components/sections/PhysicsText";
 import { useLoading } from "@/components/layout/LoadingProvider";
 import { useHeroHover } from "@/components/layout/HeroHoverProvider";
 
@@ -45,7 +46,7 @@ export default function Home() {
   return (
     <main className="h-full relative overflow-hidden flex items-center justify-center">
       <motion.div
-        className="absolute w-[95vw] h-[95vw] max-w-[680px] max-h-[680px] aspect-square left-[42%] -translate-x-1/2 pointer-events-none"
+        className="absolute w-[100vw] h-[100vw] max-w-[800px] max-h-[800px] aspect-square left-1/2 -translate-x-1/2 pointer-events-none"
         initial={{ scale: 0, opacity: 0 }}
         animate={
           isLoading
@@ -63,42 +64,14 @@ export default function Home() {
         <Blob
           onHoverChange={setIsHeroHovering}
           onClick={handleBlobClick}
-          imageSrc="/images/profile.jpg"
+          imageSrc="/profile_new.jpg"
         />
       </motion.div>
 
-      <HomeToAboutTransition phase={phase} />
+      {/* Physics Interactive Text Layer */}
+      {phase === "idle" && <PhysicsText />}
 
-      <motion.div
-        layout
-        transition={{ type: "spring", stiffness: 170, damping: 22 }}
-        className={`z-40 pointer-events-none ${
-          isHeroHovering
-            ? "fixed left-[42%] top-[68%] -translate-x-1/2 text-center max-w-xs"
-            : "relative ml-[30%] max-w-sm"
-        }`}
-      >
-        <motion.h1
-          animate={!isLoading ? { opacity: 1 } : { opacity: 0 }}
-          transition={{ delay: 0.4, duration: 0.5, ease: "easeOut" }}
-          className={`font-serif text-ink transition-all ${
-            isHeroHovering ? "text-2xl mb-2" : "text-5xl mb-6"
-          }`}
-        >
-          IT Undergrad &amp; Developer
-        </motion.h1>
-        <motion.ul
-          className="flex flex-col gap-2"
-          animate={{ opacity: isHeroHovering ? 0 : 1 }}
-          transition={{ duration: 0.35, ease: "easeOut" }}
-        >
-          {highlights.map((line) => (
-            <li key={line} className="font-sans text-sm text-ink/80">
-              {line}
-            </li>
-          ))}
-        </motion.ul>
-      </motion.div>
+      <HomeToAboutTransition phase={phase} />
     </main>
   );
 }

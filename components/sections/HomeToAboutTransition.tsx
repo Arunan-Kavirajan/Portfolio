@@ -12,13 +12,13 @@ export default function HomeToAboutTransition({ phase }: { phase: Phase }) {
       <motion.div
         className="fixed z-[70] rounded-full pointer-events-none"
         style={{
-          left: "42%",
+          left: "50%",
           top: "50%",
           width: "680px",
           height: "680px",
           translateX: "-50%",
           translateY: "-50%",
-          background: "linear-gradient(135deg, #5B21B6 0%, #C4B5FD 100%)",
+          background: "var(--color-ink)",
         }}
         initial={{ scale: 0, opacity: 0 }}
         animate={
