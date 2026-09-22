@@ -206,11 +206,58 @@ function TechnicalEnvironment({ mouseX, mouseY, hoveredId }: { mouseX: any, mous
 
   return (
     <motion.div 
-      className="absolute inset-0 pointer-events-none z-0"
+      className="absolute inset-0 pointer-events-none z-0 overflow-hidden"
       animate={{ opacity: hoveredId ? 0.3 : 1, filter: hoveredId ? "blur(2px)" : "blur(0px)" }}
       transition={{ duration: 0.8 }}
     >
+      {/* 1. ATMOSPHERIC DEEP DRIFT (Illumination) */}
+      <div className="absolute inset-0 opacity-[0.4] mix-blend-screen">
+        <motion.div
+          className="absolute rounded-full blur-[120px]"
+          style={{ 
+            width: size.w * 0.8, height: size.w * 0.8, 
+            background: "radial-gradient(circle, rgba(54, 217, 230, 0.04) 0%, rgba(11, 14, 18, 0) 60%)" 
+          }}
+          animate={{ x: ["-10vw", "30vw", "10vw", "-10vw"], y: ["-20vh", "10vh", "40vh", "-20vh"] }}
+          transition={{ duration: 45, repeat: Infinity, ease: "linear" }}
+        />
+        <motion.div
+          className="absolute rounded-full blur-[100px]"
+          style={{ 
+            width: size.w * 0.6, height: size.w * 0.6, 
+            background: "radial-gradient(circle, rgba(54, 217, 230, 0.03) 0%, rgba(11, 14, 18, 0) 70%)" 
+          }}
+          animate={{ x: ["60vw", "20vw", "50vw", "60vw"], y: ["50vh", "10vh", "-10vh", "50vh"] }}
+          transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+        />
+      </div>
+
+      {/* 2. BLUEPRINT ASTRONOMICAL RINGS */}
       <svg className="absolute inset-0 w-full h-full">
+        {/* Top-Right Massive Ring System */}
+        <g style={{ transformOrigin: `${size.w * 0.85}px ${size.h * 0.15}px` }}>
+          <motion.g animate={{ rotate: 360 }} transition={{ duration: 200, repeat: Infinity, ease: "linear" }}>
+            <circle cx={size.w * 0.85} cy={size.h * 0.15} r={size.h * 0.6} stroke="#69737D" strokeWidth={0.5} opacity={0.06} fill="none" strokeDasharray="4 16" />
+            <circle cx={size.w * 0.85} cy={size.h * 0.15} r={size.h * 0.62} stroke="#36D9E6" strokeWidth={0.25} opacity={0.12} fill="none" />
+            <circle cx={size.w * 0.85} cy={size.h * 0.15} r={size.h * 0.85} stroke="#69737D" strokeWidth={0.25} opacity={0.04} fill="none" />
+            {/* Tick marks */}
+            <line x1={size.w * 0.85} y1={size.h * 0.15 - size.h * 0.6} x2={size.w * 0.85} y2={size.h * 0.15 - size.h * 0.6 - 20} stroke="#69737D" opacity={0.2} strokeWidth={1} />
+            <line x1={size.w * 0.85} y1={size.h * 0.15 + size.h * 0.6} x2={size.w * 0.85} y2={size.h * 0.15 + size.h * 0.6 + 20} stroke="#69737D" opacity={0.2} strokeWidth={1} />
+            <line x1={size.w * 0.85 - size.h * 0.6} y1={size.h * 0.15} x2={size.w * 0.85 - size.h * 0.6 - 20} y2={size.h * 0.15} stroke="#69737D" opacity={0.2} strokeWidth={1} />
+          </motion.g>
+        </g>
+
+        {/* Bottom-Left Partial Ring System */}
+        <g style={{ transformOrigin: `${size.w * 0.1}px ${size.h * 0.9}px` }}>
+          <motion.g animate={{ rotate: -360 }} transition={{ duration: 250, repeat: Infinity, ease: "linear" }}>
+            <circle cx={size.w * 0.1} cy={size.h * 0.9} r={size.h * 0.35} stroke="#36D9E6" strokeWidth={0.5} opacity={0.04} fill="none" strokeDasharray="2 8" />
+            <circle cx={size.w * 0.1} cy={size.h * 0.9} r={size.h * 0.45} stroke="#69737D" strokeWidth={0.25} opacity={0.07} fill="none" />
+            {/* Angular crosshairs */}
+            <line x1={size.w * 0.1 - size.h * 0.45} y1={size.h * 0.9} x2={size.w * 0.1 + size.h * 0.45} y2={size.h * 0.9} stroke="#69737D" opacity={0.06} strokeWidth={0.5} />
+            <line x1={size.w * 0.1} y1={size.h * 0.9 - size.h * 0.45} x2={size.w * 0.1} y2={size.h * 0.9 + size.h * 0.45} stroke="#69737D" opacity={0.06} strokeWidth={0.5} />
+          </motion.g>
+        </g>
+
         {/* Subtle coordinate arcs and routing lines */}
         <path d={`M ${size.w*0.2} ${size.h*0.3} Q ${size.w*0.4} ${size.h*0.1} ${size.w*0.55} ${size.h*0.25}`} stroke="#69737D" strokeWidth={0.5} fill="none" opacity={0.15} />
         <path d={`M ${size.w*0.55} ${size.h*0.6} C ${size.w*0.7} ${size.h*0.7} ${size.w*0.8} ${size.h*0.6} ${size.w*0.85} ${size.h*0.45}`} stroke="#69737D" strokeWidth={0.5} fill="none" opacity={0.1} />
@@ -221,7 +268,7 @@ function TechnicalEnvironment({ mouseX, mouseY, hoveredId }: { mouseX: any, mous
         <line x1="0" y1={size.h*0.5} x2={size.w} y2={size.h*0.5} stroke="#69737D" strokeWidth={0.5} opacity={0.03} strokeDasharray="4 8" />
       </svg>
       
-      {/* Ambient technical markers instead of generic stars */}
+      {/* Ambient technical markers */}
       <AtmosphericMarker x={15} y={20} mouseX={mouseX} mouseY={mouseY} label="SYS.01" />
       <AtmosphericMarker x={85} y={15} mouseX={mouseX} mouseY={mouseY} type="bracket" />
       <AtmosphericMarker x={75} y={75} mouseX={mouseX} mouseY={mouseY} type="cross" />
