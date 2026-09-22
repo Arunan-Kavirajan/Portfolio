@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { useHeroHover } from "./HeroHoverProvider";
 
 export default function Footer() {
