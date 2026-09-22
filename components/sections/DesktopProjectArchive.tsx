@@ -14,6 +14,7 @@ type Project = {
   tech: TechNode[];
   x: number; // percentage viewport
   y: number; // percentage viewport
+  inDevelopment?: boolean;
 };
 
 const PROJECTS: Project[] = [
@@ -24,6 +25,7 @@ const PROJECTS: Project[] = [
     subtitle: "CODEBASE DETECTIVE",
     description: "Codebase investigation tool. Ingest public GitHub repositories, explore file structure, and prepare for multi-agent analysis.",
     x: 20, y: 30,
+    inDevelopment: true,
     tech: [
       { name: "NEXT.JS", x: 0, y: -120 },
       { name: "TYPESCRIPT", x: 140, y: -30 },
@@ -67,6 +69,7 @@ const PROJECTS: Project[] = [
     subtitle: "VISUALIZATION ENGINE",
     description: "An interactive, physics-driven visualization laboratory for algorithms and data structures, featuring dynamic frontends and a Python calculation engine.",
     x: 15, y: 75,
+    inDevelopment: true,
     tech: [
       { name: "FASTAPI", x: 0, y: -100 },
       { name: "PYTHON", x: 120, y: 20 },
@@ -123,6 +126,7 @@ const PROJECTS: Project[] = [
     subtitle: "GAMIFIED PRODUCTIVITY",
     description: "A gamified productivity and study session platform featuring active focus tracking, study cohorts, leaderboards, and an achievements store.",
     x: 55, y: 60,
+    inDevelopment: true,
     tech: [
       { name: "REACT", x: 0, y: -110 },
       { name: "FIREBASE", x: 140, y: 0 },
@@ -310,7 +314,12 @@ function ProjectNode({ project, mouseX, mouseY, hoveredId, setHoveredId, onSelec
           animate={{ opacity: isHovered ? 1 : 0.25, y: isHovered ? 0 : -2 }}
           transition={{ duration: 0.4 }}
         >
-          <motion.span layoutId={`proj-num-${project.id}`} className="font-mono text-[9px] text-[#36D9E6] tracking-widest mb-1">{project.number}</motion.span>
+          <div className="flex items-center gap-2 mb-1">
+            <motion.span layoutId={`proj-num-${project.id}`} className="font-mono text-[9px] text-[#36D9E6] tracking-widest">{project.number}</motion.span>
+            {project.inDevelopment && (
+              <span className="font-mono text-[7px] text-[#69737D] border border-[#69737D]/40 px-1 py-[1px] tracking-widest rounded-sm">IN DEV</span>
+            )}
+          </div>
           <motion.span layoutId={`proj-title-${project.id}`} className="font-serif text-sm tracking-widest text-[#E8EDF2] whitespace-nowrap">{project.title}</motion.span>
         </motion.div>
 
@@ -426,10 +435,15 @@ function ProjectDetails({ project, onClose }: any) {
         <div className="max-w-4xl mx-auto w-full">
           
           <div className="mb-24 relative">
-            <motion.div 
-              layoutId={`proj-dot-${project.id}`}
-              className="w-[3px] h-[3px] bg-[#36D9E6] rounded-full mb-6" 
-            />
+            <div className="flex items-center gap-4 mb-6">
+              <motion.div 
+                layoutId={`proj-dot-${project.id}`}
+                className="w-[3px] h-[3px] bg-[#36D9E6] rounded-full" 
+              />
+              {project.inDevelopment && (
+                 <span className="font-mono text-[10px] text-[#69737D] border border-[#69737D]/30 px-2 py-1 tracking-[0.2em] rounded-sm">IN DEVELOPMENT</span>
+              )}
+            </div>
             <motion.span layoutId={`proj-num-${project.id}`} className="block font-mono text-sm text-[#36D9E6] tracking-widest mb-4">
               {project.number}
             </motion.span>
