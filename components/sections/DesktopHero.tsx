@@ -36,7 +36,7 @@ export default function DesktopHero() {
   };
 
   return (
-    <main className="h-full relative overflow-hidden flex items-center justify-center w-full">
+    <main className="min-h-screen relative overflow-hidden flex items-center justify-center w-full">
       <motion.div
         className="absolute w-[100vw] h-[100vw] max-w-[800px] max-h-[800px] aspect-square left-[25%] -translate-x-1/2 pointer-events-none z-10 flex-shrink-0"
         initial={{ scale: 0, opacity: 0 }}

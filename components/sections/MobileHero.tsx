@@ -2,7 +2,7 @@
 
 export default function MobileHero() {
   return (
-    <main className="h-full relative overflow-y-auto w-full flex flex-col items-center justify-center px-8 text-center bg-bg">
+    <main className="min-h-screen relative overflow-y-auto w-full flex flex-col items-center justify-center px-8 text-center bg-bg">
       <div className="border border-border/50 bg-surface/30 backdrop-blur-md p-8 rounded-2xl max-w-sm w-full mx-auto shadow-2xl">
         <h1 className="font-serif text-3xl mb-4 text-ink leading-tight">
           Mobile Dossier<br />
