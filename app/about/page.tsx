@@ -278,7 +278,7 @@ function WorldCanvas({ scrollYProgress }: { scrollYProgress: MotionValue<number>
       const globalRotY = currentProgress * Math.PI * 3; 
       const globalRotX = 0.2 + currentProgress * 0.5;
 
-      const projected = [];
+      const projected: { px: number, py: number, scale: number, z: number }[] = [];
       const fov = 1000;
 
       for (let i = 0; i < N; i++) {
