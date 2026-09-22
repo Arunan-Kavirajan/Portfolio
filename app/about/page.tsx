@@ -388,28 +388,90 @@ function CinematicTypography({ scrollYProgress }: { scrollYProgress: MotionValue
   );
 }
 
+function AftermathText({ scrollYProgress }: { scrollYProgress: MotionValue<number> }) {
+  const op1 = useTransform(scrollYProgress, [0.90, 0.94], [0, 1]);
+  const op2 = useTransform(scrollYProgress, [0.92, 0.96], [0, 1]);
+  const op3 = useTransform(scrollYProgress, [0.94, 0.98], [0, 1]);
+
+  const y1 = useTransform(scrollYProgress, [0.90, 0.96], [40, 0]);
+  const y2 = useTransform(scrollYProgress, [0.92, 0.98], [40, 0]);
+  const y3 = useTransform(scrollYProgress, [0.94, 1.00], [40, 0]);
+  
+  const pY1 = useTransform(scrollYProgress, [0.95, 1], [0, -20]);
+  const pY2 = useTransform(scrollYProgress, [0.95, 1], [0, -40]);
+  const pY3 = useTransform(scrollYProgress, [0.95, 1], [0, -15]);
+
+  const dotOp = useTransform(scrollYProgress, [0.9, 0.95, 1], [0, 0.4, 0]);
+  const dotY = useTransform(scrollYProgress, [0.9, 1], [100, -100]);
+  const dotX = useTransform(scrollYProgress, [0.9, 1], [0, 50]);
+
+  return (
+    <div className="absolute inset-0 z-30 pointer-events-none flex flex-col justify-center max-w-5xl mx-auto px-6 md:px-12 w-full">
+       
+       <motion.div 
+         className="absolute top-[15%] left-[5%] md:left-[10%] font-mono text-[10px] md:text-xs tracking-[0.4em] text-[#69737D] uppercase"
+         style={{ opacity: op1, y: y1 }}
+       >
+         01 / Curiosity
+       </motion.div>
+
+       <motion.div 
+         className="absolute right-[15%] top-[25%] w-1 h-1 bg-[#36D9E6] rounded-full blur-[1px]"
+         style={{ opacity: dotOp, y: dotY, x: dotX }}
+       />
+
+       <div className="w-full flex flex-col gap-16 md:gap-20 mt-12 md:mt-0">
+         
+         <motion.div style={{ opacity: op1, y: y1 }} className="flex flex-col items-start">
+            <span className="font-sans text-lg md:text-2xl text-[#69737D] font-light">I’m curious about</span>
+            <motion.span style={{ y: pY1 }} className="font-serif text-5xl md:text-7xl lg:text-8xl text-[#E8EDF2] italic tracking-tight mt-1 md:mt-2">
+              what’s underneath.
+            </motion.span>
+         </motion.div>
+
+         <motion.div style={{ opacity: op2, y: y2 }} className="flex flex-col items-end text-right">
+            <span className="font-sans text-lg md:text-2xl text-[#69737D] font-light">How things work.</span>
+            <motion.span style={{ y: pY2 }} className="font-serif text-5xl md:text-7xl lg:text-8xl text-[#E8EDF2] tracking-tight mt-1 md:mt-2">
+              Why they break.
+            </motion.span>
+         </motion.div>
+
+         <motion.div style={{ opacity: op3, y: y3 }} className="flex flex-col mt-4 md:mt-8 md:pl-[10%] gap-4">
+            <motion.div style={{ y: pY3 }} className="flex flex-col gap-3 md:gap-4">
+              
+              <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                <span className="font-sans text-lg md:text-2xl text-[#69737D] font-light">What happens when you</span>
+                <span className="font-serif text-3xl md:text-5xl italic text-[#E8EDF2]">push them too far.</span>
+              </div>
+
+              <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                <span className="font-sans text-lg md:text-2xl text-[#69737D] font-light">And</span>
+                <span className="font-serif text-3xl md:text-5xl text-[#36D9E6]">what you can build</span>
+              </div>
+              
+              <div className="font-sans text-lg md:text-2xl text-[#69737D] font-light">
+                once you understand the pieces.
+              </div>
+
+            </motion.div>
+         </motion.div>
+
+       </div>
+    </div>
+  );
+}
+
 function CuriousSection() {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
   
-  const pOp = useTransform(scrollYProgress, [0.93, 0.98], [0, 1]);
-  const pY = useTransform(scrollYProgress, [0.93, 0.98], [40, 0]);
-
   return (
     <section ref={ref} className="h-[600vh] relative z-20 bg-[#0B0E12]">
       <div className="sticky top-0 h-screen w-full flex flex-col items-center justify-center overflow-hidden">
         
         <WorldCanvas scrollYProgress={scrollYProgress} />
         <CinematicTypography scrollYProgress={scrollYProgress} />
-        
-        <motion.div 
-          className="absolute z-30 max-w-2xl text-center px-6"
-          style={{ opacity: pOp, y: pY }}
-        >
-          <p className="font-sans text-xl md:text-3xl leading-relaxed text-[#69737D] font-light">
-            I’ve always been curious about what happens beneath the surface. How things work, why they fail, and what you can build once you understand them.
-          </p>
-        </motion.div>
+        <AftermathText scrollYProgress={scrollYProgress} />
         
       </div>
     </section>
