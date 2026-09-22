@@ -44,59 +44,65 @@ export default function Home() {
   };
 
   return (
-    <main className="h-full relative overflow-hidden flex items-center justify-center">
-      <motion.div
-        className="absolute w-[100vw] h-[100vw] max-w-[800px] max-h-[800px] aspect-square max-md:left-[50%] md:left-[25%] -translate-x-1/2 pointer-events-none"
-        initial={{ scale: 0, opacity: 0 }}
-        animate={
-          isLoading
-            ? { scale: 0, opacity: 0 }
-            : phase !== "idle"
-              ? { scale: 0.15, opacity: 0 }
-              : { scale: 1, opacity: 1 }
-        }
-        transition={
-          phase !== "idle"
-            ? { duration: SHRINK_MS / 1000, ease: SMOOTH_EASE }
-            : { type: "spring", stiffness: 120, damping: 12 }
-        }
-      >
-        <Blob
-          onHoverChange={setIsHeroHovering}
-          onClick={handleBlobClick}
-          imageSrc="/profile_new.jpg"
-        />
-        <div className="absolute bottom-8 md:bottom-16 w-full flex justify-center text-center z-20 pointer-events-auto">
-          <span 
-            className="font-sans text-xs md:text-sm font-medium uppercase tracking-[0.2em] text-ink/90 animate-pulse cursor-pointer drop-shadow-[0_0_8px_rgba(0,0,0,0.8)] hover:text-ink transition-colors" 
-            onClick={handleBlobClick}
-          >
-            Click the blob for more info
-          </span>
-        </div>
-      </motion.div>
-
-      {/* Hero Text Layer */}
-      <div className="relative z-10 grid grid-cols-1 md:grid-cols-[40%_60%] lg:grid-cols-[45%_55%] h-full w-full max-w-7xl mx-auto px-8 md:px-12 pointer-events-none max-md:items-end md:items-center max-md:pb-[20vh]">
-        {/* Empty left side for the blob to breathe on desktop */}
-        <div className="hidden md:block"></div>
+    <main className="h-full relative max-md:overflow-y-auto max-md:overflow-x-hidden md:overflow-hidden w-full">
+      
+      {/* Mobile container groups the flow naturally. Desktop ignores this due to absolute positioning. */}
+      <div className="w-full max-md:min-h-full md:h-full flex flex-col md:block">
         
-        {/* Elegant typography on the right */}
-        <div className="pointer-events-auto flex flex-col justify-center pl-0 md:pl-8 lg:pl-12 relative">
-          
-          {/* Subtle dark halo to ensure perfect readability against the busy matrix */}
-          <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_center,rgba(16,21,28,0.7)_0%,transparent_70%)] scale-[1.5] blur-xl" />
+        <motion.div
+          className="max-md:relative max-md:mt-32 max-md:mx-auto max-md:w-[90vw] max-md:max-w-[500px] max-md:aspect-square md:absolute md:w-[100vw] md:h-[100vw] md:max-w-[800px] md:max-h-[800px] md:aspect-square md:left-[25%] md:top-[50%] md:-translate-y-1/2 md:-translate-x-1/2 pointer-events-none z-10 flex-shrink-0"
+          initial={{ scale: 0, opacity: 0 }}
+          animate={
+            isLoading
+              ? { scale: 0, opacity: 0 }
+              : phase !== "idle"
+                ? { scale: 0.15, opacity: 0 }
+                : { scale: 1, opacity: 1 }
+          }
+          transition={
+            phase !== "idle"
+              ? { duration: SHRINK_MS / 1000, ease: SMOOTH_EASE }
+              : { type: "spring", stiffness: 120, damping: 12 }
+          }
+        >
+          <Blob
+            onHoverChange={setIsHeroHovering}
+            onClick={handleBlobClick}
+            imageSrc="/profile_new.jpg"
+          />
+          <div className="absolute max-md:-top-8 md:bottom-16 w-full flex justify-center text-center z-20 pointer-events-auto">
+            <span 
+              className="font-sans text-[10px] md:text-sm font-medium uppercase tracking-[0.2em] text-ink/90 animate-pulse cursor-pointer drop-shadow-[0_0_8px_rgba(0,0,0,0.8)] hover:text-ink transition-colors" 
+              onClick={handleBlobClick}
+            >
+              Click the blob for more info
+            </span>
+          </div>
+        </motion.div>
 
-          <h1 className="font-serif text-3xl md:text-4xl lg:text-[3rem] xl:text-[3.5rem] tracking-tight leading-[1.2] text-ink drop-shadow-2xl">
-            I build software, <br />
-            but I&apos;m most curious <br />
-            <span className="italic text-ink/90">about how it can be broken.</span>
-          </h1>
-          <p className="mt-6 font-sans text-base md:text-lg lg:text-xl text-ink font-light max-w-md leading-relaxed drop-shadow-xl">
-            Exploring cybersecurity, AI, <br className="hidden md:block" />
-            and the systems behind them.
-          </p>
+        {/* Hero Text Layer */}
+        <div className="relative z-20 max-md:mt-8 max-md:pb-32 md:absolute md:inset-0 md:grid md:grid-cols-[40%_60%] lg:grid-cols-[45%_55%] w-full max-w-7xl mx-auto px-8 md:px-12 pointer-events-none md:items-center">
+          {/* Empty left side for the blob to breathe on desktop */}
+          <div className="hidden md:block"></div>
+          
+          {/* Elegant typography on the right (desktop) / bottom (mobile) */}
+          <div className="pointer-events-auto flex flex-col justify-center pl-0 md:pl-8 lg:pl-12 relative">
+            
+            {/* Subtle dark halo to ensure perfect readability against the busy matrix */}
+            <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_center,rgba(16,21,28,0.7)_0%,transparent_70%)] scale-[1.5] blur-xl" />
+
+            <h1 className="font-serif text-3xl md:text-4xl lg:text-[3rem] xl:text-[3.5rem] tracking-tight leading-[1.2] text-ink drop-shadow-2xl">
+              I build software, <br />
+              but I&apos;m most curious <br />
+              <span className="italic text-ink/90">about how it can be broken.</span>
+            </h1>
+            <p className="mt-6 font-sans text-base md:text-lg lg:text-xl text-ink font-light max-w-md leading-relaxed drop-shadow-xl">
+              Exploring cybersecurity, AI, <br className="hidden md:block" />
+              and the systems behind them.
+            </p>
+          </div>
         </div>
+
       </div>
 
       {/* Physics Interactive Text Layer */}
