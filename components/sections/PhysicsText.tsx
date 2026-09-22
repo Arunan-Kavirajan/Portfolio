@@ -135,7 +135,7 @@ const AnimatedWord = memo(({
         containerRef.current = el;
         innerRef(el);
       }}
-      className="absolute top-0 left-0 text-sm md:text-base font-mono uppercase tracking-wider whitespace-nowrap will-change-transform"
+      className="absolute top-0 left-0 text-sm md:text-base font-mono uppercase tracking-wider whitespace-nowrap will-change-transform select-none"
       style={{
         color: isAnimating && word.category !== 'cyber' ? '#fff' : word.color,
         opacity: 1, // Solid, no fading
@@ -228,13 +228,22 @@ export default function PhysicsText() {
     }, 100);
 
     let frameId: number;
-    const update = () => {
+    let lastTime = performance.now();
+
+    const update = (time: number) => {
+      // iOS ProMotion spikes to 120Hz on touch. Delta time normalizes it to 60fps.
+      let dt = (time - lastTime) / (1000 / 60);
+      lastTime = time;
+      
+      // Cap dt to prevent massive jumps if tab was backgrounded
+      if (dt > 3) dt = 1;
+
       const w = window.innerWidth;
       const h = window.innerHeight;
 
       wordsData.forEach((p, i) => {
-        p.initialX += p.vx;
-        p.initialY += p.vy;
+        p.initialX += p.vx * dt;
+        p.initialY += p.vy * dt;
 
         const halfW = p.width / 2;
         const halfH = p.height / 2;
@@ -275,7 +284,7 @@ export default function PhysicsText() {
   if (!mounted || wordsData.length === 0) return null;
 
   return (
-    <div ref={containerRef} className="fixed inset-0 pointer-events-none z-[-1] overflow-hidden opacity-90">
+    <div ref={containerRef} className="fixed inset-0 pointer-events-none z-[-1] overflow-hidden opacity-90 select-none">
       {wordsData.map((word, i) => (
         <AnimatedWord
           key={i}

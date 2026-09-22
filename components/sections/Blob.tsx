@@ -237,11 +237,8 @@ export default function Blob({
           height="800"
           preserveAspectRatio="xMidYMid slice"
           clipPath="url(#blobClip)"
-          style={{
-            opacity: isHovering ? 1 : 0,
-            transition: "opacity 0.3s ease",
-            pointerEvents: "none",
-          }}
+          data-hover={isHovering}
+          className="opacity-100 md:opacity-0 data-[hover=true]:opacity-100 transition-opacity duration-300 pointer-events-none"
         />
       )}
     </svg>

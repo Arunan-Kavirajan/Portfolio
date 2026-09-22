@@ -7,11 +7,9 @@ export default function Footer() {
   const { isHeroHovering } = useHeroHover();
 
   return (
-    <motion.footer
-      className="w-full flex items-center justify-between px-8 py-6 font-sans text-sm text-ink"
-      animate={{ opacity: isHeroHovering ? 0 : 1 }}
-      transition={{ duration: 0.35, ease: "easeOut" }}
-      style={{ pointerEvents: isHeroHovering ? "none" : "auto" }}
+    <footer
+      data-hover={isHeroHovering}
+      className="w-full flex items-center justify-between px-8 py-6 font-sans text-sm text-ink transition-opacity duration-300 max-md:opacity-100 data-[hover=true]:md:opacity-0 max-md:pointer-events-auto data-[hover=true]:md:pointer-events-none"
     >
       <div className="flex gap-6">
         <a
@@ -37,6 +35,6 @@ export default function Footer() {
       >
         arunan.kavirajan@gmail.com
       </a>
-    </motion.footer>
+    </footer>
   );
 }

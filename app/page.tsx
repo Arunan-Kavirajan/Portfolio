@@ -46,7 +46,7 @@ export default function Home() {
   return (
     <main className="h-full relative overflow-hidden flex items-center justify-center">
       <motion.div
-        className="absolute w-[100vw] h-[100vw] max-w-[800px] max-h-[800px] aspect-square left-[25%] -translate-x-1/2 pointer-events-none"
+        className="absolute w-[100vw] h-[100vw] max-w-[800px] max-h-[800px] aspect-square max-md:left-[50%] md:left-[25%] -translate-x-1/2 pointer-events-none"
         initial={{ scale: 0, opacity: 0 }}
         animate={
           isLoading
@@ -77,8 +77,8 @@ export default function Home() {
       </motion.div>
 
       {/* Hero Text Layer */}
-      <div className="relative z-10 grid grid-cols-1 md:grid-cols-[40%_60%] lg:grid-cols-[45%_55%] h-full w-full max-w-7xl mx-auto px-8 md:px-12 pointer-events-none items-center">
-        {/* Empty left side for the blob to breathe */}
+      <div className="relative z-10 grid grid-cols-1 md:grid-cols-[40%_60%] lg:grid-cols-[45%_55%] h-full w-full max-w-7xl mx-auto px-8 md:px-12 pointer-events-none max-md:items-end md:items-center max-md:pb-[20vh]">
+        {/* Empty left side for the blob to breathe on desktop */}
         <div className="hidden md:block"></div>
         
         {/* Elegant typography on the right */}
