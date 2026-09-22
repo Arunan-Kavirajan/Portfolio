@@ -23,7 +23,7 @@ const PROJECTS: Project[] = [
     title: "KODA",
     subtitle: "CODEBASE DETECTIVE",
     description: "Codebase investigation tool. Ingest public GitHub repositories, explore file structure, and prepare for multi-agent analysis.",
-    x: 30, y: 35,
+    x: 20, y: 30,
     tech: [
       { name: "NEXT.JS", x: 0, y: -120 },
       { name: "TYPESCRIPT", x: 140, y: -30 },
@@ -37,7 +37,7 @@ const PROJECTS: Project[] = [
     title: "ECHOES",
     subtitle: "DRIFTING MESSAGES",
     description: "A public, anonymous message board where notes become part of a permanent, shared time capsule. No accounts, no algorithm. Just thoughts, drifting.",
-    x: 65, y: 25,
+    x: 55, y: 25,
     tech: [
       { name: "REACT", x: 0, y: -100 },
       { name: "FRAMER MOTION", x: 160, y: 0 },
@@ -52,7 +52,7 @@ const PROJECTS: Project[] = [
     title: "CERTIVA",
     subtitle: "CERTIFICATE AUTOMATION",
     description: "A browser-based certificate automation platform built to instantly map spreadsheet data onto PDF templates and generate personalized certificates in bulk.",
-    x: 75, y: 65,
+    x: 85, y: 45,
     tech: [
       { name: "REACT", x: -120, y: -70 },
       { name: "VITE", x: 110, y: -60 },
@@ -63,10 +63,10 @@ const PROJECTS: Project[] = [
   {
     id: "algolab",
     number: "04",
-    title: "ALGO_LAB",
+    title: "ALGORITHM LABORATORY",
     subtitle: "VISUALIZATION ENGINE",
     description: "An interactive, physics-driven visualization laboratory for algorithms and data structures, featuring dynamic frontends and a Python calculation engine.",
-    x: 20, y: 70,
+    x: 15, y: 75,
     tech: [
       { name: "FASTAPI", x: 0, y: -100 },
       { name: "PYTHON", x: 120, y: 20 },
@@ -77,15 +77,57 @@ const PROJECTS: Project[] = [
   {
     id: "dbrownie",
     number: "05",
-    title: "D_BROWNIE",
-    subtitle: "ANDROID BILLING SOFTWARE",
+    title: "ANDROID BILLING APP",
+    subtitle: "RETAIL POS SYSTEM",
     description: "A Flutter-based billing and order management app built for small food stalls, handling the full lifecycle with live ESC/POS Bluetooth receipt printing.",
-    x: 45, y: 85,
+    x: 40, y: 85,
     tech: [
       { name: "FLUTTER", x: -110, y: -60 },
       { name: "DART", x: 120, y: -40 },
       { name: "SQLITE", x: 80, y: 100 },
       { name: "BLUETOOTH ESC/POS", x: -90, y: 90 },
+    ]
+  },
+  {
+    id: "chatclub",
+    number: "06",
+    title: "CHAT CLUB WEBSITE",
+    subtitle: "OFFICIAL PLATFORM",
+    description: "The official platform for the Computer Hardware and AI Technology (CHAT) Club, featuring dynamic event management and fluid animations.",
+    x: 75, y: 15,
+    tech: [
+      { name: "NEXT.JS", x: 0, y: -100 },
+      { name: "FIREBASE", x: 130, y: -30 },
+      { name: "FRAMER MOTION", x: -110, y: 40 },
+      { name: "TAILWIND CSS", x: 80, y: 90 },
+    ]
+  },
+  {
+    id: "pallavan",
+    number: "07",
+    title: "PALLAVAN MES",
+    subtitle: "OFFLINE-FIRST MES",
+    description: "An enterprise-grade Manufacturing Execution System designed for factory floors, featuring a rigorous offline-first architecture with true 2-way sync.",
+    x: 85, y: 80,
+    tech: [
+      { name: "REACT", x: -100, y: -80 },
+      { name: "DEXIE.JS", x: 140, y: -20 },
+      { name: "FIREBASE", x: 60, y: 100 },
+      { name: "TYPESCRIPT", x: -130, y: 40 },
+    ]
+  },
+  {
+    id: "ascend",
+    number: "08",
+    title: "ASCEND",
+    subtitle: "GAMIFIED PRODUCTIVITY",
+    description: "A gamified productivity and study session platform featuring active focus tracking, study cohorts, leaderboards, and an achievements store.",
+    x: 55, y: 60,
+    tech: [
+      { name: "REACT", x: 0, y: -110 },
+      { name: "FIREBASE", x: 140, y: 0 },
+      { name: "FRAMER MOTION", x: 80, y: 100 },
+      { name: "VITE", x: -120, y: -20 },
     ]
   }
 ];
