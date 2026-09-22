@@ -1,9 +1,13 @@
 "use client";
 
 import { useHeroHover } from "./HeroHoverProvider";
+import { usePathname } from "next/navigation";
 
 export default function Footer() {
+  const pathname = usePathname();
   const { isHeroHovering } = useHeroHover();
+
+  if (pathname === "/about") return null;
 
   return (
     <footer
