@@ -211,21 +211,21 @@ function TechnicalEnvironment({ mouseX, mouseY, hoveredId }: { mouseX: any, mous
       transition={{ duration: 0.8 }}
     >
       {/* 1. ATMOSPHERIC DEEP DRIFT (Illumination) */}
-      <div className="absolute inset-0 opacity-[0.4] mix-blend-screen">
+      <div className="absolute inset-0 mix-blend-screen opacity-70">
         <motion.div
-          className="absolute rounded-full blur-[120px]"
+          className="absolute rounded-full blur-[100px]"
           style={{ 
             width: size.w * 0.8, height: size.w * 0.8, 
-            background: "radial-gradient(circle, rgba(54, 217, 230, 0.04) 0%, rgba(11, 14, 18, 0) 60%)" 
+            background: "radial-gradient(circle, rgba(54, 217, 230, 0.12) 0%, rgba(11, 14, 18, 0) 60%)" 
           }}
           animate={{ x: ["-10vw", "30vw", "10vw", "-10vw"], y: ["-20vh", "10vh", "40vh", "-20vh"] }}
           transition={{ duration: 45, repeat: Infinity, ease: "linear" }}
         />
         <motion.div
-          className="absolute rounded-full blur-[100px]"
+          className="absolute rounded-full blur-[80px]"
           style={{ 
             width: size.w * 0.6, height: size.w * 0.6, 
-            background: "radial-gradient(circle, rgba(54, 217, 230, 0.03) 0%, rgba(11, 14, 18, 0) 70%)" 
+            background: "radial-gradient(circle, rgba(54, 217, 230, 0.08) 0%, rgba(11, 14, 18, 0) 70%)" 
           }}
           animate={{ x: ["60vw", "20vw", "50vw", "60vw"], y: ["50vh", "10vh", "-10vh", "50vh"] }}
           transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
@@ -237,24 +237,24 @@ function TechnicalEnvironment({ mouseX, mouseY, hoveredId }: { mouseX: any, mous
         {/* Top-Right Massive Ring System */}
         <g style={{ transformOrigin: `${size.w * 0.85}px ${size.h * 0.15}px` }}>
           <motion.g animate={{ rotate: 360 }} transition={{ duration: 200, repeat: Infinity, ease: "linear" }}>
-            <circle cx={size.w * 0.85} cy={size.h * 0.15} r={size.h * 0.6} stroke="#69737D" strokeWidth={0.5} opacity={0.06} fill="none" strokeDasharray="4 16" />
-            <circle cx={size.w * 0.85} cy={size.h * 0.15} r={size.h * 0.62} stroke="#36D9E6" strokeWidth={0.25} opacity={0.12} fill="none" />
-            <circle cx={size.w * 0.85} cy={size.h * 0.15} r={size.h * 0.85} stroke="#69737D" strokeWidth={0.25} opacity={0.04} fill="none" />
+            <circle cx={size.w * 0.85} cy={size.h * 0.15} r={size.h * 0.6} stroke="#69737D" strokeWidth={1} opacity={0.15} fill="none" strokeDasharray="4 16" />
+            <circle cx={size.w * 0.85} cy={size.h * 0.15} r={size.h * 0.62} stroke="#36D9E6" strokeWidth={1.5} opacity={0.25} fill="none" />
+            <circle cx={size.w * 0.85} cy={size.h * 0.15} r={size.h * 0.85} stroke="#69737D" strokeWidth={1} opacity={0.1} fill="none" />
             {/* Tick marks */}
-            <line x1={size.w * 0.85} y1={size.h * 0.15 - size.h * 0.6} x2={size.w * 0.85} y2={size.h * 0.15 - size.h * 0.6 - 20} stroke="#69737D" opacity={0.2} strokeWidth={1} />
-            <line x1={size.w * 0.85} y1={size.h * 0.15 + size.h * 0.6} x2={size.w * 0.85} y2={size.h * 0.15 + size.h * 0.6 + 20} stroke="#69737D" opacity={0.2} strokeWidth={1} />
-            <line x1={size.w * 0.85 - size.h * 0.6} y1={size.h * 0.15} x2={size.w * 0.85 - size.h * 0.6 - 20} y2={size.h * 0.15} stroke="#69737D" opacity={0.2} strokeWidth={1} />
+            <line x1={size.w * 0.85} y1={size.h * 0.15 - size.h * 0.6} x2={size.w * 0.85} y2={size.h * 0.15 - size.h * 0.6 - 30} stroke="#36D9E6" opacity={0.5} strokeWidth={2} />
+            <line x1={size.w * 0.85} y1={size.h * 0.15 + size.h * 0.6} x2={size.w * 0.85} y2={size.h * 0.15 + size.h * 0.6 + 30} stroke="#36D9E6" opacity={0.5} strokeWidth={2} />
+            <line x1={size.w * 0.85 - size.h * 0.6} y1={size.h * 0.15} x2={size.w * 0.85 - size.h * 0.6 - 30} y2={size.h * 0.15} stroke="#36D9E6" opacity={0.5} strokeWidth={2} />
           </motion.g>
         </g>
 
         {/* Bottom-Left Partial Ring System */}
         <g style={{ transformOrigin: `${size.w * 0.1}px ${size.h * 0.9}px` }}>
           <motion.g animate={{ rotate: -360 }} transition={{ duration: 250, repeat: Infinity, ease: "linear" }}>
-            <circle cx={size.w * 0.1} cy={size.h * 0.9} r={size.h * 0.35} stroke="#36D9E6" strokeWidth={0.5} opacity={0.04} fill="none" strokeDasharray="2 8" />
-            <circle cx={size.w * 0.1} cy={size.h * 0.9} r={size.h * 0.45} stroke="#69737D" strokeWidth={0.25} opacity={0.07} fill="none" />
+            <circle cx={size.w * 0.1} cy={size.h * 0.9} r={size.h * 0.35} stroke="#36D9E6" strokeWidth={1.5} opacity={0.2} fill="none" strokeDasharray="4 12" />
+            <circle cx={size.w * 0.1} cy={size.h * 0.9} r={size.h * 0.45} stroke="#69737D" strokeWidth={1} opacity={0.15} fill="none" />
             {/* Angular crosshairs */}
-            <line x1={size.w * 0.1 - size.h * 0.45} y1={size.h * 0.9} x2={size.w * 0.1 + size.h * 0.45} y2={size.h * 0.9} stroke="#69737D" opacity={0.06} strokeWidth={0.5} />
-            <line x1={size.w * 0.1} y1={size.h * 0.9 - size.h * 0.45} x2={size.w * 0.1} y2={size.h * 0.9 + size.h * 0.45} stroke="#69737D" opacity={0.06} strokeWidth={0.5} />
+            <line x1={size.w * 0.1 - size.h * 0.45} y1={size.h * 0.9} x2={size.w * 0.1 + size.h * 0.45} y2={size.h * 0.9} stroke="#69737D" opacity={0.2} strokeWidth={1} />
+            <line x1={size.w * 0.1} y1={size.h * 0.9 - size.h * 0.45} x2={size.w * 0.1} y2={size.h * 0.9 + size.h * 0.45} stroke="#69737D" opacity={0.2} strokeWidth={1} />
           </motion.g>
         </g>
 
