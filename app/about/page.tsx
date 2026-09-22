@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring, type Transition } from "framer-motion";
 import { useRef } from "react";
 import Image from "next/image";
 
@@ -109,7 +109,7 @@ function MindVisual() {
   const pathLength = useSpring(useTransform(scrollYProgress, [0, 0.5], [0, 1]), { stiffness: 40, damping: 20 });
   const nodeOp = useTransform(scrollYProgress, [0.3, 0.6], [0, 1]);
 
-  const floatingTransition = { repeat: Infinity, duration: 6, repeatType: "mirror" as const, ease: "easeInOut" };
+  const floatingTransition: Transition = { repeat: Infinity, duration: 6, repeatType: "mirror", ease: "easeInOut" };
 
   return (
     <section ref={ref} className="h-[120vh] w-full relative flex items-center justify-center border-t border-[#69737D]/20 bg-[#0B0E12]">
@@ -347,7 +347,7 @@ function FinalTransition() {
 
 export default function AboutPage() {
   return (
-    <main className="bg-[#0B0E12] text-[#E8EDF2] selection:bg-[#36D9E6]/30 overflow-x-hidden">
+    <main className="bg-[#0B0E12] text-[#E8EDF2] selection:bg-[#36D9E6]/30">
       <HeroSection />
       <CuriousSection />
       <MindVisual />

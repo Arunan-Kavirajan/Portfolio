@@ -220,7 +220,7 @@ export default function ProjectField({ projectId }: { projectId: string }) {
 
     // 2. Update Secondary Nodes (Orbiting Primaries)
     secondaryNodesRef.current.forEach((sn, i) => {
-      const parent = nodesRef.current[sn.parentId];
+      const parent = nodesRef.current![sn.parentId];
       if (!parent) return;
 
       const angle = sn.angleOffset + t * 0.0005;
@@ -241,8 +241,8 @@ export default function ProjectField({ projectId }: { projectId: string }) {
 
     // 3. Update Connections (Bending Lines)
     edgesRef.current.forEach((edge, i) => {
-      const n1 = nodesRef.current[edge[0]];
-      const n2 = nodesRef.current[edge[1]];
+      const n1 = nodesRef.current![edge[0]];
+      const n2 = nodesRef.current![edge[1]];
       if (!n1 || !n2 || !paths.current[i]) return;
 
       let midX = (n1.x + n2.x) / 2;
