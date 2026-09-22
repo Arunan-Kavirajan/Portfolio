@@ -16,77 +16,76 @@ type Project = {
   y: number; // percentage viewport
 };
 
-// --- DATA ---
 const PROJECTS: Project[] = [
   {
     id: "koda",
     number: "01",
     title: "KODA",
     subtitle: "CODEBASE DETECTIVE",
-    description: "An agentic system for understanding unfamiliar codebases.",
+    description: "Codebase investigation tool. Ingest public GitHub repositories, explore file structure, and prepare for multi-agent analysis.",
     x: 30, y: 35,
     tech: [
-      { name: "AGENTS", x: 0, y: -120 },
-      { name: "NEXT.JS", x: 140, y: -30 },
-      { name: "SUPABASE", x: 60, y: 120 },
-      { name: "RAG", x: -130, y: 30 },
-      { name: "TYPESCRIPT", x: -80, y: -90 },
+      { name: "NEXT.JS", x: 0, y: -120 },
+      { name: "TYPESCRIPT", x: 140, y: -30 },
+      { name: "GITHUB API", x: 60, y: 120 },
+      { name: "TAILWIND CSS", x: -130, y: 30 },
+    ]
+  },
+  {
+    id: "echoes",
+    number: "02",
+    title: "ECHOES",
+    subtitle: "DRIFTING MESSAGES",
+    description: "A public, anonymous message board where notes become part of a permanent, shared time capsule. No accounts, no algorithm. Just thoughts, drifting.",
+    x: 65, y: 25,
+    tech: [
+      { name: "REACT", x: 0, y: -100 },
+      { name: "FRAMER MOTION", x: 160, y: 0 },
+      { name: "SUPABASE", x: 60, y: 100 },
+      { name: "POSTGRESQL", x: -140, y: -20 },
+      { name: "VITE", x: -80, y: 80 },
     ]
   },
   {
     id: "certiva",
-    number: "02",
-    title: "CERTIVA",
-    subtitle: "CREDENTIAL VERIFICATION",
-    description: "Cryptographic credential issuance and verification system.",
-    x: 65, y: 25,
-    tech: [
-      { name: "BLOCKCHAIN", x: 0, y: -100 },
-      { name: "SMART CONTRACTS", x: 160, y: 0 },
-      { name: "NODE.JS", x: 60, y: 100 },
-      { name: "NEXT.JS", x: -140, y: -20 },
-    ]
-  },
-  {
-    id: "ascend",
     number: "03",
-    title: "ASCEND",
-    subtitle: "PERFORMANCE TRACKING",
-    description: "Real-time analytics and telemetry for extreme sports.",
+    title: "CERTIVA",
+    subtitle: "CERTIFICATE AUTOMATION",
+    description: "A browser-based certificate automation platform built to instantly map spreadsheet data onto PDF templates and generate personalized certificates in bulk.",
     x: 75, y: 65,
     tech: [
-      { name: "REACT NATIVE", x: -120, y: -70 },
-      { name: "FIREBASE", x: 110, y: -60 },
-      { name: "REDUX", x: 90, y: 90 },
-      { name: "NODE.JS", x: -100, y: 80 },
+      { name: "REACT", x: -120, y: -70 },
+      { name: "VITE", x: 110, y: -60 },
+      { name: "PDF-LIB", x: 90, y: 90 },
+      { name: "TYPESCRIPT", x: -100, y: 80 },
     ]
   },
   {
-    id: "algo",
+    id: "algolab",
     number: "04",
-    title: "ALGO_VIS",
-    subtitle: "EDUCATIONAL TOOL",
-    description: "Interactive visualizer for complex graph and sorting algorithms.",
+    title: "ALGO_LAB",
+    subtitle: "VISUALIZATION ENGINE",
+    description: "An interactive, physics-driven visualization laboratory for algorithms and data structures, featuring dynamic frontends and a Python calculation engine.",
     x: 20, y: 70,
     tech: [
-      { name: "REACT", x: 0, y: -100 },
-      { name: "D3.JS", x: 120, y: 20 },
-      { name: "TYPESCRIPT", x: -120, y: 40 },
-      { name: "ALGORITHMS", x: 0, y: 100 },
+      { name: "FASTAPI", x: 0, y: -100 },
+      { name: "PYTHON", x: 120, y: 20 },
+      { name: "REACT", x: -120, y: 40 },
+      { name: "FRAMER MOTION", x: 0, y: 100 },
     ]
   },
   {
     id: "dbrownie",
     number: "05",
     title: "D_BROWNIE",
-    subtitle: "BILLING ENGINE",
-    description: "Automated invoicing and payment gateway integration.",
+    subtitle: "ANDROID BILLING SOFTWARE",
+    description: "A Flutter-based billing and order management app built for small food stalls, handling the full lifecycle with live ESC/POS Bluetooth receipt printing.",
     x: 45, y: 85,
     tech: [
-      { name: "PYTHON", x: -110, y: -60 },
-      { name: "DJANGO", x: 120, y: -40 },
-      { name: "POSTGRESQL", x: 80, y: 100 },
-      { name: "STRIPE", x: -90, y: 90 },
+      { name: "FLUTTER", x: -110, y: -60 },
+      { name: "DART", x: 120, y: -40 },
+      { name: "SQLITE", x: 80, y: 100 },
+      { name: "BLUETOOTH ESC/POS", x: -90, y: 90 },
     ]
   }
 ];
