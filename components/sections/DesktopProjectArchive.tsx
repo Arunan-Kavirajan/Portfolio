@@ -33,10 +33,10 @@ const PROJECTS: Project[] = [
     inDevelopment: true,
     primary: true,
     tech: [
-      { name: "NEXT.JS", x: 140, y: 20 },
-      { name: "TYPESCRIPT", x: 80, y: 120 },
-      { name: "GITHUB API", x: -20, y: 140 },
-      { name: "TAILWIND CSS", x: 160, y: 80 },
+      { name: "NEXT.JS", x: 0, y: 0 },
+      { name: "TYPESCRIPT", x: 0, y: 0 },
+      { name: "GITHUB API", x: 0, y: 0 },
+      { name: "TAILWIND CSS", x: 0, y: 0 },
     ]
   },
   {
@@ -47,10 +47,10 @@ const PROJECTS: Project[] = [
     description: "A public, anonymous message board where notes become part of a permanent, shared time capsule. No accounts, no algorithms.",
     x: 55, y: 25, // Top Center
     tech: [
-      { name: "REACT", x: -140, y: 40 },
-      { name: "FRAMER MOTION", x: 140, y: 30 },
-      { name: "SUPABASE", x: -80, y: 120 },
-      { name: "POSTGRESQL", x: 80, y: 100 },
+      { name: "REACT", x: 0, y: 0 },
+      { name: "FRAMER MOTION", x: 0, y: 0 },
+      { name: "SUPABASE", x: 0, y: 0 },
+      { name: "POSTGRESQL", x: 0, y: 0 },
     ]
   },
   {
@@ -62,10 +62,10 @@ const PROJECTS: Project[] = [
     x: 85, y: 45, // Right Center
     primary: true,
     tech: [
-      { name: "REACT", x: -140, y: -60 },
-      { name: "VITE", x: -160, y: 20 },
-      { name: "PDF-LIB", x: -120, y: 100 },
-      { name: "TYPESCRIPT", x: -80, y: 150 },
+      { name: "REACT", x: 0, y: 0 },
+      { name: "VITE", x: 0, y: 0 },
+      { name: "PDF-LIB", x: 0, y: 0 },
+      { name: "TYPESCRIPT", x: 0, y: 0 },
     ]
   },
   {
@@ -77,10 +77,10 @@ const PROJECTS: Project[] = [
     x: 15, y: 75, // Bottom Left
     inDevelopment: true,
     tech: [
-      { name: "FASTAPI", x: 140, y: -100 },
-      { name: "PYTHON", x: 80, y: -150 },
-      { name: "REACT", x: 160, y: -30 },
-      { name: "FRAMER MOTION", x: 20, y: -120 },
+      { name: "FASTAPI", x: 0, y: 0 },
+      { name: "PYTHON", x: 0, y: 0 },
+      { name: "REACT", x: 0, y: 0 },
+      { name: "FRAMER MOTION", x: 0, y: 0 },
     ]
   },
   {
@@ -91,10 +91,10 @@ const PROJECTS: Project[] = [
     description: "A Flutter-based billing and order management app built for small food stalls, handling the full lifecycle with Bluetooth printing.",
     x: 40, y: 85, // Bottom Center
     tech: [
-      { name: "FLUTTER", x: -120, y: -100 },
-      { name: "DART", x: 120, y: -120 },
-      { name: "SQLITE", x: -60, y: -150 },
-      { name: "ESC/POS", x: 60, y: -160 },
+      { name: "FLUTTER", x: 0, y: 0 },
+      { name: "DART", x: 0, y: 0 },
+      { name: "SQLITE", x: 0, y: 0 },
+      { name: "ESC/POS", x: 0, y: 0 },
     ]
   },
   {
@@ -105,10 +105,10 @@ const PROJECTS: Project[] = [
     description: "The official platform for the Computer Hardware and AI Technology (CHAT) Club, featuring dynamic event management.",
     x: 75, y: 15, // Top Right
     tech: [
-      { name: "NEXT.JS", x: -160, y: 20 },
-      { name: "FIREBASE", x: -120, y: 80 },
-      { name: "FRAMER MOTION", x: -80, y: 140 },
-      { name: "TAILWIND CSS", x: -20, y: 120 },
+      { name: "NEXT.JS", x: 0, y: 0 },
+      { name: "FIREBASE", x: 0, y: 0 },
+      { name: "FRAMER MOTION", x: 0, y: 0 },
+      { name: "TAILWIND CSS", x: 0, y: 0 },
     ]
   },
   {
@@ -119,10 +119,10 @@ const PROJECTS: Project[] = [
     description: "An enterprise-grade Manufacturing Execution System designed for factory floors, featuring a rigorous offline-first architecture.",
     x: 85, y: 80, // Bottom Right
     tech: [
-      { name: "REACT", x: -150, y: -40 },
-      { name: "DEXIE.JS", x: -120, y: -100 },
-      { name: "FIREBASE", x: -80, y: -150 },
-      { name: "TYPESCRIPT", x: -40, y: -120 },
+      { name: "REACT", x: 0, y: 0 },
+      { name: "DEXIE.JS", x: 0, y: 0 },
+      { name: "FIREBASE", x: 0, y: 0 },
+      { name: "TYPESCRIPT", x: 0, y: 0 },
     ]
   },
   {
@@ -135,10 +135,10 @@ const PROJECTS: Project[] = [
     inDevelopment: true,
     primary: true,
     tech: [
-      { name: "REACT", x: -160, y: -60 },
-      { name: "FIREBASE", x: 140, y: -100 },
-      { name: "FRAMER MOTION", x: -120, y: -120 },
-      { name: "VITE", x: 160, y: -40 },
+      { name: "REACT", x: 0, y: 0 },
+      { name: "FIREBASE", x: 0, y: 0 },
+      { name: "FRAMER MOTION", x: 0, y: 0 },
+      { name: "VITE", x: 0, y: 0 },
     ]
   }
 ];
@@ -165,12 +165,12 @@ export default function DesktopProjectArchive() {
       {/* BACKGROUND ENVIRONMENT - Layered, Restrained, Technical */}
       
       {/* HUGE EDITORIAL TYPOGRAPHY */}
-      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 font-serif text-[32vw] leading-none text-[#E8EDF2] opacity-[0.035] pointer-events-none whitespace-nowrap select-none tracking-tighter z-0">
+      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 font-serif text-[20vw] leading-none text-[#E8EDF2] opacity-[0.015] pointer-events-none whitespace-nowrap select-none tracking-tighter z-0">
         WORK
       </div>
 
       {/* Layer 1: Grain texture */}
-      <div className="absolute inset-0 opacity-[0.15] mix-blend-overlay pointer-events-none z-0" style={{ backgroundImage: \`url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")\` }} />
+      <div className="absolute inset-0 opacity-[0.15] mix-blend-overlay pointer-events-none z-0" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
 
       {/* Layer 2: Environment Constellations & Technical Markers */}
       <TechnicalEnvironment mouseX={mouseX} mouseY={mouseY} hoveredId={hoveredId} />
@@ -212,9 +212,9 @@ function TechnicalEnvironment({ mouseX, mouseY, hoveredId }: { mouseX: any, mous
     >
       <svg className="absolute inset-0 w-full h-full">
         {/* Subtle coordinate arcs and routing lines */}
-        <path d={\`M \${size.w*0.2} \${size.h*0.3} Q \${size.w*0.4} \${size.h*0.1} \${size.w*0.55} \${size.h*0.25}\`} stroke="#69737D" strokeWidth={0.5} fill="none" opacity={0.15} />
-        <path d={\`M \${size.w*0.55} \${size.h*0.6} C \${size.w*0.7} \${size.h*0.7} \${size.w*0.8} \${size.h*0.6} \${size.w*0.85} \${size.h*0.45}\`} stroke="#69737D" strokeWidth={0.5} fill="none" opacity={0.1} />
-        <path d={\`M \${size.w*0.15} \${size.h*0.75} C \${size.w*0.1} \${size.h*0.9} \${size.w*0.3} \${size.h*0.9} \${size.w*0.4} \${size.h*0.85}\`} stroke="#36D9E6" strokeWidth={0.5} fill="none" opacity={0.05} />
+        <path d={`M ${size.w*0.2} ${size.h*0.3} Q ${size.w*0.4} ${size.h*0.1} ${size.w*0.55} ${size.h*0.25}`} stroke="#69737D" strokeWidth={0.5} fill="none" opacity={0.15} />
+        <path d={`M ${size.w*0.55} ${size.h*0.6} C ${size.w*0.7} ${size.h*0.7} ${size.w*0.8} ${size.h*0.6} ${size.w*0.85} ${size.h*0.45}`} stroke="#69737D" strokeWidth={0.5} fill="none" opacity={0.1} />
+        <path d={`M ${size.w*0.15} ${size.h*0.75} C ${size.w*0.1} ${size.h*0.9} ${size.w*0.3} ${size.h*0.9} ${size.w*0.4} ${size.h*0.85}`} stroke="#36D9E6" strokeWidth={0.5} fill="none" opacity={0.05} />
         
         {/* Geographic / Technical grid lines */}
         <line x1={size.w*0.5} y1="0" x2={size.w*0.5} y2={size.h} stroke="#69737D" strokeWidth={0.5} opacity={0.03} strokeDasharray="4 8" />
@@ -274,7 +274,7 @@ function AtmosphericMarker({ x, y, type = "text", label, mouseX, mouseY }: any) 
     <motion.div 
       ref={ref}
       className="absolute flex items-center justify-center opacity-20 pointer-events-none"
-      style={{ left: \`\${x}%\`, top: \`\${y}%\`, x: driftX, y: driftY }}
+      style={{ left: `${x}%`, top: `${y}%`, x: driftX, y: driftY }}
     >
       {type === "text" && <div className="font-mono text-[8px] text-[#69737D] tracking-widest">{label || "+"}</div>}
       {type === "bracket" && <div className="font-mono text-[8px] text-[#69737D] tracking-widest">[ ]</div>}
@@ -354,7 +354,7 @@ function ProjectNode({ project, mouseX, mouseY, hoveredId, setHoveredId }: any) 
     // Set Hovered based strictly on distance to center
     if (dist < 80 && hoveredId === null) {
       setHoveredId(project.id);
-    } else if (dist > 320 && isHovered) {
+    } else if (dist > 180 && isHovered) {
       setHoveredId(null);
     }
     
@@ -384,7 +384,7 @@ function ProjectNode({ project, mouseX, mouseY, hoveredId, setHoveredId }: any) 
   const handleClick = () => {
     // Stop hover interaction cleanly before navigating
     setHoveredId(null);
-    router.push(\`/projects/\${project.id}\`);
+    router.push(`/projects/${project.id}`);
   };
 
   const bSize = project.primary ? 18 : 14; 
@@ -399,11 +399,30 @@ function ProjectNode({ project, mouseX, mouseY, hoveredId, setHoveredId }: any) 
   const descAlignY = isBottomHalf ? "bottom-12" : "top-12";
   const descTextAlign = isRightHalf ? "text-right items-end" : "text-left items-start";
 
+  // DYNAMIC TECH STACK POSITIONING (Prevents Overlap)
+  // Calculate an arc strictly pointing AWAY from the description box
+  let sweepCenter = 0;
+  if (!isRightHalf && !isBottomHalf) sweepCenter = -135;      // Desc goes Bottom-Right, Tech arcs Top-Left
+  else if (isRightHalf && !isBottomHalf) sweepCenter = -45;   // Desc goes Bottom-Left, Tech arcs Top-Right
+  else if (isRightHalf && isBottomHalf) sweepCenter = 45;     // Desc goes Top-Left, Tech arcs Bottom-Right
+  else if (!isRightHalf && isBottomHalf) sweepCenter = 135;   // Desc goes Top-Right, Tech arcs Bottom-Left
+
+  const dynamicTech = project.tech.map((t: any, i: number) => {
+    const N = project.tech.length;
+    const spread = 150; // Sweep across 150 degrees
+    const startAngle = sweepCenter - spread / 2;
+    const angle = startAngle + (N > 1 ? (i / (N - 1)) * spread : 0);
+    const rad = angle * (Math.PI / 180);
+    // Irregular distance
+    const distance = 90 + (i % 2 === 0 ? 0 : 40) + (i % 3 === 0 ? 20 : 0);
+    return { ...t, x: Math.cos(rad) * distance, y: Math.sin(rad) * distance };
+  });
+
   return (
     <motion.div
       ref={nodeRef}
       className="absolute flex items-center justify-center z-10"
-      style={{ left: \`\${project.x}%\`, top: \`\${project.y}%\`, x: driftX, y: driftY }}
+      style={{ left: `${project.x}%`, top: `${project.y}%`, x: driftX, y: driftY }}
       animate={{ opacity: isOtherHovered ? 0.05 : 1 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
     >
@@ -426,7 +445,7 @@ function ProjectNode({ project, mouseX, mouseY, hoveredId, setHoveredId }: any) 
 
       {/* PROJECT LABEL (Inactive / Stage 2) */}
       <motion.div 
-        className={\`absolute flex flex-col pointer-events-none whitespace-nowrap \${isBottomHalf ? 'bottom-8' : 'top-8'} \${isRightHalf ? 'right-0 items-end' : 'left-0 items-start'}\`}
+        className={`absolute flex flex-col pointer-events-none whitespace-nowrap ${isBottomHalf ? 'bottom-8' : 'top-8'} ${isRightHalf ? 'right-0 items-end' : 'left-0 items-start'}`}
         animate={{ opacity: stage >= 2 ? 0 : 0.7 }}
         transition={{ duration: 0.3 }}
       >
@@ -437,13 +456,13 @@ function ProjectNode({ project, mouseX, mouseY, hoveredId, setHoveredId }: any) 
       {/* PROJECT ECOSYSTEM (Unified Composition) */}
       {/* Lines */}
       <svg className="absolute overflow-visible pointer-events-none z-0" style={{ width: 1, height: 1 }}>
-        {project.tech.map((t: any, i: number) => (
+        {dynamicTech.map((t: any, i: number) => (
           <TechLine key={i} target={t} awakened={stage >= 3} delay={i * 0.05} mouseX={mouseX} mouseY={mouseY} parentX={centerX} parentY={centerY} />
         ))}
       </svg>
 
       {/* Tech Nodes */}
-      {project.tech.map((t: any, i: number) => (
+      {dynamicTech.map((t: any, i: number) => (
         <TechNode key={i} tech={t} awakened={stage >= 4} delay={i * 0.05} mouseX={mouseX} mouseY={mouseY} parentX={centerX} parentY={centerY} />
       ))}
 
@@ -451,7 +470,7 @@ function ProjectNode({ project, mouseX, mouseY, hoveredId, setHoveredId }: any) 
       <AnimatePresence>
         {stage >= 5 && (
           <motion.div
-            className={\`absolute w-80 pointer-events-none flex flex-col \${descAlignX} \${descAlignY} \${descTextAlign} z-20\`}
+            className={`absolute w-80 pointer-events-none flex flex-col ${descAlignX} ${descAlignY} ${descTextAlign} z-20`}
             initial={{ opacity: 0, filter: "blur(4px)" }}
             animate={{ opacity: 1, filter: "blur(0px)" }}
             exit={{ opacity: 0, filter: "blur(4px)", transition: { duration: 0.3 } }}
@@ -467,7 +486,7 @@ function ProjectNode({ project, mouseX, mouseY, hoveredId, setHoveredId }: any) 
             <h2 className="font-serif text-[26px] leading-none text-[#E8EDF2] tracking-widest mb-2">{project.title}</h2>
             <h3 className="font-mono text-[9px] text-[#69737D] tracking-[0.2em] mb-4 uppercase">{project.subtitle}</h3>
             
-            <p className={\`font-sans text-xs text-[#E8EDF2]/80 leading-relaxed font-light mb-6 \${isRightHalf ? 'text-right' : 'text-left'}\`}>
+            <p className={`font-sans text-xs text-[#E8EDF2]/80 leading-relaxed font-light mb-6 ${isRightHalf ? 'text-right' : 'text-left'}`}>
               {project.description}
             </p>
             
@@ -510,7 +529,7 @@ function TechLine({ target, awakened, delay, mouseX, mouseY, parentX, parentY }:
     }
   });
 
-  const pathD = useMotionTemplate\`M 0 0 Q \${controlX} \${controlY} \${target.x} \${target.y}\`;
+  const pathD = useMotionTemplate`M 0 0 Q ${controlX} ${controlY} ${target.x} ${target.y}`;
 
   return (
     <motion.path
