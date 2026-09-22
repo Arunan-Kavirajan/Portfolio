@@ -2,31 +2,45 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-// Mock Data Template
+// Minimal Data Template
 const MOCK_DATA = {
-  title: "PROJECT KODA",
-  subtitle: "CODEBASE DETECTIVE & INGESTION SYSTEM",
-  status: "ACTIVE / IN DEVELOPMENT",
-  classification: "AGENTIC / AI",
-  tech: ["NEXT.JS", "TYPESCRIPT", "GITHUB API", "TAILWIND CSS", "OPENAI"],
+  id: "koda",
+  number: "01 / 08",
+  title: "KODA",
+  subtitle: "CODEBASE DETECTIVE",
+  status: "IN DEVELOPMENT",
+  role: "SOLO",
+  year: "2026",
+  tech: ["NEXT.JS", "TYPESCRIPT", "SUPABASE", "OPENAI"],
   links: [
-    { label: "LIVE DEPLOYMENT", url: "#" },
-    { label: "REPOSITORY", url: "#" }
+    { label: "LIVE PROJECT", url: "#" },
+    { label: "SOURCE CODE", url: "#" }
   ],
-  summary: "An agentic system designed to ingest, comprehend, and navigate entirely unfamiliar codebases. KODA operates as a synthetic developer, mapping complex file structures and architectural dependencies without prior human instruction.",
-  mechanics: [
-    { title: "Recursive AST Parsing", desc: "Maps deeply nested directory trees and generates comprehensive abstract syntax mappings of internal dependencies." },
-    { title: "Vector Embeddings", desc: "Translates proprietary business logic into dense vector space, allowing for instantaneous semantic retrieval of functions and types." },
-    { title: "Autonomous Refactoring", desc: "Proposes and simulates structural refactors in an isolated sandbox before committing changes to the primary repository." }
-  ]
+  overview: "KODA is an agentic system for understanding unfamiliar codebases. It ingests repositories, reconstructs their architecture and produces a navigable representation of the system.",
+  features: [
+    { title: "REPOSITORY INGESTION", desc: "Maps deeply nested directory trees and generates comprehensive abstract syntax mappings of internal dependencies." },
+    { title: "ARCHITECTURE ANALYSIS", desc: "Translates proprietary business logic into dense vector space, allowing for instantaneous semantic retrieval." },
+    { title: "SECURITY ANALYSIS", desc: "Proposes and simulates structural refactors in an isolated sandbox before committing changes." }
+  ],
+  highlights: [
+    { title: "Recursive AST parsing", desc: "Generates comprehensive syntax mappings in seconds across thousands of files." },
+    { title: "Vector embeddings", desc: "Translates business logic into searchable dense vector space." },
+    { title: "Agent orchestration", desc: "Manages parallel execution of highly specialized sub-agents." },
+    { title: "Repository graph generation", desc: "Constructs a live, interactive node map of codebase architecture." }
+  ],
+  next: {
+    id: "echoes",
+    number: "02 / 08",
+    title: "ECHOES"
+  }
 };
 
-export default function ProjectDossier() {
+export default function ProjectArchiveEditorial() {
   const params = useParams();
-  const id = params.id as string;
+  const router = useRouter();
   
   const [mounted, setMounted] = useState(false);
   // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -35,155 +49,267 @@ export default function ProjectDossier() {
   if (!mounted) return null;
 
   return (
-    <main className="min-h-screen bg-[#0B0E12] selection:bg-[#36D9E6]/30 overflow-x-hidden font-sans">
+    <main className="min-h-screen bg-[#0B0E12] text-[#E8EDF2] selection:bg-[#36D9E6]/30 overflow-x-hidden pt-32 pb-24">
       
-      {/* SUBTLE BACKGROUND GRID */}
-      <div className="fixed inset-0 pointer-events-none z-0 opacity-20">
-        <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#69737D" strokeWidth="0.5" opacity="0.3" />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#grid)" />
-        </svg>
-      </div>
-
-      {/* TOP NAVIGATION BAR */}
-      <motion.nav 
-        className="fixed top-0 left-0 w-full h-12 border-b border-[#69737D]/30 bg-[#0B0E12]/80 backdrop-blur-md flex items-center justify-between px-6 z-50 font-mono text-[10px] tracking-[0.2em] text-[#69737D]"
-        initial={{ y: -50 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
+      {/* ARCHIVE NAVIGATION */}
+      <motion.div 
+        className="max-w-[1400px] mx-auto px-6 md:px-12 flex justify-between items-end mb-24"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
       >
-        <Link href="/projects" className="flex items-center hover:text-[#E8EDF2] transition-colors">
-          <span className="mr-2">←</span> ABORT TO FIELD
+        <Link href="/" className="font-sans text-xs tracking-widest text-[#69737D] hover:text-[#E8EDF2] transition-colors">
+          ← WORK
         </Link>
-        <div className="text-[#36D9E6]">DOSSIER : {id?.toUpperCase() || 'UNKNOWN'}</div>
-        <div className="hidden md:block">STATUS : SECURE</div>
-      </motion.nav>
+        <div className="font-mono text-xs tracking-widest text-[#69737D]">
+          {MOCK_DATA.number}
+        </div>
+      </motion.div>
 
-      {/* DOSSIER CONTAINER */}
-      <div className="pt-24 pb-24 px-4 md:px-12 max-w-[1400px] mx-auto relative z-10">
+      {/* 1. PROJECT HERO */}
+      <div className="max-w-[1400px] mx-auto px-6 md:px-12 mb-40">
         
-        {/* BORDER WRAPPER */}
         <motion.div 
-          className="border border-[#69737D]/30 bg-[#0B0E12]/50 backdrop-blur-sm relative"
-          initial={{ opacity: 0, scale: 0.98 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.7, ease: "easeOut" }}
+          className="max-w-4xl flex flex-col justify-center"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
         >
-          {/* CORNER ACCENTS */}
-          <div className="absolute -top-1 -left-1 w-2 h-2 border-t border-l border-[#36D9E6]" />
-          <div className="absolute -top-1 -right-1 w-2 h-2 border-t border-r border-[#36D9E6]" />
-          <div className="absolute -bottom-1 -left-1 w-2 h-2 border-b border-l border-[#36D9E6]" />
-          <div className="absolute -bottom-1 -right-1 w-2 h-2 border-b border-r border-[#36D9E6]" />
-
-          {/* GRID LAYOUT */}
-          <div className="grid grid-cols-1 md:grid-cols-12 divide-y md:divide-y-0 md:divide-x divide-[#69737D]/30">
-            
-            {/* LEFT COLUMN: METADATA */}
-            <div className="md:col-span-3 p-6 md:p-8 flex flex-col gap-12">
-              
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
-                <div className="font-mono text-[9px] text-[#69737D] tracking-[0.2em] mb-3">CLASSIFICATION</div>
-                <div className="font-mono text-xs text-[#E8EDF2] tracking-wider">{MOCK_DATA.classification}</div>
-                <div className="font-mono text-xs text-[#36D9E6] tracking-wider mt-1">{MOCK_DATA.status}</div>
-              </motion.div>
-
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>
-                <div className="font-mono text-[9px] text-[#69737D] tracking-[0.2em] mb-4">TECHNICAL STACK</div>
-                <ul className="flex flex-col gap-2">
-                  {MOCK_DATA.tech.map((t, i) => (
-                    <li key={i} className="font-mono text-[10px] text-[#E8EDF2] tracking-wider flex items-center gap-2">
-                      <span className="text-[#69737D]">+</span> {t}
-                    </li>
-                  ))}
-                </ul>
-              </motion.div>
-
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
-                <div className="font-mono text-[9px] text-[#69737D] tracking-[0.2em] mb-4">EXTERNAL LINKS</div>
-                <ul className="flex flex-col gap-3">
-                  {MOCK_DATA.links.map((l, i) => (
-                    <li key={i}>
-                      <a href={l.url} className="font-mono text-[10px] text-[#36D9E6] tracking-wider hover:text-[#E8EDF2] transition-colors flex items-center justify-between border border-[#69737D]/20 px-3 py-2 group">
-                        {l.label}
-                        <span className="opacity-0 group-hover:opacity-100 transition-opacity">↗</span>
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </motion.div>
-
-              {/* DIAGRAM PLACEHOLDER */}
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }} className="mt-auto hidden md:block">
-                <div className="font-mono text-[9px] text-[#69737D] tracking-[0.2em] mb-4">SYSTEM SCHEMATIC</div>
-                <div className="border border-[#69737D]/20 aspect-square p-4 flex items-center justify-center relative overflow-hidden">
-                  <svg viewBox="0 0 100 100" className="w-full h-full opacity-30">
-                    <circle cx="50" cy="50" r="30" fill="none" stroke="#36D9E6" strokeWidth="0.5" strokeDasharray="2 4" />
-                    <circle cx="50" cy="50" r="15" fill="none" stroke="#E8EDF2" strokeWidth="1" />
-                    <line x1="20" y1="50" x2="35" y2="50" stroke="#69737D" strokeWidth="1" />
-                    <line x1="65" y1="50" x2="80" y2="50" stroke="#69737D" strokeWidth="1" />
-                    <line x1="50" y1="20" x2="50" y2="35" stroke="#69737D" strokeWidth="1" />
-                    <line x1="50" y1="65" x2="50" y2="80" stroke="#69737D" strokeWidth="1" />
-                  </svg>
-                </div>
-              </motion.div>
-
+          <h1 className="font-serif text-6xl md:text-7xl lg:text-8xl text-[#E8EDF2] leading-none mb-6 tracking-tight uppercase">
+            {MOCK_DATA.title}
+          </h1>
+          <h2 className="font-sans text-xs md:text-sm tracking-[0.2em] text-[#69737D] mb-12 uppercase">
+            {MOCK_DATA.subtitle}
+          </h2>
+          
+          <div className="flex flex-wrap gap-x-12 gap-y-8 mb-16">
+            <div>
+              <div className="font-sans text-[10px] text-[#69737D] tracking-widest mb-3 uppercase">Status</div>
+              <div className="font-sans text-xs text-[#E8EDF2] tracking-wide uppercase">{MOCK_DATA.status}</div>
             </div>
-
-            {/* RIGHT COLUMN: CONTENT */}
-            <div className="md:col-span-9 p-6 md:p-12 lg:p-16 flex flex-col">
-              
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }} 
-                animate={{ opacity: 1, y: 0 }} 
-                transition={{ delay: 0.2, duration: 0.6 }}
-                className="border-b border-[#69737D]/30 pb-12 mb-12"
-              >
-                <div className="font-mono text-[10px] text-[#36D9E6] tracking-[0.3em] mb-6">01 // IDENTITY</div>
-                <h1 className="font-serif text-4xl md:text-6xl lg:text-7xl text-[#E8EDF2] tracking-wide leading-none mb-4 uppercase">{MOCK_DATA.title}</h1>
-                <h2 className="font-mono text-xs md:text-sm text-[#69737D] tracking-[0.2em]">{MOCK_DATA.subtitle}</h2>
-              </motion.div>
-
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }} 
-                animate={{ opacity: 1, y: 0 }} 
-                transition={{ delay: 0.3, duration: 0.6 }}
-                className="mb-16 max-w-3xl"
-              >
-                <div className="font-mono text-[10px] text-[#36D9E6] tracking-[0.3em] mb-6">02 // EXECUTIVE SUMMARY</div>
-                <p className="font-serif text-lg md:text-xl lg:text-2xl text-[#E8EDF2]/90 leading-relaxed">
-                  {MOCK_DATA.summary}
-                </p>
-              </motion.div>
-
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }} 
-                animate={{ opacity: 1, y: 0 }} 
-                transition={{ delay: 0.4, duration: 0.6 }}
-              >
-                <div className="font-mono text-[10px] text-[#36D9E6] tracking-[0.3em] mb-8">03 // CORE MECHANICS</div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  {MOCK_DATA.mechanics.map((mech, i) => (
-                    <div key={i} className="border border-[#69737D]/20 p-6 bg-[#0B0E12]/40 group hover:border-[#36D9E6]/40 transition-colors">
-                      <div className="font-mono text-[10px] text-[#69737D] tracking-[0.2em] mb-3">M.{i + 1}</div>
-                      <h3 className="font-sans text-sm tracking-wider text-[#E8EDF2] mb-3 uppercase">{mech.title}</h3>
-                      <p className="font-sans text-xs text-[#E8EDF2]/70 leading-relaxed font-light">
-                        {mech.desc}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </motion.div>
-
+            <div>
+              <div className="font-sans text-[10px] text-[#69737D] tracking-widest mb-3 uppercase">Role</div>
+              <div className="font-sans text-xs text-[#E8EDF2] tracking-wide uppercase">{MOCK_DATA.role}</div>
+            </div>
+            <div>
+              <div className="font-sans text-[10px] text-[#69737D] tracking-widest mb-3 uppercase">Year</div>
+              <div className="font-sans text-xs text-[#E8EDF2] tracking-wide uppercase">{MOCK_DATA.year}</div>
+            </div>
+            <div>
+              <div className="font-sans text-[10px] text-[#69737D] tracking-widest mb-3 uppercase">Stack</div>
+              <div className="font-sans text-xs text-[#E8EDF2] tracking-wide leading-loose uppercase">
+                {MOCK_DATA.tech.map((t, i) => <div key={i}>{t}</div>)}
+              </div>
             </div>
           </div>
+
+          <div className="flex flex-col gap-4">
+            {MOCK_DATA.links.map((link, i) => (
+              <Link key={i} href={link.url} className="font-sans text-xs tracking-widest flex items-center group w-fit text-[#E8EDF2]">
+                {link.label} <span className="ml-3 group-hover:translate-x-1 transition-transform text-[#69737D]">→</span>
+              </Link>
+            ))}
+          </div>
         </motion.div>
+
+      </div>
+
+      {/* 2. OVERVIEW */}
+      <motion.div 
+        className="max-w-[900px] mx-auto px-6 md:px-12 mb-40 text-center"
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.8 }}
+      >
+        <div className="font-sans text-[10px] text-[#69737D] tracking-[0.2em] mb-8 uppercase">Overview</div>
+        <p className="font-serif text-2xl md:text-3xl lg:text-4xl leading-relaxed text-[#E8EDF2]">
+          {MOCK_DATA.overview}
+        </p>
+      </motion.div>
+
+      {/* 3. FEATURES (Staggered Blocks) */}
+      <div className="max-w-[1400px] mx-auto px-6 md:px-12 mb-40">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-16 md:gap-12">
+          {MOCK_DATA.features.map((feature, i) => (
+            <motion.div 
+              key={i} 
+              className="flex flex-col"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.6, delay: i * 0.15 }}
+            >
+              <div className="font-mono text-4xl text-[#69737D] mb-8 font-light">0{i + 1}</div>
+              <h3 className="font-sans text-sm tracking-widest mb-4 uppercase text-[#E8EDF2]">{feature.title}</h3>
+              <p className="font-sans text-sm text-[#69737D] leading-relaxed">
+                {feature.desc}
+              </p>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+
+      {/* 4. ARCHITECTURE (Full Width) */}
+      <motion.div 
+        className="w-full border-t border-[#69737D]/20 pt-32 pb-16 mb-40 overflow-hidden"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 1 }}
+      >
+        <div className="max-w-[1400px] mx-auto px-6 md:px-12">
+          <div className="font-sans text-[10px] text-[#69737D] tracking-[0.2em] mb-24 text-center uppercase">System Architecture</div>
+          <div className="w-full overflow-x-auto pb-12 flex justify-center">
+            <FullArchitectureDiagram />
+          </div>
+        </div>
+      </motion.div>
+
+      {/* 5. TECHNICAL HIGHLIGHTS */}
+      <div className="max-w-[800px] mx-auto px-6 md:px-12 mb-40">
+        <motion.div 
+          className="font-sans text-[10px] text-[#69737D] tracking-[0.2em] mb-16 uppercase"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+        >
+          Technical Highlights
+        </motion.div>
+        
+        <div className="flex flex-col gap-16">
+          {MOCK_DATA.highlights.map((highlight, i) => (
+            <motion.div 
+              key={i} 
+              className="flex gap-8 md:gap-12"
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.5, delay: i * 0.1 }}
+            >
+              <div className="font-mono text-[#69737D] pt-1">0{i + 1}</div>
+              <div>
+                <h3 className="font-sans text-sm tracking-wide mb-3 text-[#E8EDF2]">{highlight.title}</h3>
+                <p className="font-sans text-sm text-[#69737D] leading-relaxed max-w-lg">{highlight.desc}</p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+
+      {/* 6. RESULT / OUTPUT */}
+      <motion.div 
+        className="max-w-[1400px] mx-auto px-6 md:px-12 mb-48"
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.8 }}
+      >
+        <div className="font-sans text-[10px] text-[#69737D] tracking-[0.2em] mb-12 uppercase">Result</div>
+        <div className="w-full aspect-video bg-[#0B0E12] border border-[#69737D]/20 relative overflow-hidden flex items-center justify-center group">
+          {/* Mock visual representation */}
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#36D9E6]/5 via-[#0B0E12]/0 to-[#0B0E12]" />
+          <svg className="absolute w-full h-full opacity-10 group-hover:opacity-20 transition-opacity duration-1000" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <pattern id="dotGrid" width="20" height="20" patternUnits="userSpaceOnUse">
+                <circle cx="2" cy="2" r="1" fill="#69737D" />
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#dotGrid)" />
+          </svg>
+          <div className="font-serif text-2xl md:text-4xl text-[#69737D] font-light z-10 tracking-widest">
+            [ ARCHIVE RECORDING ]
+          </div>
+        </div>
+      </motion.div>
+
+      {/* 7. NEXT PROJECT TRANSITION */}
+      <div className="max-w-[1400px] mx-auto px-6 md:px-12 pb-12 border-t border-[#69737D]/20 pt-24">
+        <div 
+          className="flex flex-col md:flex-row md:items-end justify-between group cursor-pointer gap-8" 
+          onClick={() => router.push(`/projects/${MOCK_DATA.next.id}`)}
+        >
+          <div>
+            <div className="font-sans text-[10px] text-[#69737D] tracking-[0.2em] mb-6 uppercase">Next Project</div>
+            <div className="font-serif text-5xl md:text-7xl lg:text-8xl text-[#69737D] group-hover:text-[#E8EDF2] transition-colors duration-500 uppercase tracking-tight">
+              {MOCK_DATA.next.title}
+            </div>
+          </div>
+          <div className="font-mono text-xs md:text-sm text-[#69737D] group-hover:text-[#E8EDF2] transition-colors duration-500 flex items-center gap-6">
+            {MOCK_DATA.next.number} 
+            <span className="text-2xl group-hover:translate-x-4 transition-transform duration-500 ease-out font-light">→</span>
+          </div>
+        </div>
       </div>
 
     </main>
+  );
+}
+
+// --- VISUALIZATION COMPONENTS ---
+
+
+
+function FullArchitectureDiagram() {
+  return (
+    <div className="w-[800px] flex flex-col items-center font-sans text-[10px] md:text-xs tracking-widest text-[#E8EDF2] min-w-[800px]">
+      
+      {/* REPOSITORY */}
+      <div className="py-2 text-[#69737D]">REPOSITORY</div>
+      <VerticalArrow />
+      
+      {/* INGESTION */}
+      <div className="py-2">INGESTION</div>
+      <div className="h-16 w-[1px] bg-[#69737D]/30" />
+      
+      {/* SPLIT */}
+      <div className="w-[600px] h-[1px] bg-[#69737D]/30 relative">
+         <div className="absolute top-0 left-0 w-[1px] h-6 bg-[#69737D]/30" />
+         <div className="absolute top-0 right-0 w-[1px] h-6 bg-[#69737D]/30" />
+         <div className="absolute top-0 left-1/2 w-[1px] h-6 bg-[#69737D]/30" />
+         <ArrowHead className="absolute top-6 left-0 -translate-x-[0.5px]" />
+         <ArrowHead className="absolute top-6 right-0 -translate-x-[0.5px]" />
+         <ArrowHead className="absolute top-6 left-1/2 -translate-x-[0.5px]" />
+      </div>
+
+      {/* AGENTS ROW */}
+      <div className="w-[600px] flex justify-between mt-8">
+         <div className="w-[140px] text-center">ARCHITECT<br/>AGENT</div>
+         <div className="w-[140px] text-center">CODE<br/>AGENT</div>
+         <div className="w-[140px] text-center">SECURITY<br/>AGENT</div>
+      </div>
+
+      {/* MERGE */}
+      <div className="w-[600px] h-8 relative mt-6">
+         <div className="absolute bottom-0 left-0 w-[1px] h-8 bg-[#69737D]/30" />
+         <div className="absolute bottom-0 right-0 w-[1px] h-8 bg-[#69737D]/30" />
+         <div className="absolute bottom-0 left-1/2 w-[1px] h-8 bg-[#69737D]/30" />
+      </div>
+      <div className="w-[600px] h-[1px] bg-[#69737D]/30 relative">
+         <div className="absolute top-0 left-1/2 w-[1px] h-16 bg-[#69737D]/30" />
+         <ArrowHead className="absolute top-16 left-1/2 -translate-x-[0.5px]" />
+      </div>
+
+      {/* SYNTHESIZER */}
+      <div className="mt-20 py-2">SYNTHESIZER</div>
+      <VerticalArrow />
+      
+      {/* SYSTEM REPRESENTATION */}
+      <div className="py-2 text-[#36D9E6]">SYSTEM REPRESENTATION</div>
+    </div>
+  );
+}
+
+function VerticalArrow() {
+  return (
+    <div className="h-12 w-[1px] bg-[#69737D]/30 relative my-2">
+      <ArrowHead className="absolute bottom-0 left-0 -translate-x-[0.5px]" />
+    </div>
+  );
+}
+
+function ArrowHead({ className }: { className?: string }) {
+  return (
+    <div className={`w-0 h-0 border-l-[3px] border-r-[3px] border-t-[4px] border-l-transparent border-r-transparent border-t-[#69737D]/50 ${className}`} />
   );
 }
