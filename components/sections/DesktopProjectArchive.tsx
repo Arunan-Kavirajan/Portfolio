@@ -403,8 +403,25 @@ function ProjectNode({ project, mouseX, mouseY, hoveredId, setHoveredId }: any) 
     // Set Hovered based strictly on distance to center
     if (dist < 80 && hoveredId === null) {
       setHoveredId(project.id);
-    } else if (dist > 180 && isHovered) {
-      setHoveredId(null);
+    } 
+    
+    if (isHovered) {
+      // Calculate a safe zone that covers the description box
+      let inDescBox = false;
+      const pad = 60; // Forgiving padding around the box
+      const minX = isRightHalf ? -400 : -pad;
+      const maxX = isRightHalf ? pad : 400;
+      const minY = isBottomHalf ? -320 : -pad;
+      const maxY = isBottomHalf ? pad : 320;
+      
+      if (dx > minX && dx < maxX && dy > minY && dy < maxY) {
+        inDescBox = true;
+      }
+
+      // Un-hover if they leave the 140px node radius AND they are not in the description box quadrant
+      if (dist > 140 && !inDescBox) {
+        setHoveredId(null);
+      }
     }
     
     // When hovered, resist cursor slightly but follow
