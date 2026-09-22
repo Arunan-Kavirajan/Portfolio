@@ -21,7 +21,7 @@ type Project = {
 };
 
 // --- DATA ---
-// Adjusted tech node coordinates to ensure they NEVER overflow the viewport based on their anchor positions.
+// Coordinates are carefully distributed across the fixed 100vw x 100vh canvas
 const PROJECTS: Project[] = [
   {
     id: "koda",
@@ -160,11 +160,17 @@ export default function DesktopProjectArchive() {
   }, [mouseX, mouseY]);
 
   return (
-    <main className="fixed inset-0 w-[100vw] h-[100vh] bg-[#0B0E12] overflow-hidden selection:bg-[#36D9E6]/30 cursor-none">
+    <main className="fixed inset-0 w-[100vw] h-[100vh] bg-[#0B0E12] overflow-hidden selection:bg-[#36D9E6]/30">
       
       {/* BACKGROUND ENVIRONMENT - Layered, Restrained, Technical */}
+      
+      {/* HUGE EDITORIAL TYPOGRAPHY */}
+      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 font-serif text-[32vw] leading-none text-[#E8EDF2] opacity-[0.035] pointer-events-none whitespace-nowrap select-none tracking-tighter z-0">
+        WORK
+      </div>
+
       {/* Layer 1: Grain texture */}
-      <div className="absolute inset-0 opacity-[0.15] mix-blend-overlay pointer-events-none" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
+      <div className="absolute inset-0 opacity-[0.15] mix-blend-overlay pointer-events-none z-0" style={{ backgroundImage: \`url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")\` }} />
 
       {/* Layer 2: Environment Constellations & Technical Markers */}
       <TechnicalEnvironment mouseX={mouseX} mouseY={mouseY} hoveredId={hoveredId} />
@@ -181,7 +187,6 @@ export default function DesktopProjectArchive() {
         />
       ))}
       
-      <CustomCursor mouseX={mouseX} mouseY={mouseY} />
     </main>
   );
 }
@@ -201,15 +206,15 @@ function TechnicalEnvironment({ mouseX, mouseY, hoveredId }: { mouseX: any, mous
 
   return (
     <motion.div 
-      className="absolute inset-0 pointer-events-none"
+      className="absolute inset-0 pointer-events-none z-0"
       animate={{ opacity: hoveredId ? 0.3 : 1, filter: hoveredId ? "blur(2px)" : "blur(0px)" }}
       transition={{ duration: 0.8 }}
     >
       <svg className="absolute inset-0 w-full h-full">
         {/* Subtle coordinate arcs and routing lines */}
-        <path d={`M ${size.w*0.2} ${size.h*0.3} Q ${size.w*0.4} ${size.h*0.1} ${size.w*0.55} ${size.h*0.25}`} stroke="#69737D" strokeWidth={0.5} fill="none" opacity={0.15} />
-        <path d={`M ${size.w*0.55} ${size.h*0.6} C ${size.w*0.7} ${size.h*0.7} ${size.w*0.8} ${size.h*0.6} ${size.w*0.85} ${size.h*0.45}`} stroke="#69737D" strokeWidth={0.5} fill="none" opacity={0.1} />
-        <path d={`M ${size.w*0.15} ${size.h*0.75} C ${size.w*0.1} ${size.h*0.9} ${size.w*0.3} ${size.h*0.9} ${size.w*0.4} ${size.h*0.85}`} stroke="#36D9E6" strokeWidth={0.5} fill="none" opacity={0.05} />
+        <path d={\`M \${size.w*0.2} \${size.h*0.3} Q \${size.w*0.4} \${size.h*0.1} \${size.w*0.55} \${size.h*0.25}\`} stroke="#69737D" strokeWidth={0.5} fill="none" opacity={0.15} />
+        <path d={\`M \${size.w*0.55} \${size.h*0.6} C \${size.w*0.7} \${size.h*0.7} \${size.w*0.8} \${size.h*0.6} \${size.w*0.85} \${size.h*0.45}\`} stroke="#69737D" strokeWidth={0.5} fill="none" opacity={0.1} />
+        <path d={\`M \${size.w*0.15} \${size.h*0.75} C \${size.w*0.1} \${size.h*0.9} \${size.w*0.3} \${size.h*0.9} \${size.w*0.4} \${size.h*0.85}\`} stroke="#36D9E6" strokeWidth={0.5} fill="none" opacity={0.05} />
         
         {/* Geographic / Technical grid lines */}
         <line x1={size.w*0.5} y1="0" x2={size.w*0.5} y2={size.h} stroke="#69737D" strokeWidth={0.5} opacity={0.03} strokeDasharray="4 8" />
@@ -269,7 +274,7 @@ function AtmosphericMarker({ x, y, type = "text", label, mouseX, mouseY }: any) 
     <motion.div 
       ref={ref}
       className="absolute flex items-center justify-center opacity-20 pointer-events-none"
-      style={{ left: `${x}%`, top: `${y}%`, x: driftX, y: driftY }}
+      style={{ left: \`\${x}%\`, top: \`\${y}%\`, x: driftX, y: driftY }}
     >
       {type === "text" && <div className="font-mono text-[8px] text-[#69737D] tracking-widest">{label || "+"}</div>}
       {type === "bracket" && <div className="font-mono text-[8px] text-[#69737D] tracking-widest">[ ]</div>}
@@ -298,9 +303,8 @@ function ProjectNode({ project, mouseX, mouseY, hoveredId, setHoveredId }: any) 
   const [stage, setStage] = useState(0);
 
   // Physics
-  const distance = useMotionValue(1000);
-  const driftX = useSpring(0, { stiffness: 40, damping: 12, mass: 0.8 });
-  const driftY = useSpring(0, { stiffness: 40, damping: 12, mass: 0.8 });
+  const driftX = useSpring(0, { stiffness: 60, damping: 15, mass: 0.8 });
+  const driftY = useSpring(0, { stiffness: 60, damping: 15, mass: 0.8 });
   
   useEffect(() => {
     const updateCenter = () => {
@@ -327,9 +331,8 @@ function ProjectNode({ project, mouseX, mouseY, hoveredId, setHoveredId }: any) 
     const dx = mx - cx;
     const dy = my - cy;
     const dist = Math.sqrt(dx * dx + dy * dy);
-    distance.set(dist);
 
-    // 1. Magnetic Radius Check & Pull (Stage 0 to 1)
+    // 1. Magnetic Radius Check & Pull
     const MAGNETIC_RADIUS = 280;
     
     if (dist < MAGNETIC_RADIUS) {
@@ -337,7 +340,7 @@ function ProjectNode({ project, mouseX, mouseY, hoveredId, setHoveredId }: any) 
         // Only pull if we are not hovering something else
         const normalized = (MAGNETIC_RADIUS - dist) / MAGNETIC_RADIUS;
         const pull = Math.pow(normalized, 1.5); 
-        // Strong pull up to 45px
+        // Strong physical pull up to 45px
         driftX.set(dx * pull * 0.45);
         driftY.set(dy * pull * 0.45);
       }
@@ -348,17 +351,17 @@ function ProjectNode({ project, mouseX, mouseY, hoveredId, setHoveredId }: any) 
       }
     }
 
-    // Set Hovered based strictly on distance to center (avoids jitter)
-    if (dist < 60 && hoveredId === null) {
+    // Set Hovered based strictly on distance to center
+    if (dist < 80 && hoveredId === null) {
       setHoveredId(project.id);
-    } else if (dist > 150 && isHovered) {
+    } else if (dist > 320 && isHovered) {
       setHoveredId(null);
     }
     
-    // When hovered, strongly snap to cursor
+    // When hovered, resist cursor slightly but follow
     if (isHovered) {
-      driftX.set(dx * 0.15);
-      driftY.set(dy * 0.15);
+      driftX.set(dx * 0.2);
+      driftY.set(dy * 0.2);
     }
   });
 
@@ -377,9 +380,11 @@ function ProjectNode({ project, mouseX, mouseY, hoveredId, setHoveredId }: any) 
     return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); };
   }, [isHovered]);
 
-  // Click Handler - Navigates to project
+  // Click Handler - Navigates to existing project route
   const handleClick = () => {
-    router.push(`/projects/${project.id}`);
+    // Stop hover interaction cleanly before navigating
+    setHoveredId(null);
+    router.push(\`/projects/\${project.id}\`);
   };
 
   const bSize = project.primary ? 18 : 14; 
@@ -398,20 +403,19 @@ function ProjectNode({ project, mouseX, mouseY, hoveredId, setHoveredId }: any) 
     <motion.div
       ref={nodeRef}
       className="absolute flex items-center justify-center z-10"
-      style={{ left: `${project.x}%`, top: `${project.y}%`, x: driftX, y: driftY }}
+      style={{ left: \`\${project.x}%\`, top: \`\${project.y}%\`, x: driftX, y: driftY }}
       animate={{ opacity: isOtherHovered ? 0.05 : 1 }}
-      transition={{ duration: 0.8, ease: "easeInOut" }}
+      transition={{ duration: 0.8, ease: "easeOut" }}
     >
-      {/* Interaction Hitbox */}
+      {/* Interaction Hitbox (No tooltips) */}
       <div 
-        className="absolute w-[140px] h-[140px] rounded-full cursor-pointer z-20" 
+        className="absolute w-[160px] h-[160px] rounded-full cursor-pointer z-20" 
         onClick={handleClick}
-        title="Open Project"
       />
 
       {/* PROJECT BEACON / MARKER */}
       <motion.div 
-        className="relative flex items-center justify-center pointer-events-none"
+        className="relative flex items-center justify-center pointer-events-none z-10"
         animate={{ opacity: stage >= 1 ? 1 : 0.4, scale: stage >= 1 ? 1.2 : 1 }}
         transition={{ duration: 0.3 }}
       >
@@ -422,7 +426,7 @@ function ProjectNode({ project, mouseX, mouseY, hoveredId, setHoveredId }: any) 
 
       {/* PROJECT LABEL (Inactive / Stage 2) */}
       <motion.div 
-        className={`absolute flex flex-col pointer-events-none whitespace-nowrap ${isBottomHalf ? 'bottom-8' : 'top-8'} ${isRightHalf ? 'right-0 items-end' : 'left-0 items-start'}`}
+        className={\`absolute flex flex-col pointer-events-none whitespace-nowrap \${isBottomHalf ? 'bottom-8' : 'top-8'} \${isRightHalf ? 'right-0 items-end' : 'left-0 items-start'}\`}
         animate={{ opacity: stage >= 2 ? 0 : 0.7 }}
         transition={{ duration: 0.3 }}
       >
@@ -430,12 +434,15 @@ function ProjectNode({ project, mouseX, mouseY, hoveredId, setHoveredId }: any) 
         <div className="font-serif text-sm tracking-widest text-[#E8EDF2]">{project.title}</div>
       </motion.div>
 
-      {/* PROJECT ECOSYSTEM */}
-      <svg className="absolute overflow-visible pointer-events-none" style={{ width: 1, height: 1 }}>
+      {/* PROJECT ECOSYSTEM (Unified Composition) */}
+      {/* Lines */}
+      <svg className="absolute overflow-visible pointer-events-none z-0" style={{ width: 1, height: 1 }}>
         {project.tech.map((t: any, i: number) => (
           <TechLine key={i} target={t} awakened={stage >= 3} delay={i * 0.05} mouseX={mouseX} mouseY={mouseY} parentX={centerX} parentY={centerY} />
         ))}
       </svg>
+
+      {/* Tech Nodes */}
       {project.tech.map((t: any, i: number) => (
         <TechNode key={i} tech={t} awakened={stage >= 4} delay={i * 0.05} mouseX={mouseX} mouseY={mouseY} parentX={centerX} parentY={centerY} />
       ))}
@@ -444,7 +451,7 @@ function ProjectNode({ project, mouseX, mouseY, hoveredId, setHoveredId }: any) 
       <AnimatePresence>
         {stage >= 5 && (
           <motion.div
-            className={`absolute w-72 pointer-events-auto flex flex-col ${descAlignX} ${descAlignY} ${descTextAlign}`}
+            className={\`absolute w-80 pointer-events-none flex flex-col \${descAlignX} \${descAlignY} \${descTextAlign} z-20\`}
             initial={{ opacity: 0, filter: "blur(4px)" }}
             animate={{ opacity: 1, filter: "blur(0px)" }}
             exit={{ opacity: 0, filter: "blur(4px)", transition: { duration: 0.3 } }}
@@ -456,18 +463,20 @@ function ProjectNode({ project, mouseX, mouseY, hoveredId, setHoveredId }: any) 
                 <span className="text-[7px] border border-[#36D9E6]/30 px-1 py-[1px] tracking-[0.2em]">IN DEV</span>
               )}
             </div>
-            <h2 className="font-serif text-2xl text-[#E8EDF2] tracking-widest mb-1">{project.title}</h2>
-            <h3 className="font-mono text-[9px] text-[#69737D] tracking-[0.2em] mb-4">{project.subtitle}</h3>
             
-            <p className={`font-sans text-xs text-[#E8EDF2]/80 leading-relaxed font-light mb-6 ${isRightHalf ? 'text-right' : 'text-left'}`}>
+            <h2 className="font-serif text-[26px] leading-none text-[#E8EDF2] tracking-widest mb-2">{project.title}</h2>
+            <h3 className="font-mono text-[9px] text-[#69737D] tracking-[0.2em] mb-4 uppercase">{project.subtitle}</h3>
+            
+            <p className={\`font-sans text-xs text-[#E8EDF2]/80 leading-relaxed font-light mb-6 \${isRightHalf ? 'text-right' : 'text-left'}\`}>
               {project.description}
             </p>
             
-            <Link href={`/projects/${project.id}`} className="group font-mono text-[9px] text-[#36D9E6] hover:text-[#E8EDF2] tracking-[0.2em] transition-colors flex items-center">
-              {isRightHalf && <span className="mr-3 group-hover:-translate-x-1 transition-transform">←</span>}
+            {/* Click to Navigate instruction (Non-interactive visual only, parent div handles click) */}
+            <div className="group font-mono text-[9px] text-[#36D9E6] tracking-[0.2em] flex items-center mt-2 pointer-events-none">
+              {isRightHalf && <span className="mr-3 transition-transform">←</span>}
               ACCESS ARCHIVE 
-              {!isRightHalf && <span className="ml-3 group-hover:translate-x-1 transition-transform">→</span>}
-            </Link>
+              {!isRightHalf && <span className="ml-3 transition-transform">→</span>}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -501,7 +510,7 @@ function TechLine({ target, awakened, delay, mouseX, mouseY, parentX, parentY }:
     }
   });
 
-  const pathD = useMotionTemplate`M 0 0 Q ${controlX} ${controlY} ${target.x} ${target.y}`;
+  const pathD = useMotionTemplate\`M 0 0 Q \${controlX} \${controlY} \${target.x} \${target.y}\`;
 
   return (
     <motion.path
@@ -548,7 +557,7 @@ function TechNode({ tech, awakened, delay, mouseX, mouseY, parentX, parentY }: a
 
   return (
     <motion.div
-      className="absolute font-mono text-[10px] text-[#E8EDF2] tracking-widest whitespace-nowrap pointer-events-none flex items-center gap-2"
+      className="absolute font-mono text-[10px] text-[#E8EDF2] tracking-widest whitespace-nowrap pointer-events-none flex items-center gap-2 z-10"
       style={{ left: tech.x, top: tech.y, x: driftX, y: driftY, translateX: "-50%", translateY: "-50%" }}
       initial={{ opacity: 0, filter: "blur(2px)" }}
       animate={{ opacity: awakened ? 1 : 0, filter: awakened ? "blur(0px)" : "blur(2px)" }}
@@ -557,56 +566,5 @@ function TechNode({ tech, awakened, delay, mouseX, mouseY, parentX, parentY }: a
       <span className="text-[#36D9E6] text-[8px]">◇</span>
       {tech.name}
     </motion.div>
-  );
-}
-
-// --- MULTI-LAYER CURSOR ---
-function CustomCursor({ mouseX, mouseY }: { mouseX: any, mouseY: any }) {
-  const smoothX = useSpring(mouseX, { stiffness: 1000, damping: 40 });
-  const smoothY = useSpring(mouseY, { stiffness: 1000, damping: 40 });
-  
-  const outerX = useSpring(mouseX, { stiffness: 150, damping: 25 });
-  const outerY = useSpring(mouseY, { stiffness: 150, damping: 25 });
-
-  const [isHoveringProject, setIsHoveringProject] = useState(false);
-  const [isProximate, setIsProximate] = useState(false);
-
-  useAnimationFrame(() => {
-    const mx = mouseX.get();
-    const my = mouseY.get();
-    
-    const w = window.innerWidth;
-    const h = window.innerHeight;
-    
-    let minDist = 1000;
-    PROJECTS.forEach(p => {
-      const px = (p.x / 100) * w;
-      const py = (p.y / 100) * h;
-      const dist = Math.sqrt(Math.pow(mx - px, 2) + Math.pow(my - py, 2));
-      if (dist < minDist) minDist = dist;
-    });
-
-    setIsProximate(minDist < 280);
-    setIsHoveringProject(minDist < 40);
-  });
-
-  return (
-    <>
-      <motion.div 
-        className="fixed top-0 left-0 w-[3px] h-[3px] bg-[#E8EDF2] rounded-full pointer-events-none z-[100]"
-        style={{ x: smoothX, y: smoothY, translateX: "-50%", translateY: "-50%" }}
-      />
-      <motion.div
-        className="fixed top-0 left-0 rounded-full pointer-events-none z-[100]"
-        style={{ x: outerX, y: outerY, translateX: "-50%", translateY: "-50%" }}
-        animate={{
-          width: isHoveringProject ? 16 : isProximate ? 32 : 0,
-          height: isHoveringProject ? 16 : isProximate ? 32 : 0,
-          opacity: isHoveringProject ? 0.8 : isProximate ? 0.3 : 0,
-          border: isHoveringProject ? "1px solid #E8EDF2" : "1px solid #36D9E6",
-        }}
-        transition={{ duration: 0.3, ease: "easeOut" }}
-      />
-    </>
   );
 }
