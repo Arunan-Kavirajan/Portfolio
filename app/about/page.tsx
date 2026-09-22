@@ -1,31 +1,87 @@
 "use client";
 
 import { motion, useScroll, useTransform, useSpring, type Transition } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import Image from "next/image";
+
+import type { MotionValue } from "framer-motion";
+
+type AnimatedLetterProps = {
+  letter: string;
+  index: number;
+  length: number;
+  mouseX: MotionValue<number>;
+  mouseY: MotionValue<number>;
+  letterSpacing: MotionValue<string>;
+};
+
+function AnimatedLetter({ letter, index, length, mouseX, mouseY, letterSpacing }: AnimatedLetterProps) {
+  const offsetMultiplier = (index - (length - 1) / 2);
+  const letterX = useTransform(mouseX, (x: number) => x * offsetMultiplier * 0.5);
+  const letterY = useTransform(mouseY, (y: number) => y * Math.abs(offsetMultiplier) * 0.3);
+
+  return (
+    <motion.span 
+      style={{ x: letterX, y: letterY, marginRight: index === length - 1 ? 0 : letterSpacing }}
+      initial={{ opacity: 0, y: 40 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 1.2, delay: index * 0.08, ease: [0.2, 0.8, 0.2, 1] }}
+    >
+      {letter}
+    </motion.span>
+  );
+}
 
 // 1. HERO
 function HeroSection() {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   
-  const yTitle = useTransform(scrollYProgress, [0, 1], [0, 250]);
-  const yImage = useTransform(scrollYProgress, [0, 1], [0, 50]);
-  const ySubtitle = useTransform(scrollYProgress, [0, 1], [0, 100]);
-  
-  const imgOpacity = useTransform(scrollYProgress, [0, 0.5], [0.4, 0.8]);
+  // Mouse tracking for subtle letter interaction
+  const mouseX = useSpring(0, { stiffness: 50, damping: 20 });
+  const mouseY = useSpring(0, { stiffness: 50, damping: 20 });
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      mouseX.set((e.clientX / window.innerWidth - 0.5) * 20); // range -10 to 10
+      mouseY.set((e.clientY / window.innerHeight - 0.5) * 20);
+    };
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, [mouseX, mouseY]);
+
+  // Scroll Transforms
+  const imgOpacity = useTransform(scrollYProgress, [0, 0.4], [0.1, 0.7]);
+  const imgScale = useTransform(scrollYProgress, [0, 0.6], [0.95, 1.05]);
+  const imgY = useTransform(scrollYProgress, [0, 1], [0, 100]);
   const imgClip = useTransform(
     scrollYProgress, 
-    [0, 0.8], 
-    ["polygon(0% 35%, 100% 35%, 100% 65%, 0% 65%)", "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)"]
+    [0, 0.5], 
+    ["polygon(0% 45%, 100% 45%, 100% 55%, 0% 55%)", "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)"]
   );
 
+  const titleY = useTransform(scrollYProgress, [0, 0.8], [0, -150]);
+  const letterSpacing = useTransform(scrollYProgress, [0, 0.6], ["0em", "0.3em"]);
+  
+  const lastNameOpacity = useTransform(scrollYProgress, [0.2, 0.5], [0, 1]);
+  const lastNameY = useTransform(scrollYProgress, [0.2, 0.5], [20, 0]);
+
+  const subtitleY = useTransform(scrollYProgress, [0, 1], [0, -80]);
+
+  const indicatorDotY = useTransform(scrollYProgress, [0, 0.5], [0, 36]);
+
+  const titleLetters = "ARUNAN".split("");
+
   return (
-    <section ref={ref} className="h-[120vh] w-full relative flex items-start justify-center overflow-hidden pt-40">
+    <section ref={ref} className="h-[150vh] w-full relative flex items-start justify-center overflow-hidden pt-32 md:pt-40">
       
+      {/* PORTRAIT */}
       <motion.div 
-        className="absolute z-0 w-full max-w-[500px] aspect-[3/4] top-[15vh]"
-        style={{ y: yImage, opacity: imgOpacity, clipPath: imgClip }}
+        className="absolute z-0 w-full max-w-[500px] md:max-w-[600px] aspect-[3/4] top-[15vh]"
+        style={{ y: imgY, opacity: imgOpacity, scale: imgScale, clipPath: imgClip }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.1 }}
+        transition={{ duration: 2, delay: 0.5 }}
       >
         <Image 
           src="/profile_new.jpg" 
@@ -34,26 +90,71 @@ function HeroSection() {
           className="object-cover grayscale mix-blend-screen"
           priority
         />
-        {/* Subtle overlay gradient to merge it into background */}
         <div className="absolute inset-0 bg-gradient-to-t from-[#0B0E12] via-transparent to-[#0B0E12] opacity-80" />
         <div className="absolute inset-0 bg-gradient-to-r from-[#0B0E12] via-transparent to-[#0B0E12] opacity-80" />
       </motion.div>
       
-      <div className="z-10 text-center mix-blend-difference w-full flex flex-col items-center pointer-events-none mt-20">
-        <motion.h1 
-          className="font-serif text-[18vw] leading-none tracking-tighter text-[#E8EDF2]"
-          style={{ y: yTitle }}
-        >
-          ARUNAN
-        </motion.h1>
+      {/* TYPOGRAPHY */}
+      <div className="z-10 text-center mix-blend-difference w-full flex flex-col items-center mt-[10vh]">
+        <motion.div style={{ y: titleY }} className="relative flex flex-col items-center">
+          
+          <h1 className="font-serif text-[18vw] leading-none tracking-tighter text-[#E8EDF2] flex">
+            {titleLetters.map((letter, i) => (
+              <AnimatedLetter
+                key={i}
+                letter={letter}
+                index={i}
+                length={titleLetters.length}
+                mouseX={mouseX}
+                mouseY={mouseY}
+                letterSpacing={letterSpacing}
+              />
+            ))}
+          </h1>
+          
+          {/* Identity Emergence */}
+          <motion.div 
+            className="font-serif text-[6vw] leading-none tracking-widest text-[#E8EDF2] absolute -bottom-10 md:-bottom-16 w-full text-center"
+            style={{ opacity: lastNameOpacity, y: lastNameY }}
+          >
+            KAVIRAJAN
+          </motion.div>
+
+        </motion.div>
+
+        {/* SUBTITLE */}
         <motion.div 
-          className="font-mono text-[9px] md:text-xs tracking-[0.4em] text-[#36D9E6] mt-8 uppercase"
-          style={{ y: ySubtitle }}
+          className="font-mono text-[8px] md:text-xs tracking-[0.3em] md:tracking-[0.4em] text-[#36D9E6] mt-24 md:mt-32 uppercase flex flex-wrap justify-center gap-2 md:gap-4 overflow-hidden px-4"
+          style={{ y: subtitleY }}
         >
-          Software Development · Cybersecurity · AI/ML
+          {["SOFTWARE DEVELOPMENT", "·", "CYBERSECURITY", "·", "AI/ML"].map((phrase, i) => (
+            <motion.span
+              key={i}
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 1.2 + i * 0.15, ease: "easeOut" }}
+            >
+              {phrase}
+            </motion.span>
+          ))}
         </motion.div>
       </div>
-      
+
+      {/* SCROLL INDICATOR */}
+      <motion.div 
+        className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1, delay: 2.5 }}
+      >
+        <div className="w-[1px] h-10 bg-[#69737D]/30 relative overflow-hidden">
+          <motion.div 
+            className="absolute top-0 left-0 w-full bg-[#E8EDF2]"
+            style={{ height: "4px", y: indicatorDotY }}
+          />
+        </div>
+      </motion.div>
+
     </section>
   );
 }
