@@ -63,7 +63,7 @@ function HeroSection() {
   const titleY = useTransform(scrollYProgress, [0, 0.8], [0, -150]);
   const letterSpacing = useTransform(scrollYProgress, [0, 0.6], ["0em", "0.3em"]);
   
-  const lastNameOpacity = useTransform(scrollYProgress, [0.2, 0.5], [0, 1]);
+  const lastNameOpacity = useTransform(scrollYProgress, [0.2, 0.5], [0.01, 1]);
   const lastNameY = useTransform(scrollYProgress, [0.2, 0.5], [20, 0]);
 
   const subtitleY = useTransform(scrollYProgress, [0, 1], [0, -80]);
@@ -78,9 +78,6 @@ function HeroSection() {
       {/* PORTRAIT */}
       <motion.div 
         className="absolute z-0 w-full max-w-[500px] md:max-w-[600px] aspect-[3/4] top-[15vh] mix-blend-screen"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 2, delay: 0.5 }}
       >
         <motion.div
           className="w-full h-full relative"
@@ -105,10 +102,10 @@ function HeroSection() {
       </motion.div>
       
       {/* TYPOGRAPHY */}
-      <div className="z-10 text-center mix-blend-difference w-full flex flex-col items-center mt-[10vh]">
+      <div className="z-10 text-center w-full flex flex-col items-center mt-[10vh]">
         <motion.div style={{ y: titleY }} className="relative flex flex-col items-center">
           
-          <h1 className="font-serif text-[18vw] leading-none tracking-tighter text-[#E8EDF2] flex">
+          <h1 className="font-serif text-[18vw] leading-none tracking-tighter text-[#E8EDF2] flex mix-blend-difference">
             {titleLetters.map((letter, i) => (
               <AnimatedLetter
                 key={i}
@@ -124,7 +121,7 @@ function HeroSection() {
           
           {/* Identity Emergence */}
           <motion.div 
-            className="font-serif text-[6vw] leading-none tracking-widest text-[#E8EDF2] absolute -bottom-10 md:-bottom-16 w-full text-center"
+            className="font-serif text-[6vw] leading-none tracking-widest text-[#E8EDF2] absolute -bottom-10 md:-bottom-16 w-full text-center mix-blend-difference"
             style={{ 
               opacity: lastNameOpacity, 
               y: lastNameY,
@@ -138,7 +135,7 @@ function HeroSection() {
 
         {/* SUBTITLE */}
         <motion.div 
-          className="font-mono text-[8px] md:text-xs tracking-[0.3em] md:tracking-[0.4em] text-[#36D9E6] mt-24 md:mt-32 uppercase flex flex-wrap justify-center gap-2 md:gap-4 overflow-hidden px-4"
+          className="font-mono text-[8px] md:text-xs tracking-[0.3em] md:tracking-[0.4em] text-[#36D9E6] mt-24 md:mt-32 uppercase flex flex-wrap justify-center gap-2 md:gap-4 overflow-hidden px-4 mix-blend-difference"
           style={{ y: subtitleY }}
         >
           {["SOFTWARE DEVELOPMENT", "·", "CYBERSECURITY", "·", "AI/ML"].map((phrase, i) => (
