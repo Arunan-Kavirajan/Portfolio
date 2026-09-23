@@ -379,15 +379,15 @@ function WorldCanvas({ scrollYProgress }: { scrollYProgress: MotionValue<number>
 }
 
 function CinematicTypography({ scrollYProgress }: { scrollYProgress: MotionValue<number> }) {
-  const w1Op = useTransform(scrollYProgress, [0.1, 0.2, 0.25, 0.3], [0, 1, 1, 0]);
-  const w2Op = useTransform(scrollYProgress, [0.3, 0.4, 0.45, 0.5], [0, 1, 1, 0]);
-  const w3Op = useTransform(scrollYProgress, [0.5, 0.6, 0.65, 0.7], [0, 1, 1, 0]);
-  const w4Op = useTransform(scrollYProgress, [0.7, 0.8, 0.85, 0.9], [0, 1, 1, 0]);
+  const w1Op = useTransform(scrollYProgress, [0.05, 0.15, 0.2, 0.25], [0, 1, 1, 0]);
+  const w2Op = useTransform(scrollYProgress, [0.25, 0.35, 0.4, 0.45], [0, 1, 1, 0]);
+  const w3Op = useTransform(scrollYProgress, [0.45, 0.55, 0.6, 0.65], [0, 1, 1, 0]);
+  const w4Op = useTransform(scrollYProgress, [0.65, 0.75, 0.8, 0.85], [0, 1, 1, 0]);
 
-  const y1 = useTransform(scrollYProgress, [0.1, 0.3], [30, -30]);
-  const y2 = useTransform(scrollYProgress, [0.3, 0.5], [30, -30]);
-  const y3 = useTransform(scrollYProgress, [0.5, 0.7], [30, -30]);
-  const y4 = useTransform(scrollYProgress, [0.7, 0.9], [30, -30]);
+  const y1 = useTransform(scrollYProgress, [0.05, 0.25], [30, -30]);
+  const y2 = useTransform(scrollYProgress, [0.25, 0.45], [30, -30]);
+  const y3 = useTransform(scrollYProgress, [0.45, 0.65], [30, -30]);
+  const y4 = useTransform(scrollYProgress, [0.65, 0.85], [30, -30]);
 
   return (
     <div className="absolute inset-0 z-20 pointer-events-none flex items-center justify-center mix-blend-difference overflow-hidden">
@@ -400,8 +400,8 @@ function CinematicTypography({ scrollYProgress }: { scrollYProgress: MotionValue
 }
 
 function AftermathText({ scrollYProgress }: { scrollYProgress: MotionValue<number> }) {
-  const pOp = useTransform(scrollYProgress, [0.9, 0.94], [0, 1]);
-  const pY = useTransform(scrollYProgress, [0.9, 0.94], [30, 0]);
+  const pOp = useTransform(scrollYProgress, [0.85, 0.9], [0, 1]);
+  const pY = useTransform(scrollYProgress, [0.85, 0.9], [30, 0]);
 
   return (
     <div className="absolute inset-0 z-30 pointer-events-none flex items-center justify-center px-6">
@@ -430,7 +430,7 @@ function CuriousSection() {
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
   
   return (
-    <section ref={ref} className="h-[600vh] relative z-20 bg-[#0B0E12]">
+    <section ref={ref} className="h-[800vh] relative z-20 bg-[#0B0E12]">
       <div className="sticky top-0 h-screen w-full flex flex-col items-center justify-center overflow-hidden">
         
         <WorldCanvas scrollYProgress={scrollYProgress} />
