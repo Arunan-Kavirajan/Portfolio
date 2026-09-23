@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useScroll, useTransform, useSpring, type Transition } from "framer-motion";
-import { useRef, useEffect, useMemo, useState } from "react";
+import { useRef, useEffect, useMemo } from "react";
 import Image from "next/image";
 
 import type { MotionValue } from "framer-motion";
@@ -73,7 +73,7 @@ function HeroSection() {
   const titleLetters = "ARUNAN".split("");
 
   return (
-    <section ref={ref} className="snap-start h-[150vh] w-full relative flex items-start justify-center overflow-hidden pt-32 md:pt-40">
+    <section ref={ref} className="h-[150vh] w-full relative flex items-start justify-center overflow-hidden pt-32 md:pt-40">
       
       {/* PORTRAIT */}
       <motion.div 
@@ -165,77 +165,71 @@ function WorldCanvas({ scrollYProgress }: { scrollYProgress: MotionValue<number>
   const canvasRef = useRef<HTMLCanvasElement>(null);
   
   const N = 1200;
-  const [particles, setParticles] = useState<any[] | null>(null);
+  const particles = useMemo(() => {
+    const random = (seed: number) => {
+      const x = Math.sin(seed) * 10000;
+      return x - Math.floor(x);
+    };
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      const random = (seed: number) => {
-        const x = Math.sin(seed) * 10000;
-        return x - Math.floor(x);
-      };
+    const arr = [];
+    for (let i = 0; i < N; i++) {
+      // S0: Scattered field
+      const s0 = [
+        (random(i) - 0.5) * 4000,
+        (random(i + N) - 0.5) * 4000,
+        (random(i + N * 2) - 0.5) * 4000 + 1000
+      ];
 
-      const arr = [];
-      for (let i = 0; i < N; i++) {
-        // S0: Scattered field
-        const s0 = [
-          (random(i) - 0.5) * 4000,
-          (random(i + N) - 0.5) * 4000,
-          (random(i + N * 2) - 0.5) * 4000 + 1000
-        ];
+      // S1: Building (Sphere)
+      const phi = Math.acos(1 - 2 * (i + 0.5) / N);
+      const theta = Math.PI * (1 + Math.sqrt(5)) * i;
+      const R = 220;
+      const s1 = [
+        R * Math.sin(phi) * Math.cos(theta),
+        R * Math.cos(phi),
+        R * Math.sin(phi) * Math.sin(theta)
+      ];
 
-        // S1: Building (Sphere)
-        const phi = Math.acos(1 - 2 * (i + 0.5) / N);
-        const theta = Math.PI * (1 + Math.sqrt(5)) * i;
-        const R = 220;
-        const s1 = [
-          R * Math.sin(phi) * Math.cos(theta),
-          R * Math.cos(phi),
-          R * Math.sin(phi) * Math.sin(theta)
-        ];
+      // S2: Breaking (Cracked/Drifting by clusters)
+      const cx = Math.sign(s1[0]) || 1;
+      const cy = Math.sign(s1[1]) || 1;
+      const cz = Math.sign(s1[2]) || 1;
+      const s2 = [
+        s1[0] + cx * (150 + random(i + N * 3) * 200) + (random(i + N * 4) - 0.5) * 150,
+        s1[1] + cy * (150 + random(i + N * 5) * 200) + (random(i + N * 6) - 0.5) * 150,
+        s1[2] + cz * (150 + random(i + N * 7) * 200) + (random(i + N * 8) - 0.5) * 150
+      ];
 
-        // S2: Breaking (Cracked/Drifting by clusters)
-        const cx = Math.sign(s1[0]) || 1;
-        const cy = Math.sign(s1[1]) || 1;
-        const cz = Math.sign(s1[2]) || 1;
-        const s2 = [
-          s1[0] + cx * (150 + random(i + N * 3) * 200) + (random(i + N * 4) - 0.5) * 150,
-          s1[1] + cy * (150 + random(i + N * 5) * 200) + (random(i + N * 6) - 0.5) * 150,
-          s1[2] + cz * (150 + random(i + N * 7) * 200) + (random(i + N * 8) - 0.5) * 150
-        ];
+      // S3: Understanding (Ordered 10x10x12 grid)
+      const gx = (i % 10) - 4.5;
+      const gy = Math.floor((i / 10)) % 10 - 4.5;
+      const gz = Math.floor(i / 100) - 5.5; // up to 12 deep
+      const s3 = [gx * 45, gy * 45, gz * 45];
 
-        // S3: Understanding (Ordered 10x10x12 grid)
-        const gx = (i % 10) - 4.5;
-        const gy = Math.floor((i / 10)) % 10 - 4.5;
-        const gz = Math.floor(i / 100) - 5.5; // up to 12 deep
-        const s3 = [gx * 45, gy * 45, gz * 45];
+      // S4: Rebuilding (Torus)
+      const tu = (i % 60) / 60 * Math.PI * 2;
+      const tv = Math.floor(i / 60) / 20 * Math.PI * 2;
+      const rMaj = 240;
+      const rMin = 70;
+      const s4 = [
+        (rMaj + rMin * Math.cos(tv)) * Math.cos(tu),
+        rMin * Math.sin(tv),
+        (rMaj + rMin * Math.cos(tv)) * Math.sin(tu)
+      ];
 
-        // S4: Rebuilding (Torus)
-        const tu = (i % 60) / 60 * Math.PI * 2;
-        const tv = Math.floor(i / 60) / 20 * Math.PI * 2;
-        const rMaj = 240;
-        const rMin = 70;
-        const s4 = [
-          (rMaj + rMin * Math.cos(tv)) * Math.cos(tu),
-          rMin * Math.sin(tv),
-          (rMaj + rMin * Math.cos(tv)) * Math.sin(tu)
-        ];
+      // S5: Exit (Dissolve upward & scatter)
+      const s5 = [
+        s4[0] * 3 + (random(i + N * 9) - 0.5) * 500,
+        s4[1] * 3 - 1500,
+        s4[2] * 3 + (random(i + N * 10) - 0.5) * 500
+      ];
 
-        // S5: Exit (Dissolve upward & scatter)
-        const s5 = [
-          s4[0] * 3 + (random(i + N * 9) - 0.5) * 500,
-          s4[1] * 3 - 1500,
-          s4[2] * 3 + (random(i + N * 10) - 0.5) * 500
-        ];
-
-        arr.push({ s0, s1, s2, s3, s4, s5 });
-      }
-      setParticles(arr);
-    }, 150);
-    return () => clearTimeout(timer);
+      arr.push({ s0, s1, s2, s3, s4, s5 });
+    }
+    return arr;
   }, []);
 
   useEffect(() => {
-    if (!particles) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -263,31 +257,16 @@ function WorldCanvas({ scrollYProgress }: { scrollYProgress: MotionValue<number>
 
     const render = () => {
       const targetProgress = scrollYProgress.get();
-      
-      const isSettledAtStart = currentProgress < 0.001 && targetProgress === 0;
-      const isSettledAtEnd = currentProgress > 0.95 && targetProgress > 0.95;
-      
-      if (isSettledAtStart || isSettledAtEnd) {
-        currentProgress = targetProgress;
-        animationFrameId = requestAnimationFrame(render);
-        return;
-      }
-
       currentProgress += (targetProgress - currentProgress) * 0.08;
 
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-      const displayWidth = canvas.clientWidth;
-      const displayHeight = canvas.clientHeight;
-      const width = Math.floor(displayWidth * dpr);
-      const height = Math.floor(displayHeight * dpr);
-
+      const width = canvas.clientWidth;
+      const height = canvas.clientHeight;
       if (canvas.width !== width || canvas.height !== height) {
         canvas.width = width;
         canvas.height = height;
-        ctx.scale(dpr, dpr);
       }
 
-      ctx.clearRect(0, 0, displayWidth, displayHeight);
+      ctx.clearRect(0, 0, width, height);
 
       const globalAlpha = currentProgress > 0.85 ? Math.max(0, 1 - (currentProgress - 0.85) / 0.1) : 1;
       ctx.globalAlpha = globalAlpha;
@@ -317,8 +296,8 @@ function WorldCanvas({ scrollYProgress }: { scrollYProgress: MotionValue<number>
         let px = 0, py = 0, scale = 0;
         if (zFinal > 0) {
           scale = fov / zFinal;
-          px = displayWidth / 2 + x2 * scale;
-          py = displayHeight / 2 + y1 * scale;
+          px = width / 2 + x2 * scale;
+          py = height / 2 + y1 * scale;
         }
         
         projected.push({ px, py, scale, z: z2 });
@@ -440,7 +419,7 @@ function CuriousSection() {
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
   
   return (
-    <section ref={ref} className="snap-start h-[600vh] relative z-20 bg-[#0B0E12]">
+    <section ref={ref} className="h-[600vh] relative z-20 bg-[#0B0E12]">
       <div className="sticky top-0 h-screen w-full flex flex-col items-center justify-center overflow-hidden">
         
         <WorldCanvas scrollYProgress={scrollYProgress} />
@@ -464,7 +443,7 @@ function MindVisual() {
   const floatingTransition: Transition = { repeat: Infinity, duration: 6, repeatType: "mirror", ease: "easeInOut" };
 
   return (
-    <section ref={ref} className="snap-start h-[120vh] w-full relative flex items-center justify-center border-t border-[#69737D]/20 bg-[#0B0E12]">
+    <section ref={ref} className="h-[120vh] w-full relative flex items-center justify-center border-t border-[#69737D]/20 bg-[#0B0E12]">
       <div className="font-mono text-[9px] text-[#69737D] tracking-[0.3em] absolute top-16 md:top-24 uppercase">The Topology of Interest</div>
       
       <svg viewBox="0 0 800 600" className="w-full h-full max-w-4xl opacity-80 overflow-visible">
@@ -534,7 +513,7 @@ function WhatIBuild() {
   const p2Scale = useTransform(scrollYProgress, [0.5, 1], [0.9, 1.05]);
 
   return (
-    <section ref={ref} className="snap-start h-[250vh] relative border-t border-[#69737D]/20 z-10">
+    <section ref={ref} className="h-[250vh] relative border-t border-[#69737D]/20 z-10">
       <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden bg-[#0B0E12]">
         <div className="absolute top-16 md:top-24 font-mono text-[9px] text-[#69737D] tracking-[0.3em] uppercase">What I Build</div>
         
@@ -570,7 +549,7 @@ function Experience() {
   const lineWidth = useSpring(useTransform(scrollYProgress, [0, 1], ["0%", "100%"]), { stiffness: 50, damping: 20 });
 
   return (
-    <section ref={ref} className="snap-start py-40 md:py-64 border-t border-[#69737D]/20 relative overflow-hidden bg-[#0B0E12]">
+    <section ref={ref} className="py-40 md:py-64 border-t border-[#69737D]/20 relative overflow-hidden bg-[#0B0E12]">
       <div className="max-w-[1200px] mx-auto px-6 md:px-12">
         <div className="font-mono text-[9px] text-[#69737D] tracking-[0.3em] uppercase mb-32 md:mb-48">Experience</div>
         
@@ -640,7 +619,7 @@ function BeyondCode() {
   const y5 = useTransform(scrollYProgress, [0, 1], [250, -150]);
 
   return (
-    <section ref={ref} className="snap-start h-[120vh] relative overflow-hidden border-t border-[#69737D]/20 flex items-center justify-center bg-[#0B0E12]">
+    <section ref={ref} className="h-[120vh] relative overflow-hidden border-t border-[#69737D]/20 flex items-center justify-center bg-[#0B0E12]">
       <div className="font-mono text-[9px] text-[#69737D] tracking-[0.3em] uppercase absolute top-16 md:top-24">Beyond Code</div>
       
       <motion.div className="absolute left-[5%] md:left-[15%] font-serif text-4xl md:text-6xl text-[#E8EDF2]/20" style={{ y: y1 }}>Philosophy</motion.div>
@@ -667,7 +646,7 @@ function BeyondCode() {
 // 7. FINAL TRANSITION
 function FinalTransition() {
   return (
-    <section className="snap-start min-h-screen relative flex flex-col items-center justify-center border-t border-[#69737D]/20 bg-[#0B0E12]">
+    <section className="min-h-screen relative flex flex-col items-center justify-center border-t border-[#69737D]/20 bg-[#0B0E12]">
       <motion.h2 
         className="font-serif text-5xl md:text-7xl lg:text-9xl text-[#E8EDF2] mb-32 tracking-tighter"
         initial={{ opacity: 0, y: 50 }}
