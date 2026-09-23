@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useScroll, useTransform, useSpring, type Transition } from "framer-motion";
-import { useRef, useEffect, useMemo } from "react";
+import { useRef, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 
 import type { MotionValue } from "framer-motion";
@@ -77,21 +77,31 @@ function HeroSection() {
       
       {/* PORTRAIT */}
       <motion.div 
-        className="absolute z-0 w-full max-w-[500px] md:max-w-[600px] aspect-[3/4] top-[15vh]"
-        style={{ y: imgY, opacity: imgOpacity, scale: imgScale, clipPath: imgClip }}
+        className="absolute z-0 w-full max-w-[500px] md:max-w-[600px] aspect-[3/4] top-[15vh] mix-blend-screen"
         initial={{ opacity: 0 }}
-        animate={{ opacity: 0.1 }}
+        animate={{ opacity: 1 }}
         transition={{ duration: 2, delay: 0.5 }}
       >
-        <Image 
-          src="/profile_new.jpg" 
-          alt="Arunan" 
-          fill 
-          className="object-cover grayscale mix-blend-screen"
-          priority
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0B0E12] via-transparent to-[#0B0E12] opacity-80" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0B0E12] via-transparent to-[#0B0E12] opacity-80" />
+        <motion.div
+          className="w-full h-full relative"
+          style={{ 
+            y: imgY, 
+            opacity: imgOpacity, 
+            scale: imgScale, 
+            clipPath: imgClip,
+            WebkitClipPath: imgClip as any
+          }}
+        >
+          <Image 
+            src="/profile_new.jpg" 
+            alt="Arunan" 
+            fill 
+            className="object-cover grayscale"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0B0E12] via-transparent to-[#0B0E12] opacity-80" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0B0E12] via-transparent to-[#0B0E12] opacity-80" />
+        </motion.div>
       </motion.div>
       
       {/* TYPOGRAPHY */}
@@ -115,7 +125,11 @@ function HeroSection() {
           {/* Identity Emergence */}
           <motion.div 
             className="font-serif text-[6vw] leading-none tracking-widest text-[#E8EDF2] absolute -bottom-10 md:-bottom-16 w-full text-center"
-            style={{ opacity: lastNameOpacity, y: lastNameY }}
+            style={{ 
+              opacity: lastNameOpacity, 
+              y: lastNameY,
+              willChange: "opacity, transform"
+            }}
           >
             KAVIRAJAN
           </motion.div>
