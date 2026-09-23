@@ -454,37 +454,37 @@ function MindVisual() {
   const swX = useTransform(scrollYProgress, [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9], ["-20vw", "-2vw", "-15vw", "-25vw", "-20vw", "-10vw", "-18vw"]);
   const swY = useTransform(scrollYProgress, [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9], ["20vh", "-2vh", "-20vh", "-10vh", "15vh", "25vh", "-12vh"]);
   const swScale = useTransform(scrollYProgress, [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9], [0.6, 1.1, 0.7, 0.6, 0.7, 0.8, 0.9]);
-  const swOp = useTransform(scrollYProgress, [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9], [0, 1, 0.5, 0.3, 0.5, 0.7, 0.9]);
+  const swOp = useTransform(scrollYProgress, [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9], [1, 1, 0.5, 0.3, 0.5, 0.7, 0.9]);
 
   // CYBERSECURITY (peaks at 0.3)
   const secX = useTransform(scrollYProgress, [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9], ["30vw", "15vw", "2vw", "-15vw", "-25vw", "-10vw", "18vw"]);
   const secY = useTransform(scrollYProgress, [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9], ["-30vh", "-15vh", "4vh", "20vh", "10vh", "-20vh", "-18vh"]);
   const secScale = useTransform(scrollYProgress, [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9], [0.5, 0.7, 1.1, 0.8, 0.6, 0.7, 0.9]);
-  const secOp = useTransform(scrollYProgress, [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9], [0, 0.5, 1, 0.6, 0.4, 0.6, 0.9]);
+  const secOp = useTransform(scrollYProgress, [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9], [0.6, 0.7, 1, 0.6, 0.4, 0.6, 0.9]);
 
   // AI / ML (peaks at 0.45)
   const aiX = useTransform(scrollYProgress, [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9], ["-30vw", "-20vw", "-10vw", "-4vw", "15vw", "25vw", "-22vw"]);
   const aiY = useTransform(scrollYProgress, [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9], ["-10vh", "10vh", "20vh", "-3vh", "-15vh", "0vh", "15vh"]);
   const aiScale = useTransform(scrollYProgress, [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9], [0.5, 0.6, 0.8, 1.1, 0.8, 0.6, 0.9]);
-  const aiOp = useTransform(scrollYProgress, [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9], [0, 0.4, 0.6, 1, 0.6, 0.4, 0.9]);
+  const aiOp = useTransform(scrollYProgress, [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9], [0.4, 0.5, 0.6, 1, 0.6, 0.4, 0.9]);
 
   // SYSTEMS (peaks at 0.6)
   const sysX = useTransform(scrollYProgress, [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9], ["20vw", "30vw", "20vw", "10vw", "4vw", "-15vw", "22vw"]);
   const sysY = useTransform(scrollYProgress, [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9], ["35vh", "15vh", "-10vh", "-20vh", "2vh", "20vh", "18vh"]);
   const sysScale = useTransform(scrollYProgress, [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9], [0.5, 0.6, 0.7, 0.8, 1.1, 0.8, 0.9]);
-  const sysOp = useTransform(scrollYProgress, [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9], [0, 0.4, 0.5, 0.7, 1, 0.6, 0.9]);
+  const sysOp = useTransform(scrollYProgress, [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9], [0.3, 0.4, 0.5, 0.7, 1, 0.6, 0.9]);
 
   // EXPERIMENTATION (peaks at 0.75)
   const expX = useTransform(scrollYProgress, [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9], ["-35vw", "-25vw", "-15vw", "-20vw", "-10vw", "-2vw", "0vw"]);
   const expY = useTransform(scrollYProgress, [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9], ["40vh", "25vh", "10vh", "-15vh", "-25vh", "-4vh", "-8vh"]);
   const expScale = useTransform(scrollYProgress, [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9], [0.5, 0.6, 0.7, 0.8, 0.9, 1.1, 0.9]);
-  const expOp = useTransform(scrollYProgress, [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9], [0, 0.4, 0.5, 0.6, 0.8, 1, 0.9]);
+  const expOp = useTransform(scrollYProgress, [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9], [0.2, 0.4, 0.5, 0.6, 0.8, 1, 0.9]);
 
   // BUILDING (peaks at 0.9)
   const bldX = useTransform(scrollYProgress, [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9], ["40vw", "25vw", "15vw", "20vw", "10vw", "15vw", "0vw"]);
   const bldY = useTransform(scrollYProgress, [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9], ["20vh", "30vh", "25vh", "10vh", "20vh", "15vh", "12vh"]);
   const bldScale = useTransform(scrollYProgress, [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9], [0.5, 0.6, 0.7, 0.8, 0.8, 0.9, 1.0]);
-  const bldOp = useTransform(scrollYProgress, [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9], [0, 0.3, 0.4, 0.5, 0.6, 0.8, 1]);
+  const bldOp = useTransform(scrollYProgress, [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9], [0.1, 0.3, 0.4, 0.5, 0.6, 0.8, 1]);
 
   // FINAL STATEMENT
   const statementOp = useTransform(scrollYProgress, [0.85, 0.95], [0, 1]);
