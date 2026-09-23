@@ -1,7 +1,7 @@
 "use client";
 
-import { motion, useScroll, useTransform, useSpring, type Transition } from "framer-motion";
-import { useRef, useEffect, useMemo } from "react";
+import { motion, useScroll, useTransform, useSpring, animate, type Transition } from "framer-motion";
+import { useRef, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 
 import type { MotionValue } from "framer-motion";
@@ -163,73 +163,75 @@ function HeroSection() {
 // 2. CURIOUS WORLD SIMULATION
 function WorldCanvas({ scrollYProgress }: { scrollYProgress: MotionValue<number> }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  
   const N = 1200;
-  const particles = useMemo(() => {
-    const random = (seed: number) => {
-      const x = Math.sin(seed) * 10000;
-      return x - Math.floor(x);
-    };
+  
+  // Lazy initialize particles to keep first load lightning fast
+  const [particles, setParticles] = useState<any[] | null>(null);
 
-    const arr = [];
-    for (let i = 0; i < N; i++) {
-      // S0: Scattered field
-      const s0 = [
-        (random(i) - 0.5) * 4000,
-        (random(i + N) - 0.5) * 4000,
-        (random(i + N * 2) - 0.5) * 4000 + 1000
-      ];
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const arr = [];
+      const random = (seed: number) => {
+        const x = Math.sin(seed) * 10000;
+        return x - Math.floor(x);
+      };
 
-      // S1: Building (Sphere)
-      const phi = Math.acos(1 - 2 * (i + 0.5) / N);
-      const theta = Math.PI * (1 + Math.sqrt(5)) * i;
-      const R = 220;
-      const s1 = [
-        R * Math.sin(phi) * Math.cos(theta),
-        R * Math.cos(phi),
-        R * Math.sin(phi) * Math.sin(theta)
-      ];
+      for (let i = 0; i < N; i++) {
+        const s0 = [
+          (random(i) - 0.5) * 4000,
+          (random(i + N) - 0.5) * 4000,
+          (random(i + N * 2) - 0.5) * 4000 + 1000
+        ];
 
-      // S2: Breaking (Cracked/Drifting by clusters)
-      const cx = Math.sign(s1[0]) || 1;
-      const cy = Math.sign(s1[1]) || 1;
-      const cz = Math.sign(s1[2]) || 1;
-      const s2 = [
-        s1[0] + cx * (150 + random(i + N * 3) * 200) + (random(i + N * 4) - 0.5) * 150,
-        s1[1] + cy * (150 + random(i + N * 5) * 200) + (random(i + N * 6) - 0.5) * 150,
-        s1[2] + cz * (150 + random(i + N * 7) * 200) + (random(i + N * 8) - 0.5) * 150
-      ];
+        const phi = Math.acos(1 - 2 * (i + 0.5) / N);
+        const theta = Math.PI * (1 + Math.sqrt(5)) * i;
+        const R = 220;
+        const s1 = [
+          R * Math.sin(phi) * Math.cos(theta),
+          R * Math.cos(phi),
+          R * Math.sin(phi) * Math.sin(theta)
+        ];
 
-      // S3: Understanding (Ordered 10x10x12 grid)
-      const gx = (i % 10) - 4.5;
-      const gy = Math.floor((i / 10)) % 10 - 4.5;
-      const gz = Math.floor(i / 100) - 5.5; // up to 12 deep
-      const s3 = [gx * 45, gy * 45, gz * 45];
+        const cx = Math.sign(s1[0]) || 1;
+        const cy = Math.sign(s1[1]) || 1;
+        const cz = Math.sign(s1[2]) || 1;
+        const s2 = [
+          s1[0] + cx * (150 + random(i + N * 3) * 200) + (random(i + N * 4) - 0.5) * 150,
+          s1[1] + cy * (150 + random(i + N * 5) * 200) + (random(i + N * 6) - 0.5) * 150,
+          s1[2] + cz * (150 + random(i + N * 7) * 200) + (random(i + N * 8) - 0.5) * 150
+        ];
 
-      // S4: Rebuilding (Torus)
-      const tu = (i % 60) / 60 * Math.PI * 2;
-      const tv = Math.floor(i / 60) / 20 * Math.PI * 2;
-      const rMaj = 240;
-      const rMin = 70;
-      const s4 = [
-        (rMaj + rMin * Math.cos(tv)) * Math.cos(tu),
-        rMin * Math.sin(tv),
-        (rMaj + rMin * Math.cos(tv)) * Math.sin(tu)
-      ];
+        const gx = (i % 10) - 4.5;
+        const gy = Math.floor((i / 10)) % 10 - 4.5;
+        const gz = Math.floor(i / 100) - 5.5; 
+        const s3 = [gx * 45, gy * 45, gz * 45];
 
-      // S5: Exit (Dissolve upward & scatter)
-      const s5 = [
-        s4[0] * 3 + (random(i + N * 9) - 0.5) * 500,
-        s4[1] * 3 - 1500,
-        s4[2] * 3 + (random(i + N * 10) - 0.5) * 500
-      ];
+        const tu = (i % 60) / 60 * Math.PI * 2;
+        const tv = Math.floor(i / 60) / 20 * Math.PI * 2;
+        const rMaj = 240;
+        const rMin = 70;
+        const s4 = [
+          (rMaj + rMin * Math.cos(tv)) * Math.cos(tu),
+          rMin * Math.sin(tv),
+          (rMaj + rMin * Math.cos(tv)) * Math.sin(tu)
+        ];
 
-      arr.push({ s0, s1, s2, s3, s4, s5 });
-    }
-    return arr;
+        const s5 = [
+          s4[0] * 3 + (random(i + N * 9) - 0.5) * 500,
+          s4[1] * 3 - 1500,
+          s4[2] * 3 + (random(i + N * 10) - 0.5) * 500
+        ];
+
+        arr.push({ s0, s1, s2, s3, s4, s5 });
+      }
+      setParticles(arr);
+    }, 150); // Delay generation to prioritize initial page render
+    
+    return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
+    if (!particles) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -257,20 +259,40 @@ function WorldCanvas({ scrollYProgress }: { scrollYProgress: MotionValue<number>
 
     const render = () => {
       const targetProgress = scrollYProgress.get();
+      
+      // VISIBILITY OPTIMIZATION: Skip calculation if completely settled at start/end
+      const isSettledAtStart = currentProgress < 0.001 && targetProgress === 0;
+      const isSettledAtEnd = currentProgress > 0.95 && targetProgress > 0.95;
+      
+      if (isSettledAtStart || isSettledAtEnd) {
+        currentProgress = targetProgress;
+        if (isSettledAtEnd && canvas.width > 0) {
+          ctx.clearRect(0, 0, canvas.width, canvas.height); // Ensure clear
+        }
+        animationFrameId = requestAnimationFrame(render);
+        return;
+      }
+
       currentProgress += (targetProgress - currentProgress) * 0.08;
 
-      const width = canvas.clientWidth;
-      const height = canvas.clientHeight;
+      // DEVICE PIXEL RATIO OPTIMIZATION
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const displayWidth = canvas.clientWidth;
+      const displayHeight = canvas.clientHeight;
+      const width = Math.floor(displayWidth * dpr);
+      const height = Math.floor(displayHeight * dpr);
+
       if (canvas.width !== width || canvas.height !== height) {
         canvas.width = width;
         canvas.height = height;
+        ctx.scale(dpr, dpr);
       }
 
-      ctx.clearRect(0, 0, width, height);
+      ctx.clearRect(0, 0, displayWidth, displayHeight);
 
       const globalAlpha = currentProgress > 0.85 ? Math.max(0, 1 - (currentProgress - 0.85) / 0.1) : 1;
       ctx.globalAlpha = globalAlpha;
-      if (globalAlpha <= 0) {
+      if (globalAlpha <= 0.01) {
         animationFrameId = requestAnimationFrame(render);
         return;
       }
@@ -281,14 +303,16 @@ function WorldCanvas({ scrollYProgress }: { scrollYProgress: MotionValue<number>
       const projected: { px: number, py: number, scale: number, z: number }[] = [];
       const fov = 1000;
 
+      // Precalculate trig
+      const cosX = Math.cos(globalRotX), sinX = Math.sin(globalRotX);
+      const cosY = Math.cos(globalRotY), sinY = Math.sin(globalRotY);
+
       for (let i = 0; i < N; i++) {
         const pt = getInterpolatedState(currentProgress, particles[i]);
         
-        const cosX = Math.cos(globalRotX), sinX = Math.sin(globalRotX);
         const y1 = pt.y * cosX - pt.z * sinX;
         const z1 = pt.y * sinX + pt.z * cosX;
 
-        const cosY = Math.cos(globalRotY), sinY = Math.sin(globalRotY);
         const x2 = pt.x * cosY + z1 * sinY;
         const z2 = -pt.x * sinY + z1 * cosY;
 
@@ -296,8 +320,8 @@ function WorldCanvas({ scrollYProgress }: { scrollYProgress: MotionValue<number>
         let px = 0, py = 0, scale = 0;
         if (zFinal > 0) {
           scale = fov / zFinal;
-          px = width / 2 + x2 * scale;
-          py = height / 2 + y1 * scale;
+          px = displayWidth / 2 + x2 * scale;
+          py = displayHeight / 2 + y1 * scale;
         }
         
         projected.push({ px, py, scale, z: z2 });
@@ -344,17 +368,18 @@ function WorldCanvas({ scrollYProgress }: { scrollYProgress: MotionValue<number>
         ctx.stroke();
       }
 
-      const sortedIndices = Array.from({ length: N }, (_, i) => i).sort((a, b) => projected[b].z - projected[a].z);
-      
+      // RENDER OPTIMIZATION: Removed sorting (unnecessary for 1.5px circles), 
+      // batched all 1200 particles into a single beginPath/fill call.
       ctx.fillStyle = '#E8EDF2';
+      ctx.beginPath();
       for (let i = 0; i < N; i++) {
-        const p = projected[sortedIndices[i]];
+        const p = projected[i];
         if (p.scale > 0) {
-          ctx.beginPath();
+          ctx.moveTo(p.px, p.py);
           ctx.arc(p.px, p.py, 1.5 * p.scale, 0, Math.PI * 2);
-          ctx.fill();
         }
       }
+      ctx.fill();
 
       animationFrameId = requestAnimationFrame(render);
     };
@@ -676,7 +701,68 @@ function FinalTransition() {
   );
 }
 
+function useSceneController() {
+  useEffect(() => {
+    if (window.matchMedia("(max-width: 768px)").matches) return;
+
+    let isAnimating = false;
+    let accumulatedDelta = 0;
+    let lockTimeout: ReturnType<typeof setTimeout>;
+
+    const handleWheel = (e: WheelEvent) => {
+      if (e.ctrlKey) return; // Allow pinch-to-zoom
+      e.preventDefault();
+
+      if (isAnimating) return;
+
+      accumulatedDelta += e.deltaY;
+
+      if (Math.abs(accumulatedDelta) > 40) {
+        const direction = Math.sign(accumulatedDelta);
+        accumulatedDelta = 0;
+        
+        const vh = window.innerHeight;
+        const currentY = window.scrollY;
+        const currentIndex = Math.round(currentY / vh);
+        
+        let nextIndex = currentIndex + direction;
+        const maxIndex = Math.floor((document.documentElement.scrollHeight - 10) / vh);
+        nextIndex = Math.max(0, Math.min(nextIndex, maxIndex));
+
+        const targetY = nextIndex * vh;
+
+        if (targetY !== currentY) {
+          isAnimating = true;
+          
+          animate(window.scrollY, targetY, {
+            type: "spring",
+            stiffness: 70,
+            damping: 20,
+            mass: 1,
+            onUpdate: (latest) => window.scrollTo(0, latest),
+            onComplete: () => {
+              // Tiny lock to absorb remaining trackpad inertia
+              lockTimeout = setTimeout(() => {
+                isAnimating = false;
+                accumulatedDelta = 0;
+              }, 50);
+            }
+          });
+        }
+      }
+    };
+
+    window.addEventListener('wheel', handleWheel, { passive: false });
+    return () => {
+      window.removeEventListener('wheel', handleWheel);
+      clearTimeout(lockTimeout);
+    };
+  }, []);
+}
+
 export default function AboutPage() {
+  useSceneController();
+  
   return (
     <main className="bg-[#0B0E12] text-[#E8EDF2] selection:bg-[#36D9E6]/30">
       <HeroSection />
