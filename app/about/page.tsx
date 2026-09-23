@@ -35,7 +35,7 @@ function AnimatedLetter({ letter, index, length, mouseX, mouseY, letterSpacing }
 // 1. HERO
 function HeroSection() {
   const ref = useRef(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
+  const { scrollY } = useScroll();
   
   // Mouse tracking for subtle letter interaction
   const mouseX = useSpring(0, { stiffness: 50, damping: 20 });
@@ -50,25 +50,25 @@ function HeroSection() {
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, [mouseX, mouseY]);
 
-  // Scroll Transforms
-  const imgOpacity = useTransform(scrollYProgress, [0, 0.4], [0.1, 0.7]);
-  const imgScale = useTransform(scrollYProgress, [0, 0.6], [0.95, 1.05]);
-  const imgY = useTransform(scrollYProgress, [0, 1], [0, 100]);
+  // Use absolute scroll pixels to bypass Chrome's IntersectionObserver height calculation bugs
+  const imgOpacity = useTransform(scrollY, [0, 480], [0.1, 0.7]);
+  const imgScale = useTransform(scrollY, [0, 720], [0.95, 1.05]);
+  const imgY = useTransform(scrollY, [0, 1200], [0, 100]);
   const imgClip = useTransform(
-    scrollYProgress, 
-    [0, 0.5], 
+    scrollY, 
+    [0, 600], 
     ["polygon(0% 45%, 100% 45%, 100% 55%, 0% 55%)", "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)"]
   );
 
-  const titleY = useTransform(scrollYProgress, [0, 0.8], [0, -150]);
-  const letterSpacing = useTransform(scrollYProgress, [0, 0.6], ["0em", "0.3em"]);
+  const titleY = useTransform(scrollY, [0, 960], [0, -150]);
+  const letterSpacing = useTransform(scrollY, [0, 720], ["0em", "0.3em"]);
   
-  const lastNameOpacity = useTransform(scrollYProgress, [0.2, 0.5], [0.01, 1]);
-  const lastNameY = useTransform(scrollYProgress, [0.2, 0.5], [20, 0]);
+  const lastNameOpacity = useTransform(scrollY, [240, 600], [0.01, 1]);
+  const lastNameY = useTransform(scrollY, [240, 600], [20, 0]);
 
-  const subtitleY = useTransform(scrollYProgress, [0, 1], [0, -80]);
+  const subtitleY = useTransform(scrollY, [0, 1200], [0, -80]);
 
-  const indicatorDotY = useTransform(scrollYProgress, [0, 0.5], [0, 36]);
+  const indicatorDotY = useTransform(scrollY, [0, 600], [0, 36]);
 
   const titleLetters = "ARUNAN".split("");
 
