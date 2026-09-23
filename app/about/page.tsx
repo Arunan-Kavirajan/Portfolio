@@ -400,8 +400,8 @@ function CinematicTypography({ scrollYProgress }: { scrollYProgress: MotionValue
 }
 
 function AftermathText({ scrollYProgress }: { scrollYProgress: MotionValue<number> }) {
-  const pOp = useTransform(scrollYProgress, [0.93, 0.98], [0, 1]);
-  const pY = useTransform(scrollYProgress, [0.93, 0.98], [30, 0]);
+  const pOp = useTransform(scrollYProgress, [0.9, 0.94], [0, 1]);
+  const pY = useTransform(scrollYProgress, [0.9, 0.94], [30, 0]);
 
   return (
     <div className="absolute inset-0 z-30 pointer-events-none flex items-center justify-center px-6">
