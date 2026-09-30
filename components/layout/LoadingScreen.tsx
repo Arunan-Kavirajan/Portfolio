@@ -16,77 +16,45 @@ export default function LoadingScreen({
     <AnimatePresence>
       {show && (
         <>
-          {/* ─── MOBILE / TABLET: Ink & Parchment Loading ─── */}
+          {/* ─── MOBILE: Wall prelude — the loading IS the reveal ─── */}
           {mounted && isMobile ? (
             <motion.div
               key="mobile-loading"
-              className="fixed inset-0 z-[9998] bg-[#F0E2C8] flex flex-col items-center justify-center select-none overflow-hidden"
-              exit={{
-                clipPath: "circle(0% at 50% 50%)",
-              }}
-              transition={{ duration: 0.9, ease: [0.76, 0, 0.24, 1] }}
+              className="fixed inset-0 z-[9998] overflow-hidden select-none"
+              style={{ background: "#3D2B1F" }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.35, ease: "easeInOut" }}
             >
-              {/* Paper texture */}
-              <div className="absolute inset-0 pointer-events-none opacity-30 mix-blend-multiply">
+              {/* Matching wall grain so dissolve is seamless */}
+              <div className="absolute inset-0 opacity-20 mix-blend-overlay">
                 <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                  <filter id="load-grain">
-                    <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="5" stitchTiles="stitch" />
+                  <filter id="load-wood">
+                    <feTurbulence type="fractalNoise" baseFrequency="0.015 0.12" numOctaves="6" seed="5" />
                     <feColorMatrix type="saturate" values="0" />
                   </filter>
-                  <rect width="100%" height="100%" filter="url(#load-grain)" opacity="0.6" />
+                  <rect width="100%" height="100%" filter="url(#load-wood)" />
                 </svg>
               </div>
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,rgba(20,12,6,0.6)_100%)]" />
 
-              {/* Thin decorative line across the top */}
-              <div className="absolute top-0 left-0 w-full h-[2px] bg-[#1C1108]/10" />
-              <div className="absolute bottom-0 left-0 w-full h-[2px] bg-[#1C1108]/10" />
-
-              {/* Content */}
-              <div className="relative flex flex-col items-center gap-10 z-10">
-                {/* Initials monogram */}
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.6, ease: "easeOut" }}
-                  className="relative"
+              {/* Archival mark */}
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
+                <motion.span
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.5 }}
+                  transition={{ duration: 0.6, delay: 0.2 }}
+                  className="font-mono text-[9px] tracking-[0.4em] text-[#D2BA94]/60 uppercase"
                 >
-                  <span className="font-serif text-7xl sm:text-8xl text-[#1C1108] font-bold tracking-tighter leading-none">
-                    AK
-                  </span>
-                  <div className="absolute -inset-4 border border-[#1C1108]/20 rounded-full" />
-                  <div className="absolute -inset-6 border border-[#1C1108]/8 rounded-full" />
-                </motion.div>
-
-                {/* Progress line — a horizontal ink stroke that fills */}
-                <div className="w-48 sm:w-56 relative">
-                  <div className="h-[1px] w-full bg-[#1C1108]/10" />
-                  <motion.div
-                    className="absolute top-0 left-0 h-[2px] bg-[#1C1108]"
-                    style={{ width: `${count}%` }}
-                    transition={{ duration: 0.05 }}
-                  />
-                  {/* Moving dot at the tip */}
-                  <motion.div
-                    className="absolute top-[-2px] w-[5px] h-[5px] rounded-full bg-[#8B4513]"
-                    style={{ left: `${count}%` }}
-                    transition={{ duration: 0.05 }}
-                  />
-                </div>
-
-                {/* Name and ref */}
-                <motion.div
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.3 }}
-                  className="flex flex-col items-center gap-2"
+                  Archive 001
+                </motion.span>
+                <motion.span
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.35 }}
+                  transition={{ duration: 0.5, delay: 0.5 }}
+                  className="font-mono text-[7px] tracking-[0.3em] text-[#D2BA94]/40 uppercase"
                 >
-                  <span className="font-mono text-[9px] tracking-[0.35em] text-[#6B5B48] uppercase">
-                    Arunan Kavirajan
-                  </span>
-                  <span className="font-mono text-[8px] tracking-[0.2em] text-[#9C8B78] uppercase">
-                    Portfolio · 2026
-                  </span>
-                </motion.div>
+                  Cataloguing…
+                </motion.span>
               </div>
             </motion.div>
           ) : (
