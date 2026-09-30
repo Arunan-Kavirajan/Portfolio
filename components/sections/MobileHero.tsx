@@ -33,144 +33,279 @@ function ChapterMark({ number, title }: { number: string; title: string }) {
 
 /* ──────────────────────────────────────────────────────────
    01 — THE COVER
-   Portrait-dominant bounty poster. Photo is the hero.
-   No scroll lock. One powerful viewport.
+   An actual bounty poster nailed to a wall.
+   Parchment paper, centered portrait, ornamental type,
+   physical artifacts, stamp-in entrance.
    ────────────────────────────────────────────────────────── */
 function TheCover() {
+  /* shared spring for "stamped onto paper" feel */
+  const stamp = (delay: number): any => ({
+    initial: { opacity: 0, scale: 1.3, y: -8 },
+    animate: { opacity: 1, scale: 1, y: 0 },
+    transition: { type: "spring", stiffness: 180, damping: 16, delay },
+  });
+
+  const fadeUp = (delay: number): any => ({
+    initial: { opacity: 0, y: 18 },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: 0.7, delay, ease: [0.16, 1, 0.3, 1] },
+  });
+
+  const draw = (delay: number): any => ({
+    initial: { scaleX: 0 },
+    animate: { scaleX: 1 },
+    transition: { duration: 0.5, delay, ease: [0.16, 1, 0.3, 1] },
+  });
+
   return (
-    <section className="relative min-h-[100dvh] bg-[#1C1108] overflow-hidden">
+    <section className="relative min-h-[100dvh] bg-[#D2BA94] overflow-hidden flex items-center justify-center py-10 px-4 sm:px-6">
 
-      {/* ── Full-bleed portrait ── */}
-      <div className="absolute inset-0">
-        <Image
-          src="/profile_new.jpg"
-          alt="Arunan Kavirajan"
-          fill
-          className="object-cover object-top"
-          style={{ filter: "sepia(25%) contrast(1.05) brightness(0.85) saturate(0.9)" }}
-          priority
-          sizes="100vw"
+      {/* ── Woodgrain wall behind the poster ── */}
+      <div className="absolute inset-0 bg-[#3D2B1F]">
+        <div className="absolute inset-0 opacity-20">
+          <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+            <filter id="wood">
+              <feTurbulence type="fractalNoise" baseFrequency="0.02 0.15" numOctaves="5" seed="3" />
+              <feColorMatrix type="saturate" values="0" />
+            </filter>
+            <rect width="100%" height="100%" filter="url(#wood)" />
+          </svg>
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-b from-[#2A1C12]/60 via-transparent to-[#2A1C12]/80" />
+      </div>
+
+      {/* ── THE POSTER ── */}
+      <motion.div
+        initial={{ opacity: 0, y: 40, rotate: -1 }}
+        animate={{ opacity: 1, y: 0, rotate: 0.5 }}
+        transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+        className="relative w-full max-w-[380px] sm:max-w-[440px] bg-[#F0E2C8] z-10"
+        style={{ boxShadow: "8px 12px 40px rgba(0,0,0,0.5), 2px 3px 8px rgba(0,0,0,0.3)" }}
+      >
+        {/* Paper grain texture */}
+        <div className="absolute inset-0 pointer-events-none opacity-30 mix-blend-multiply rounded-sm overflow-hidden">
+          <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+            <filter id="poster-grain">
+              <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="5" stitchTiles="stitch" />
+              <feColorMatrix type="saturate" values="0" />
+            </filter>
+            <rect width="100%" height="100%" filter="url(#poster-grain)" opacity="0.5" />
+          </svg>
+        </div>
+
+        {/* Coffee stain — top-right */}
+        <div
+          className="absolute -top-4 -right-3 w-20 h-20 rounded-full pointer-events-none z-30"
+          style={{
+            background: "radial-gradient(ellipse, rgba(139,69,19,0.08) 30%, rgba(139,69,19,0.03) 60%, transparent 75%)",
+          }}
         />
-        {/* Warm overlay to unify with parchment palette */}
-        <div className="absolute inset-0 bg-[#1C1108]/25 mix-blend-multiply" />
-        {/* Bottom gradient into parchment */}
-        <div className="absolute bottom-0 left-0 w-full h-[45%] bg-gradient-to-t from-[#1C1108] via-[#1C1108]/70 to-transparent" />
-        {/* Top gradient for header text readability */}
-        <div className="absolute top-0 left-0 w-full h-[25%] bg-gradient-to-b from-[#1C1108]/50 to-transparent" />
-      </div>
 
-      {/* ── Paper grain ── */}
-      <div className="absolute inset-0 pointer-events-none opacity-20 mix-blend-overlay z-10">
-        <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-          <filter id="hero-grain">
-            <feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="4" stitchTiles="stitch" />
-            <feColorMatrix type="saturate" values="0" />
-          </filter>
-          <rect width="100%" height="100%" filter="url(#hero-grain)" opacity="0.5" />
-        </svg>
-      </div>
+        {/* Fold crease — diagonal */}
+        <div className="absolute top-0 right-0 w-[140%] h-[1px] bg-[#1C1108]/[0.06] origin-top-right rotate-[28deg] pointer-events-none z-20" />
 
-      {/* ── Poster border frame ── */}
-      <div className="absolute inset-3 sm:inset-5 border border-[#F0E2C8]/10 z-10 pointer-events-none" />
-      <div className="absolute inset-4 sm:inset-6 border border-[#F0E2C8]/5 z-10 pointer-events-none" />
+        {/* Nail hole at top center */}
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ delay: 0.1, type: "spring", stiffness: 300, damping: 20 }}
+          className="absolute -top-3 left-1/2 -translate-x-1/2 z-40"
+        >
+          <div className="w-4 h-4 rounded-full bg-[#3D2B1F] border-2 border-[#5C4A38] shadow-md" />
+          <div className="absolute top-1 left-1 w-2 h-2 rounded-full bg-[#2A1C12]" />
+        </motion.div>
 
-      {/* ── Top archival strip ── */}
+        {/* ── POSTER CONTENT ── */}
+        <div className="relative px-6 sm:px-8 pt-10 pb-8 flex flex-col items-center z-10">
+
+          {/* Outer decorative border */}
+          <div className="absolute inset-3 border-2 border-[#1C1108]/60 pointer-events-none" />
+          <div className="absolute inset-[14px] border border-[#1C1108]/25 pointer-events-none" />
+
+          {/* ── Top ornamental row ── */}
+          <motion.div {...stamp(0.4)} className="flex items-center gap-3 mb-2">
+            <span className="text-[#8B4513]/60 text-xs">★</span>
+            <span className="font-mono text-[7px] tracking-[0.4em] text-[#6B5B48] uppercase">By Order of the Portfolio</span>
+            <span className="text-[#8B4513]/60 text-xs">★</span>
+          </motion.div>
+
+          {/* ── Ornamental rule ── */}
+          <motion.div {...draw(0.5)} className="w-full h-[2px] bg-[#1C1108]/50 origin-center mb-3" />
+
+          {/* ── WANTED ── */}
+          <motion.h2
+            {...stamp(0.6)}
+            className="font-serif text-[16vw] sm:text-[72px] leading-none tracking-[0.08em] text-[#1C1108] uppercase font-black text-center"
+            style={{ textShadow: "2px 2px 0px rgba(139,69,19,0.15)" }}
+          >
+            WANTED
+          </motion.h2>
+
+          {/* ── Sub-headline ── */}
+          <motion.div {...stamp(0.75)} className="flex items-center gap-4 my-2">
+            <div className="h-[1px] w-6 bg-[#1C1108]/30" />
+            <span className="font-serif text-[11px] sm:text-xs tracking-[0.3em] text-[#4A3828] uppercase italic">
+              Dead Code or Alive
+            </span>
+            <div className="h-[1px] w-6 bg-[#1C1108]/30" />
+          </motion.div>
+
+          {/* ── Ornamental rule ── */}
+          <motion.div {...draw(0.85)} className="w-full h-[1px] bg-[#1C1108]/30 origin-center mb-6" />
+
+          {/* ── PORTRAIT ── */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1, delay: 0.9, ease: [0.16, 1, 0.3, 1] }}
+            className="relative w-[60vw] max-w-[260px] sm:max-w-[280px] aspect-[3/4] mb-6"
+          >
+            {/* Decorative corner brackets */}
+            <div className="absolute -top-2 -left-2 w-5 h-5 border-t-[3px] border-l-[3px] border-[#1C1108]/70 z-20" />
+            <div className="absolute -top-2 -right-2 w-5 h-5 border-t-[3px] border-r-[3px] border-[#1C1108]/70 z-20" />
+            <div className="absolute -bottom-2 -left-2 w-5 h-5 border-b-[3px] border-l-[3px] border-[#1C1108]/70 z-20" />
+            <div className="absolute -bottom-2 -right-2 w-5 h-5 border-b-[3px] border-r-[3px] border-[#1C1108]/70 z-20" />
+
+            {/* Portrait frame */}
+            <div className="absolute inset-0 border-2 border-[#1C1108]/40 z-10 pointer-events-none" />
+
+            {/* The portrait */}
+            <div className="absolute inset-0 overflow-hidden bg-[#D2BA94]">
+              <Image
+                src="/profile_new.jpg"
+                alt="Arunan Kavirajan"
+                fill
+                className="object-cover object-top"
+                style={{ filter: "sepia(35%) contrast(1.1) brightness(0.95) saturate(0.85)" }}
+                priority
+                sizes="(max-width: 640px) 60vw, 280px"
+              />
+              {/* Daguerreotype vignette */}
+              <div className="absolute inset-0 shadow-[inset_0_0_60px_rgba(28,17,8,0.45)] z-10" />
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_50%,rgba(28,17,8,0.3)_100%)] z-10" />
+            </div>
+
+            {/* Wax seal — bottom-right */}
+            <motion.div
+              initial={{ scale: 2.5, opacity: 0, rotate: -30 }}
+              animate={{ scale: 1, opacity: 1, rotate: -8 }}
+              transition={{ type: "spring", stiffness: 160, damping: 12, delay: 1.8 }}
+              className="absolute -bottom-5 -right-5 sm:-bottom-6 sm:-right-6 w-14 h-14 sm:w-16 sm:h-16 z-30"
+            >
+              <div className="w-full h-full rounded-full bg-[#8B2500] flex items-center justify-center shadow-lg"
+                style={{ background: "radial-gradient(circle at 40% 35%, #B83A1B 0%, #8B2500 50%, #6B1A00 100%)" }}
+              >
+                <span className="font-serif text-lg sm:text-xl font-bold text-[#F0E2C8]/90 tracking-tight">AK</span>
+              </div>
+              {/* Wax drip */}
+              <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-[#8B2500]/80" />
+            </motion.div>
+          </motion.div>
+
+          {/* ── NAME ── */}
+          <motion.h1
+            {...stamp(1.2)}
+            className="font-serif text-[11vw] sm:text-[48px] leading-[0.9] tracking-tight text-[#1C1108] text-center uppercase font-bold mb-1"
+          >
+            <span className="block">Arunan</span>
+            <span className="block">Kavirajan</span>
+          </motion.h1>
+
+          {/* ── Thin divider with star ── */}
+          <motion.div {...fadeUp(1.35)} className="flex items-center gap-3 my-4 w-full max-w-[240px]">
+            <div className="flex-1 h-[1px] bg-[#1C1108]/25" />
+            <span className="text-[#8B4513]/50 text-[10px]">✦</span>
+            <div className="flex-1 h-[1px] bg-[#1C1108]/25" />
+          </motion.div>
+
+          {/* ── REWARD / tagline section ── */}
+          <motion.div {...fadeUp(1.45)} className="flex flex-col items-center gap-3 mb-5">
+            <span className="font-serif text-xs sm:text-sm tracking-[0.25em] text-[#4A3828] uppercase font-bold">
+              Known For
+            </span>
+            <p className="font-serif text-base sm:text-lg text-[#1C1108]/80 italic text-center leading-relaxed max-w-[260px]">
+              &quot;Building software and studying how it breaks&quot;
+            </p>
+          </motion.div>
+
+          {/* ── Discipline badges ── */}
+          <motion.div {...fadeUp(1.6)} className="flex flex-wrap justify-center gap-2 mb-5">
+            {["Software Engineer", "Cybersecurity", "AI / ML"].map((d) => (
+              <span
+                key={d}
+                className="border border-[#1C1108]/50 px-2.5 py-1 font-mono text-[8px] sm:text-[9px] tracking-[0.15em] text-[#1C1108] uppercase bg-[#EBD9BC]/40"
+              >
+                {d}
+              </span>
+            ))}
+          </motion.div>
+
+          {/* ── Bottom ornamental rule ── */}
+          <motion.div {...draw(1.7)} className="w-full h-[2px] bg-[#1C1108]/50 origin-center mb-4" />
+
+          {/* ── Bottom details ── */}
+          <motion.div {...fadeUp(1.8)} className="flex justify-between w-full px-1 sm:px-2">
+            <div className="flex flex-col gap-0.5">
+              <span className="font-mono text-[7px] sm:text-[8px] tracking-[0.2em] text-[#6B5B48] uppercase">
+                Last Seen
+              </span>
+              <span className="font-mono text-[8px] sm:text-[9px] text-[#1C1108]/70 tracking-wider">
+                Chennai, India
+              </span>
+            </div>
+            <div className="flex flex-col gap-0.5 items-end">
+              <span className="font-mono text-[7px] sm:text-[8px] tracking-[0.2em] text-[#6B5B48] uppercase">
+                Status
+              </span>
+              <span className="font-mono text-[8px] sm:text-[9px] text-[#8B4513] tracking-wider font-bold">
+                ACTIVE
+              </span>
+            </div>
+          </motion.div>
+
+          {/* ── Star row at bottom ── */}
+          <motion.div {...fadeUp(1.9)} className="flex items-center gap-2 mt-4">
+            {[...Array(5)].map((_, i) => (
+              <span key={i} className="text-[#8B4513]/40 text-[8px]">★</span>
+            ))}
+          </motion.div>
+        </div>
+      </motion.div>
+
+      {/* ── Scroll cue below the poster ── */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 1, delay: 0.5 }}
-        className="absolute top-0 left-0 w-full px-5 sm:px-7 pt-6 sm:pt-8 flex justify-between items-start z-20"
+        transition={{ delay: 2.2, duration: 0.6 }}
+        className="absolute bottom-5 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-1.5"
       >
-        <div className="flex flex-col gap-1">
-          <span className="font-mono text-[8px] sm:text-[9px] tracking-[0.35em] text-[#F0E2C8]/50 uppercase">
-            No. 001
-          </span>
-          <span className="font-mono text-[7px] sm:text-[8px] tracking-[0.25em] text-[#F0E2C8]/30 uppercase">
-            Est. 2026
-          </span>
-        </div>
-        <span className="font-mono text-[8px] sm:text-[9px] tracking-[0.25em] text-[#F0E2C8]/40 uppercase">
-          Field Archive
+        <motion.div
+          className="w-[1px] h-6 bg-[#F0E2C8]/30 origin-top"
+          animate={{ scaleY: [1, 0.3, 1] }}
+          transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+        />
+        <span className="font-mono text-[7px] tracking-[0.3em] text-[#F0E2C8]/40 uppercase">
+          Examine Dossier
         </span>
       </motion.div>
 
-      {/* ── Main content — anchored to bottom ── */}
-      <div className="relative z-20 min-h-[100dvh] flex flex-col justify-end px-5 sm:px-7 pb-8 sm:pb-10">
-
-        {/* Name — the poster headline */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-          className="mb-5"
-        >
-          <h1 className="font-serif text-[15vw] sm:text-[12vw] leading-[0.82] tracking-tight text-[#F0E2C8] uppercase">
-            <span className="block">Arunan</span>
-            <span className="block text-[#F0E2C8]/50">Kavirajan</span>
-          </h1>
-        </motion.div>
-
-        {/* Thin rule */}
-        <motion.div
-          initial={{ scaleX: 0 }}
-          animate={{ scaleX: 1 }}
-          transition={{ duration: 0.6, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="h-[1px] bg-[#F0E2C8]/20 origin-left mb-5"
-        />
-
-        {/* Tagline + disciplines */}
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 1.0, ease: [0.16, 1, 0.3, 1] }}
-          className="flex flex-col gap-4 mb-8"
-        >
-          <p className="font-serif text-lg sm:text-xl text-[#F0E2C8]/80 leading-relaxed max-w-xs">
-            I build software.{" "}
-            <span className="italic text-[#F0E2C8]/45">I study how it breaks.</span>
-          </p>
-          <div className="flex flex-wrap gap-x-5 gap-y-2">
-            {["Software", "Cybersecurity", "AI / ML"].map((d, i) => (
-              <motion.span
-                key={d}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.4, delay: 1.2 + i * 0.12 }}
-                className="font-mono text-[9px] sm:text-[10px] tracking-[0.2em] text-[#D4A76A]/70 uppercase"
-              >
-                {d}
-              </motion.span>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Scroll prompt */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 1.6 }}
-          className="flex items-center gap-3"
-        >
-          <motion.div
-            className="w-[1px] h-5 bg-[#D4A76A]/50 origin-top"
-            animate={{ scaleY: [1, 0.4, 1] }}
-            transition={{ repeat: Infinity, duration: 1.8, ease: "easeInOut" }}
-          />
-          <span className="font-mono text-[8px] tracking-[0.3em] text-[#F0E2C8]/35 uppercase">
-            Scroll to examine
-          </span>
-        </motion.div>
-      </div>
-
-      {/* ── Torn bottom edge into parchment ── */}
+      {/* ── Torn bottom edge transition into parchment ── */}
       <div className="absolute -bottom-1 left-0 w-full z-30">
-        <svg viewBox="0 0 1200 40" preserveAspectRatio="none" className="w-full h-6 sm:h-8" xmlns="http://www.w3.org/2000/svg">
+        <svg viewBox="0 0 1200 50" preserveAspectRatio="none" className="w-full h-8 sm:h-10" xmlns="http://www.w3.org/2000/svg">
           <path
-            d="M0,20 Q30,8 60,18 T120,14 T180,20 T240,12 T300,18 T360,10 T420,16 T480,20 T540,12 T600,18 T660,10 T720,16 T780,20 T840,14 T900,18 T960,12 T1020,16 T1080,20 T1140,14 T1200,18 V40 H0 Z"
+            d="M0,25 Q20,10 50,22 T100,18 T150,28 T200,15 T250,22 T300,12 T350,20 T400,28 T450,16 T500,24 T550,14 T600,22 T650,18 T700,26 T750,12 T800,20 T850,28 T900,16 T950,22 T1000,14 T1050,24 T1100,18 T1150,26 T1200,20 V50 H0 Z"
             fill="#F0E2C8"
           />
         </svg>
       </div>
+
+      <style jsx>{`
+        @keyframes flicker {
+          0%, 100% { opacity: 0.18; }
+          50% { opacity: 0.22; }
+          73% { opacity: 0.16; }
+        }
+      `}</style>
     </section>
   );
 }
