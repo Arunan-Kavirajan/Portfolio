@@ -16,124 +16,81 @@ export default function LoadingScreen({
     <AnimatePresence>
       {show && (
         <>
-          {/* MOBILE / TABLET (< 1024px): Vintage Bounty Seal Loading Screen */}
+          {/* ─── MOBILE / TABLET: Ink & Parchment Loading ─── */}
           {mounted && isMobile ? (
             <motion.div
               key="mobile-loading"
-              className="fixed inset-0 z-[9998] bg-[#F0E2C8] text-[#1C1108] flex flex-col items-center justify-center p-6 select-none overflow-hidden"
-              exit={{ opacity: 0, scale: 1.03 }}
-              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              className="fixed inset-0 z-[9998] bg-[#F0E2C8] flex flex-col items-center justify-center select-none overflow-hidden"
+              exit={{
+                clipPath: "circle(0% at 50% 50%)",
+              }}
+              transition={{ duration: 0.9, ease: [0.76, 0, 0.24, 1] }}
             >
-              {/* Vintage double frame */}
-              <div className="absolute inset-4 sm:inset-6 border-2 border-[#8B4513]/30 pointer-events-none" />
-              <div className="absolute inset-5 sm:inset-7 border border-[#8B4513]/15 pointer-events-none" />
-              
-              {/* Corner rosettes */}
-              <span className="absolute top-8 left-8 text-[#8B4513]/50 font-serif text-sm">✦</span>
-              <span className="absolute top-8 right-8 text-[#8B4513]/50 font-serif text-sm">✦</span>
-              <span className="absolute bottom-8 left-8 text-[#8B4513]/50 font-serif text-sm">✦</span>
-              <span className="absolute bottom-8 right-8 text-[#8B4513]/50 font-serif text-sm">✦</span>
+              {/* Paper texture */}
+              <div className="absolute inset-0 pointer-events-none opacity-30 mix-blend-multiply">
+                <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                  <filter id="load-grain">
+                    <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="5" stitchTiles="stitch" />
+                    <feColorMatrix type="saturate" values="0" />
+                  </filter>
+                  <rect width="100%" height="100%" filter="url(#load-grain)" opacity="0.6" />
+                </svg>
+              </div>
 
-              <div className="relative flex flex-col items-center justify-center max-w-sm w-full">
-                
-                {/* Vintage Circular Seal */}
-                <div className="relative w-48 h-48 sm:w-56 sm:h-56 flex items-center justify-center mb-8">
-                  {/* Rotating ornamental ring */}
-                  <svg className="absolute inset-0 w-full h-full animate-[spin_30s_linear_infinite]" viewBox="0 0 200 200">
-                    <circle
-                      cx="100"
-                      cy="100"
-                      r="90"
-                      fill="none"
-                      stroke="#8B4513"
-                      strokeWidth="1.5"
-                      strokeDasharray="4 4"
-                      opacity="0.35"
-                    />
-                    <circle
-                      cx="100"
-                      cy="100"
-                      r="78"
-                      fill="none"
-                      stroke="#8B4513"
-                      strokeWidth="0.8"
-                      opacity="0.4"
-                    />
-                    {/* Curved text */}
-                    <path
-                      id="seal-text-path"
-                      d="M 100, 100 m -68, 0 a 68,68 0 1,1 136,0 a 68,68 0 1,1 -136,0"
-                      fill="none"
-                    />
-                    <text className="font-mono text-[8.5px] uppercase tracking-[0.28em] fill-[#8B4513]/70">
-                      <textPath href="#seal-text-path" startOffset="0%">
-                        ✦ ARCHIVAL FIELD JOURNAL ✦ SPECIMEN 001 ✦ 2026 ✦
-                      </textPath>
-                    </text>
-                  </svg>
+              {/* Thin decorative line across the top */}
+              <div className="absolute top-0 left-0 w-full h-[2px] bg-[#1C1108]/10" />
+              <div className="absolute bottom-0 left-0 w-full h-[2px] bg-[#1C1108]/10" />
 
-                  {/* Circular progress meter */}
-                  <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 200 200">
-                    <circle
-                      cx="100"
-                      cy="100"
-                      r="60"
-                      fill="none"
-                      stroke="#8B4513"
-                      strokeWidth="1"
-                      opacity="0.15"
-                    />
-                    <circle
-                      cx="100"
-                      cy="100"
-                      r="60"
-                      fill="none"
-                      stroke="#8B4513"
-                      strokeWidth="2.5"
-                      strokeDasharray={2 * Math.PI * 60}
-                      strokeDashoffset={2 * Math.PI * 60 * (1 - count / 100)}
-                      strokeLinecap="round"
-                      className="transition-all duration-75"
-                    />
-                  </svg>
+              {/* Content */}
+              <div className="relative flex flex-col items-center gap-10 z-10">
+                {/* Initials monogram */}
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.6, ease: "easeOut" }}
+                  className="relative"
+                >
+                  <span className="font-serif text-7xl sm:text-8xl text-[#1C1108] font-bold tracking-tighter leading-none">
+                    AK
+                  </span>
+                  <div className="absolute -inset-4 border border-[#1C1108]/20 rounded-full" />
+                  <div className="absolute -inset-6 border border-[#1C1108]/8 rounded-full" />
+                </motion.div>
 
-                  {/* Center Emblem / Counter */}
-                  <div className="flex flex-col items-center justify-center text-center z-10">
-                    <span className="font-serif text-xs text-[#8B4513]/70 uppercase tracking-widest mb-0.5">Vol. I</span>
-                    <span className="font-serif text-3xl sm:text-4xl text-[#1C1108] tracking-tight font-medium">
-                      {count}
-                      <span className="text-lg text-[#8B4513]/60 font-light">%</span>
-                    </span>
-                    <span className="font-mono text-[8px] text-[#6B5B48] tracking-[0.2em] uppercase mt-1">Loaded</span>
-                  </div>
-
-                  {/* Red Wax / Inked Stamp when approaching 100% */}
-                  {count >= 90 && (
-                    <motion.div
-                      initial={{ scale: 2.2, opacity: 0, rotate: -24 }}
-                      animate={{ scale: 1, opacity: 0.88, rotate: -10 }}
-                      transition={{ type: "spring", damping: 14, stiffness: 220 }}
-                      className="absolute z-20 border-2 border-[#9E2A2B] text-[#9E2A2B] px-3 py-1 font-mono text-[10px] tracking-[0.25em] uppercase font-bold shadow-sm"
-                      style={{ mixBlendMode: "multiply" }}
-                    >
-                      UNSEALED
-                    </motion.div>
-                  )}
+                {/* Progress line — a horizontal ink stroke that fills */}
+                <div className="w-48 sm:w-56 relative">
+                  <div className="h-[1px] w-full bg-[#1C1108]/10" />
+                  <motion.div
+                    className="absolute top-0 left-0 h-[2px] bg-[#1C1108]"
+                    style={{ width: `${count}%` }}
+                    transition={{ duration: 0.05 }}
+                  />
+                  {/* Moving dot at the tip */}
+                  <motion.div
+                    className="absolute top-[-2px] w-[5px] h-[5px] rounded-full bg-[#8B4513]"
+                    style={{ left: `${count}%` }}
+                    transition={{ duration: 0.05 }}
+                  />
                 </div>
 
-                {/* Subtext info */}
-                <div className="text-center flex flex-col items-center gap-2">
-                  <p className="font-serif text-base sm:text-lg text-[#1C1108] tracking-wide">
+                {/* Name and ref */}
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                  className="flex flex-col items-center gap-2"
+                >
+                  <span className="font-mono text-[9px] tracking-[0.35em] text-[#6B5B48] uppercase">
                     Arunan Kavirajan
-                  </p>
-                  <p className="font-mono text-[9px] text-[#6B5B48] tracking-[0.28em] uppercase">
-                    Opening Field Dossier · Ref 001-AK
-                  </p>
-                </div>
+                  </span>
+                  <span className="font-mono text-[8px] tracking-[0.2em] text-[#9C8B78] uppercase">
+                    Portfolio · 2026
+                  </span>
+                </motion.div>
               </div>
             </motion.div>
           ) : (
-            /* DESKTOP (≥ 1024px): Existing Original Loading Screen (UNTOUCHED) */
+            /* ─── DESKTOP: Original Loading Screen (UNTOUCHED) ─── */
             <motion.div
               key="desktop-loading"
               className="fixed inset-0 z-[9998] bg-bg flex flex-col items-center justify-center gap-4"

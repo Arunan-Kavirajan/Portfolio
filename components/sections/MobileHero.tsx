@@ -32,163 +32,143 @@ function ChapterMark({ number, title }: { number: string; title: string }) {
 }
 
 /* ──────────────────────────────────────────────────────────
-   01 — THE COVER (Vintage Bounty Poster)
+   01 — THE COVER
+   Portrait-dominant bounty poster. Photo is the hero.
+   No scroll lock. One powerful viewport.
    ────────────────────────────────────────────────────────── */
 function TheCover() {
-  const containerVariants: any = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.3, delayChildren: 0.2 }
-    }
-  };
-
-  const inkBleedVariants: any = {
-    hidden: { opacity: 0, filter: "blur(8px) contrast(0.5)" },
-    visible: { 
-      opacity: 1, 
-      filter: "blur(0px) contrast(1.7)",
-      transition: { duration: 2, ease: "easeOut" }
-    }
-  };
-
-  const stampVariants: any = {
-    hidden: { opacity: 0, scale: 2.5, rotate: -15 },
-    visible: { 
-      opacity: 0.9, 
-      scale: 1, 
-      rotate: -6,
-      transition: { type: "spring", stiffness: 150, damping: 10, delay: 1.5 }
-    }
-  };
-
-  const textStampVariants: any = {
-    hidden: { opacity: 0, scale: 1.05 },
-    visible: { 
-      opacity: 1, 
-      scale: 1,
-      transition: { type: "spring", stiffness: 200, damping: 20 }
-    }
-  };
-
   return (
-    <section className="min-h-[100dvh] relative bg-[#F0E2C8] flex flex-col p-4 sm:p-6 overflow-hidden">
-      {/* Outer Border */}
-      <motion.div 
-        className="flex-1 border-2 border-[#1C1108]/80 relative flex flex-col items-center pt-12 pb-6 px-4 z-10"
-        initial="hidden"
-        animate="visible"
-        variants={containerVariants}
+    <section className="relative min-h-[100dvh] bg-[#1C1108] overflow-hidden">
+
+      {/* ── Full-bleed portrait ── */}
+      <div className="absolute inset-0">
+        <Image
+          src="/profile_new.jpg"
+          alt="Arunan Kavirajan"
+          fill
+          className="object-cover object-top"
+          style={{ filter: "sepia(25%) contrast(1.05) brightness(0.85) saturate(0.9)" }}
+          priority
+          sizes="100vw"
+        />
+        {/* Warm overlay to unify with parchment palette */}
+        <div className="absolute inset-0 bg-[#1C1108]/25 mix-blend-multiply" />
+        {/* Bottom gradient into parchment */}
+        <div className="absolute bottom-0 left-0 w-full h-[45%] bg-gradient-to-t from-[#1C1108] via-[#1C1108]/70 to-transparent" />
+        {/* Top gradient for header text readability */}
+        <div className="absolute top-0 left-0 w-full h-[25%] bg-gradient-to-b from-[#1C1108]/50 to-transparent" />
+      </div>
+
+      {/* ── Paper grain ── */}
+      <div className="absolute inset-0 pointer-events-none opacity-20 mix-blend-overlay z-10">
+        <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+          <filter id="hero-grain">
+            <feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="4" stitchTiles="stitch" />
+            <feColorMatrix type="saturate" values="0" />
+          </filter>
+          <rect width="100%" height="100%" filter="url(#hero-grain)" opacity="0.5" />
+        </svg>
+      </div>
+
+      {/* ── Poster border frame ── */}
+      <div className="absolute inset-3 sm:inset-5 border border-[#F0E2C8]/10 z-10 pointer-events-none" />
+      <div className="absolute inset-4 sm:inset-6 border border-[#F0E2C8]/5 z-10 pointer-events-none" />
+
+      {/* ── Top archival strip ── */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1, delay: 0.5 }}
+        className="absolute top-0 left-0 w-full px-5 sm:px-7 pt-6 sm:pt-8 flex justify-between items-start z-20"
       >
-        {/* Inner Hairline Border */}
-        <div className="absolute inset-1.5 border border-[#1C1108]/30 pointer-events-none" />
-        
-        {/* Corner Ornaments */}
-        <span className="absolute top-2 left-3 text-[#1C1108]/80 font-serif text-xl leading-none">✦</span>
-        <span className="absolute top-2 right-3 text-[#1C1108]/80 font-serif text-xl leading-none">✦</span>
-        <span className="absolute bottom-2 left-3 text-[#1C1108]/80 font-serif text-xl leading-none">✦</span>
-        <span className="absolute bottom-2 right-3 text-[#1C1108]/80 font-serif text-xl leading-none">✦</span>
-
-        {/* Archival Header */}
-        <motion.div variants={textStampVariants} className="flex flex-col items-center mb-8">
-          <span className="font-mono text-[9px] tracking-[0.3em] text-[#6B5B48] uppercase mb-3 text-center">
-            Archive Dossier No. 001
+        <div className="flex flex-col gap-1">
+          <span className="font-mono text-[8px] sm:text-[9px] tracking-[0.35em] text-[#F0E2C8]/50 uppercase">
+            No. 001
           </span>
-          <div className="flex items-center gap-3">
-            <span className="text-[#1C1108]/40">❖</span>
-            <h2 className="font-serif text-3xl sm:text-4xl tracking-widest text-[#1C1108] uppercase font-bold">
-              Wanted
-            </h2>
-            <span className="text-[#1C1108]/40">❖</span>
-          </div>
-        </motion.div>
-
-        {/* Portrait Area */}
-        <div className="relative w-[65vw] max-w-[320px] aspect-[3/4] mb-8 bg-[#EBD9BC]/50">
-          {/* Photo Corners */}
-          <div className="absolute -top-2 -left-2 w-6 h-6 border-t-2 border-l-2 border-[#1C1108] z-20" />
-          <div className="absolute -top-2 -right-2 w-6 h-6 border-t-2 border-r-2 border-[#1C1108] z-20" />
-          <div className="absolute -bottom-2 -left-2 w-6 h-6 border-b-2 border-l-2 border-[#1C1108] z-20" />
-          <div className="absolute -bottom-2 -right-2 w-6 h-6 border-b-2 border-r-2 border-[#1C1108] z-20" />
-          
-          {/* The Ink Bleed Portrait */}
-          <motion.div 
-            variants={inkBleedVariants}
-            className="absolute inset-0 overflow-hidden"
-            style={{ mixBlendMode: 'multiply' }}
-          >
-            <Image 
-              src="/profile_new.jpg" 
-              alt="Arunan Kavirajan" 
-              fill 
-              className="object-cover object-top"
-              style={{ filter: "grayscale(100%) contrast(160%) brightness(0.9) sepia(20%)" }}
-              priority 
-              sizes="(max-width: 640px) 65vw, 320px"
-            />
-          </motion.div>
-
-          {/* Red Rubber Stamp */}
-          <motion.div 
-            variants={stampVariants}
-            className="absolute -bottom-4 -right-6 sm:-right-8 z-30 border-4 border-[#9E2A2B] text-[#9E2A2B] px-3 py-1 bg-[#F0E2C8]"
-            style={{ mixBlendMode: 'multiply' }}
-          >
-            <span className="font-mono text-sm sm:text-base font-bold tracking-[0.2em] uppercase whitespace-nowrap opacity-90">
-              Field Specimen
-            </span>
-          </motion.div>
+          <span className="font-mono text-[7px] sm:text-[8px] tracking-[0.25em] text-[#F0E2C8]/30 uppercase">
+            Est. 2026
+          </span>
         </div>
+        <span className="font-mono text-[8px] sm:text-[9px] tracking-[0.25em] text-[#F0E2C8]/40 uppercase">
+          Field Archive
+        </span>
+      </motion.div>
 
-        {/* Name */}
-        <motion.div variants={textStampVariants} className="flex flex-col items-center mb-6 text-center">
-          <h1 className="font-serif text-[12vw] sm:text-[10vw] leading-[0.85] tracking-tighter text-[#1C1108] font-black uppercase drop-shadow-sm">
+      {/* ── Main content — anchored to bottom ── */}
+      <div className="relative z-20 min-h-[100dvh] flex flex-col justify-end px-5 sm:px-7 pb-8 sm:pb-10">
+
+        {/* Name — the poster headline */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          className="mb-5"
+        >
+          <h1 className="font-serif text-[15vw] sm:text-[12vw] leading-[0.82] tracking-tight text-[#F0E2C8] uppercase">
             <span className="block">Arunan</span>
-            <span className="block">Kavirajan</span>
+            <span className="block text-[#F0E2C8]/50">Kavirajan</span>
           </h1>
         </motion.div>
 
-        {/* Manifesto */}
-        <motion.div variants={textStampVariants} className="flex flex-col items-center gap-4 mb-8">
-          <p className="font-serif text-lg sm:text-xl text-[#1C1108] italic text-center max-w-[280px]">
-            &quot;I build software. <br />
-            I study how it breaks.&quot;
+        {/* Thin rule */}
+        <motion.div
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: 1 }}
+          transition={{ duration: 0.6, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="h-[1px] bg-[#F0E2C8]/20 origin-left mb-5"
+        />
+
+        {/* Tagline + disciplines */}
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 1.0, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-col gap-4 mb-8"
+        >
+          <p className="font-serif text-lg sm:text-xl text-[#F0E2C8]/80 leading-relaxed max-w-xs">
+            I build software.{" "}
+            <span className="italic text-[#F0E2C8]/45">I study how it breaks.</span>
           </p>
-          <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
-            {["Software", "Cybersecurity", "AI / ML"].map((d) => (
-              <span key={d} className="border border-[#1C1108]/40 px-2 py-1 font-mono text-[9px] sm:text-[10px] tracking-[0.1em] text-[#1C1108] uppercase bg-[#EBD9BC]/60">
+          <div className="flex flex-wrap gap-x-5 gap-y-2">
+            {["Software", "Cybersecurity", "AI / ML"].map((d, i) => (
+              <motion.span
+                key={d}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.4, delay: 1.2 + i * 0.12 }}
+                className="font-mono text-[9px] sm:text-[10px] tracking-[0.2em] text-[#D4A76A]/70 uppercase"
+              >
                 {d}
-              </span>
+              </motion.span>
             ))}
           </div>
         </motion.div>
 
-        {/* Bottom Metadata & Scroll Cue */}
-        <motion.div 
-          variants={textStampVariants}
-          className="mt-auto w-full flex flex-col items-center gap-6"
+        {/* Scroll prompt */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 1.6 }}
+          className="flex items-center gap-3"
         >
-          <div className="w-full flex justify-between px-2 sm:px-4 font-mono text-[8px] text-[#6B5B48] tracking-widest uppercase">
-            <span>Loc: Chennai, IN</span>
-            <span>Status: Active</span>
-          </div>
-          
-          <motion.div 
-            className="flex flex-col items-center gap-1 opacity-70"
-            animate={{ y: [0, 5, 0] }}
-            transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-          >
-            <span className="font-mono text-[8px] tracking-[0.3em] text-[#8B4513] uppercase">Examine Record</span>
-            <span className="text-[#8B4513] text-xs">▼</span>
-          </motion.div>
+          <motion.div
+            className="w-[1px] h-5 bg-[#D4A76A]/50 origin-top"
+            animate={{ scaleY: [1, 0.4, 1] }}
+            transition={{ repeat: Infinity, duration: 1.8, ease: "easeInOut" }}
+          />
+          <span className="font-mono text-[8px] tracking-[0.3em] text-[#F0E2C8]/35 uppercase">
+            Scroll to examine
+          </span>
         </motion.div>
-      </motion.div>
+      </div>
 
-      {/* Subtle Paper Grain Overlay */}
-      <div className="absolute inset-0 z-0 pointer-events-none opacity-40 mix-blend-multiply">
-        <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-          <filter id="paper-grain"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch" /><feColorMatrix type="saturate" values="0" /></filter>
-          <rect width="100%" height="100%" filter="url(#paper-grain)" opacity="0.5" />
+      {/* ── Torn bottom edge into parchment ── */}
+      <div className="absolute -bottom-1 left-0 w-full z-30">
+        <svg viewBox="0 0 1200 40" preserveAspectRatio="none" className="w-full h-6 sm:h-8" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M0,20 Q30,8 60,18 T120,14 T180,20 T240,12 T300,18 T360,10 T420,16 T480,20 T540,12 T600,18 T660,10 T720,16 T780,20 T840,14 T900,18 T960,12 T1020,16 T1080,20 T1140,14 T1200,18 V40 H0 Z"
+            fill="#F0E2C8"
+          />
         </svg>
       </div>
     </section>
