@@ -143,7 +143,7 @@ export default function CompactHomeHero() {
             style={{ opacity: metaOpacity }}
           >
             <div className="flex flex-col gap-1.5">
-              <span className="font-mono text-[10px] tracking-[0.35em] text-[#36D9E6] uppercase">
+              <span className="font-mono text-[10px] tracking-[0.35em] text-[#C4A265] uppercase">
                 01 / Archive
               </span>
               <span className="font-mono text-[9px] tracking-[0.25em] text-[#69737D] uppercase">
@@ -185,7 +185,7 @@ export default function CompactHomeHero() {
               {["Software", "Cybersecurity", "AI / ML"].map((d) => (
                 <span
                   key={d}
-                  className="font-mono text-[10px] sm:text-[11px] tracking-[0.2em] text-[#36D9E6] uppercase"
+                  className="font-mono text-[10px] sm:text-[11px] tracking-[0.2em] text-[#C4A265] uppercase"
                 >
                   {d}
                 </span>
@@ -206,7 +206,7 @@ export default function CompactHomeHero() {
           </motion.div>
 
           {/* ═══ BREATHING FRAME BORDER ═══ */}
-          <div className="absolute inset-4 sm:inset-6 border border-[#36D9E6]/[0.08] rounded-sm z-20 pointer-events-none animate-[breathe_4s_ease-in-out_infinite]" />
+          <div className="absolute inset-4 sm:inset-6 border border-[#C4A265]/[0.08] rounded-sm z-20 pointer-events-none animate-[breathe_4s_ease-in-out_infinite]" />
 
           {/* ═══ SCROLL INDICATOR ═══ */}
           <motion.div
@@ -215,7 +215,7 @@ export default function CompactHomeHero() {
           >
             <span className="font-mono text-[8px] tracking-[0.3em] text-[#69737D] uppercase">Scroll</span>
             <svg
-              className="w-4 h-4 text-[#36D9E6] animate-bounce"
+              className="w-4 h-4 text-[#C4A265] animate-bounce"
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
               fill="none"
