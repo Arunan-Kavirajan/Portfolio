@@ -1,31 +1,29 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Link from "next/link";
+import dynamic from "next/dynamic";
+
+const PDFViewer = dynamic(() => import("@/components/sections/PDFViewer"), {
+  ssr: false,
+  loading: () => (
+    <div className="w-[800px] h-[1130px] max-w-[95%] flex items-center justify-center bg-white/5 animate-pulse shadow-[0_0_40px_rgba(54,217,230,0.1)] z-10 relative">
+      <div className="font-mono text-xs text-[#36D9E6] tracking-widest uppercase">Initializing...</div>
+    </div>
+  )
+});
 
 export default function ResumePage() {
   return (
     <main className="min-h-screen bg-[#0B0E12] text-[#E8EDF2] selection:bg-[#36D9E6]/30 flex flex-col relative overflow-hidden">
       
       {/* Background atmospheric glows */}
-      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-[#36D9E6]/5 blur-[150px] pointer-events-none" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[30%] h-[40%] rounded-full bg-[#E8EDF2]/5 blur-[120px] pointer-events-none" />
+      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-[#36D9E6]/5 blur-[150px] pointer-events-none z-0" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[30%] h-[40%] rounded-full bg-[#E8EDF2]/5 blur-[120px] pointer-events-none z-0" />
 
-      {/* Navigation / Header */}
-      <nav className="w-full p-6 md:p-12 flex justify-between items-center z-50 relative">
-        <Link 
-          href="/" 
-          className="group flex items-center gap-3 text-[#69737D] hover:text-[#36D9E6] transition-colors"
-        >
-          <svg className="w-4 h-4 transition-transform group-hover:-translate-x-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
-          <span className="font-mono text-xs tracking-widest uppercase">Return</span>
-        </Link>
-      </nav>
-
-      <div className="flex-1 flex flex-col items-center justify-start px-6 pb-24 md:px-12 w-full max-w-[1400px] mx-auto z-10">
+      <div className="flex-1 flex flex-col items-center justify-start px-4 pb-24 md:px-12 w-full max-w-[1400px] mx-auto z-10 pt-32">
         
         {/* Title Section */}
-        <div className="w-full flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16 mt-4">
+        <div className="w-full flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -51,18 +49,24 @@ export default function ResumePage() {
           </motion.a>
         </div>
 
-        {/* PDF Viewer */}
+        {/* Custom PDF Viewer Container */}
         <motion.div 
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: "easeOut", delay: 0.4 }}
-          className="w-full h-[75vh] md:h-[800px] relative rounded-xl overflow-hidden border border-[#69737D]/20 shadow-[0_20px_50px_rgba(0,0,0,0.5)] bg-[#0B0E12]"
+          className="w-full relative rounded-2xl border border-[#69737D]/20 shadow-[0_20px_50px_rgba(0,0,0,0.5)] bg-[#050608] flex flex-col items-center justify-center min-h-[800px] py-16 group"
         >
-          <iframe 
-            src="/resume.pdf#view=FitH" 
-            className="w-full h-full relative z-10"
-            title="Arunan Kavirajan Resume"
-          />
+          {/* Beautiful Architectural Background Design */}
+          <div className="absolute inset-0 z-0 pointer-events-none rounded-2xl overflow-hidden">
+            <div className="absolute inset-0 opacity-[0.07]" style={{
+              backgroundImage: `linear-gradient(to right, #36D9E6 1px, transparent 1px), linear-gradient(to bottom, #36D9E6 1px, transparent 1px)`,
+              backgroundSize: '3rem 3rem'
+            }} />
+            <div className="absolute inset-0 bg-[#050608] [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black_80%)]" />
+          </div>
+          
+          {/* PDF Engine */}
+          <PDFViewer />
         </motion.div>
       </div>
     </main>
