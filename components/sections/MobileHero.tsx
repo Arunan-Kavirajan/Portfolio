@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect, useMemo, useRef } from "react";
+import { motion, useAnimation } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { useLoading } from "@/components/layout/LoadingProvider";
 
 /* ═══════════════════════════════════════════════════════════
    COMPACT HOMEPAGE — A Personal Field Journal
@@ -37,15 +38,42 @@ function ChapterMark({ number, title }: { number: string; title: string }) {
    Cinematic, physical vintage bounty poster.
    ────────────────────────────────────────────────────────── */
 function TheCover() {
+  const { isLoading } = useLoading();
+  const [start, setStart] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0.5, y: 0.5 });
+  const controls = useAnimation();
+
+  useEffect(() => {
+    if (!isLoading) {
+      const t = setTimeout(() => setStart(true), 150);
+      return () => clearTimeout(t);
+    }
+  }, [isLoading]);
+
+  useEffect(() => {
+    if (start) {
+      const runAnim = async () => {
+        await controls.start({
+          y: 0, rotateZ: 1.2, rotateX: 0, opacity: 1,
+          transition: { type: "spring", stiffness: 70, damping: 14, mass: 1.2 }
+        });
+        controls.start({
+          rotateZ: [1.2, 0.2, 1.2],
+          rotateX: [0, 1.5, 0],
+          transition: { duration: 12, repeat: Infinity, ease: "easeInOut" }
+        });
+      };
+      runAnim();
+    }
+  }, [start, controls]);
   
   const dustParticles = useMemo(() => {
-    return Array.from({ length: 20 }).map((_, i) => ({
+    return Array.from({ length: 35 }).map((_, i) => ({
       id: i,
       x: Math.random() * 100,
       y: Math.random() * 100,
-      scale: 0.2 + Math.random() * 0.8,
-      duration: 15 + Math.random() * 15,
+      scale: 0.15 + Math.random() * 0.8,
+      duration: 12 + Math.random() * 18,
       delay: Math.random() * 5,
     }));
   }, []);
@@ -66,18 +94,18 @@ function TheCover() {
     setMousePos({ x, y });
   };
 
-  const xOffset = (mousePos.x - 0.5) * 20;
-  const yOffset = (mousePos.y - 0.5) * 20;
+  const xOffset = (mousePos.x - 0.5) * 25;
+  const yOffset = (mousePos.y - 0.5) * 25;
 
   return (
     <section 
-      className="relative h-[100dvh] w-full bg-[#1e130c] overflow-hidden flex items-center justify-center pt-[3vh] pb-[3vh] perspective-[1000px] select-none"
+      className="relative h-[100dvh] w-full bg-[#1e130c] overflow-hidden flex items-center justify-center pt-[3vh] pb-[3vh] perspective-[1200px] select-none"
       onMouseMove={handleMouseMove}
       onTouchMove={handleMouseMove}
     >
       {/* ── Wall Background ── */}
       <div className="absolute inset-0 bg-[#3D2B1F]">
-        <div className="absolute inset-0 opacity-[0.18] mix-blend-overlay pointer-events-none">
+        <div className="absolute inset-0 opacity-[0.2] mix-blend-overlay pointer-events-none">
           <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
             <filter id="cinematic-wood">
               <feTurbulence type="fractalNoise" baseFrequency="0.015 0.12" numOctaves="6" seed="5" />
@@ -86,27 +114,31 @@ function TheCover() {
             <rect width="100%" height="100%" filter="url(#cinematic-wood)" />
           </svg>
         </div>
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,rgba(20,12,6,0.85)_100%)] pointer-events-none" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_15%,rgba(20,12,6,0.9)_100%)] pointer-events-none" />
         
-        <motion.div 
+        {/* Lantern flicker / Ambient light */}
+        <motion.div
           className="absolute inset-0 pointer-events-none opacity-40 mix-blend-overlay"
           animate={{
-            background: `radial-gradient(circle 600px at ${mousePos.x * 100}% ${mousePos.y * 100}%, rgba(255,200,150,0.15), transparent)`
+            opacity: [0.35, 0.45, 0.38, 0.5, 0.4],
+            scale: [1, 1.02, 0.98, 1.01, 1],
           }}
-          transition={{ type: "spring", stiffness: 40, damping: 20 }}
-        />
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <div className="w-full h-full" style={{ background: `radial-gradient(circle 700px at ${mousePos.x * 100}% ${mousePos.y * 100}%, rgba(255,210,160,0.2), transparent)` }} />
+        </motion.div>
         
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           {dustParticles.map((dust) => (
             <motion.div
               key={dust.id}
-              className="absolute w-1 h-1 bg-[#D2BA94] rounded-full blur-[1px] opacity-0 mix-blend-screen"
+              className="absolute w-1 h-1 bg-[#F0E2C8] rounded-full blur-[0.8px] opacity-0 mix-blend-screen"
               style={{ left: `${dust.x}%`, top: `${dust.y}%`, scale: dust.scale }}
-              animate={{
-                y: [0, -100],
-                x: [0, Math.sin(dust.id) * 30],
-                opacity: [0, 0.4, 0],
-              }}
+              animate={start ? {
+                y: [0, -120],
+                x: [0, Math.sin(dust.id) * 40],
+                opacity: [0, 0.6, 0],
+              } : {}}
               transition={{
                 duration: dust.duration,
                 delay: dust.delay,
@@ -118,285 +150,341 @@ function TheCover() {
         </div>
       </div>
 
-      {/* ── Nail (Impact at 0.25s) ── */}
-      <motion.div
-        initial={{ scale: 0, y: -20, opacity: 0 }}
-        animate={{ scale: 1, y: 0, opacity: 1 }}
-        transition={{ delay: 0.25, type: "spring", stiffness: 400, damping: 12 }}
-        className="absolute top-[6vh] sm:top-[8vh] z-50 pointer-events-none"
-      >
-        <div className="relative w-3.5 h-3.5 sm:w-4 sm:h-4 bg-[#1a110a] rounded-full shadow-[0_4px_6px_rgba(0,0,0,0.6)] border-[1.5px] border-[#36271c]">
-           <div className="absolute top-[2px] left-[2px] w-1 h-1 bg-[#8c7462] rounded-full opacity-60 blur-[0.5px]" />
-           <motion.div 
-             className="absolute -bottom-2 -right-2 w-4 h-4 bg-black/50 blur-[2px] rounded-full -z-10"
-             animate={{ x: -xOffset * 0.15, y: -yOffset * 0.15 }}
-           />
-        </div>
-      </motion.div>
+      {start && (
+        <>
+          {/* ── Nail (Impact at 0.1s) ── */}
+          <motion.div
+            initial={{ scale: 0, y: -30, opacity: 0 }}
+            animate={{ scale: 1, y: 0, opacity: 1 }}
+            transition={{ delay: 0.1, type: "spring", stiffness: 500, damping: 12 }}
+            className="absolute top-[6vh] sm:top-[8vh] z-50 pointer-events-none"
+          >
+            <div className="relative w-3.5 h-3.5 sm:w-4 sm:h-4 bg-[#1a110a] rounded-full shadow-[0_4px_6px_rgba(0,0,0,0.7)] border-[1.5px] border-[#36271c]">
+               <div className="absolute top-[2px] left-[2px] w-1 h-1 bg-[#8c7462] rounded-full opacity-70 blur-[0.5px]" />
+               <motion.div 
+                 className="absolute -bottom-2 -right-2 w-5 h-5 bg-black/60 blur-[2px] rounded-full -z-10"
+                 animate={{ x: -xOffset * 0.15, y: -yOffset * 0.15 }}
+               />
+            </div>
+          </motion.div>
 
-      {/* ── The Poster Object (Drops at 0.45s) ── */}
-      <motion.div
-        initial={{ y: "-100vh", rotateZ: 4, rotateX: 25, opacity: 0 }}
-        animate={{ y: 0, rotateZ: 1.2, rotateX: 0, opacity: 1 }}
-        transition={{ delay: 0.45, type: "spring", stiffness: 70, damping: 14, mass: 1.2 }}
-        className="relative w-[88vw] max-w-[380px] sm:max-w-[420px] h-[85vh] sm:h-[88vh] z-20"
-        style={{
-          filter: "drop-shadow(15px 25px 35px rgba(0,0,0,0.65)) drop-shadow(0px 8px 12px rgba(0,0,0,0.5))",
-        }}
-      >
-        <motion.div 
-          className="w-full h-full relative"
-          animate={{
-            rotateX: -yOffset * 0.35,
-            rotateY: xOffset * 0.35,
-          }}
-          transition={{ type: "spring", stiffness: 80, damping: 25 }}
-          style={{ transformStyle: "preserve-3d" }}
-        >
-          {/* Irregular Paper */}
-          <div 
-            className="absolute inset-0 bg-[#F0E2C8]"
+          {/* ── The Poster Object ── */}
+          <motion.div
+            initial={{ y: "-100vh", rotateZ: 5, rotateX: 25, opacity: 0 }}
+            animate={controls}
+            className="relative w-[88vw] max-w-[380px] sm:max-w-[420px] h-[85vh] sm:h-[88vh] z-20"
             style={{
-              clipPath: "polygon(1% 0%, 98% 1%, 100% 98%, 97% 100%, 2% 99%, 0% 2%)",
-              boxShadow: "inset 0 0 50px rgba(139,69,19,0.18)",
+              filter: "drop-shadow(15px 25px 35px rgba(0,0,0,0.7)) drop-shadow(0px 8px 12px rgba(0,0,0,0.6))",
             }}
           >
-            {/* Paper Texture */}
-            <div className="absolute inset-0 pointer-events-none opacity-[0.35] mix-blend-multiply">
-              <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                <filter id="paper-texture">
-                  <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch" />
-                  <feColorMatrix type="saturate" values="0" />
-                </filter>
-                <rect width="100%" height="100%" filter="url(#paper-texture)" />
-              </svg>
-            </div>
-            
-            <div className="absolute inset-0 shadow-[inset_0_0_90px_rgba(61,43,31,0.25)] pointer-events-none" />
-            
-            {/* Creases */}
-            <div className="absolute top-0 right-10 w-[150%] h-[2px] -rotate-12 pointer-events-none flex flex-col opacity-70">
-               <div className="w-full h-[1px] bg-white/40" />
-               <div className="w-full h-[1px] bg-[#3D2B1F]/15" />
-            </div>
-            <div className="absolute top-[48%] left-0 w-full h-[3px] pointer-events-none flex flex-col opacity-50">
-               <div className="w-full h-[1.5px] bg-[#3D2B1F]/15" />
-               <div className="w-full h-[1.5px] bg-white/30" />
-            </div>
-            
-            {/* Burn marks */}
-            <div className="absolute -bottom-8 -left-8 w-28 h-28 bg-[radial-gradient(circle,rgba(61,43,31,0.4)_0%,transparent_70%)] mix-blend-multiply blur-[2px] pointer-events-none" />
-            <div className="absolute -top-4 -right-4 w-20 h-20 bg-[radial-gradient(circle,rgba(139,69,19,0.15)_0%,transparent_70%)] mix-blend-multiply blur-[1px] pointer-events-none" />
-
-            {/* Nail stress tear */}
-            <div className="absolute top-[-2px] left-1/2 -translate-x-1/2 w-8 h-10 bg-[radial-gradient(ellipse,rgba(61,43,31,0.15)_0%,transparent_70%)] mix-blend-multiply pointer-events-none" />
-
-            {/* ── Poster Content ── */}
-            <div className="relative w-full h-full p-4 sm:p-5 flex flex-col z-10">
-              
-              <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.95, duration: 0.5 }}
-                className="absolute inset-[14px] sm:inset-[18px] border-[1.5px] border-[#3D2B1F]/60 pointer-events-none"
-                style={{ clipPath: "polygon(0 0, 100% 1%, 99% 100%, 1% 99%)" }}
-              />
-              <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.95, duration: 0.5 }}
-                className="absolute inset-[18px] sm:inset-[22px] border-[0.5px] border-[#3D2B1F]/40 pointer-events-none"
-              />
-
-              {/* Header (1.15s) */}
-              <motion.div
-                initial={{ opacity: 0, y: -5 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.15, duration: 0.4 }}
-                className="mt-3 text-center"
+            <motion.div 
+              className="w-full h-full relative"
+              animate={{
+                rotateX: -yOffset * 0.4,
+                rotateY: xOffset * 0.4,
+              }}
+              transition={{ type: "spring", stiffness: 60, damping: 20 }}
+              style={{ transformStyle: "preserve-3d" }}
+            >
+              {/* Irregular Paper */}
+              <div 
+                className="absolute inset-0 bg-[#F0E2C8]"
+                style={{
+                  clipPath: "polygon(1% 0%, 98.5% 1%, 100% 98.5%, 97% 100%, 1.5% 99%, 0% 1.5%)",
+                  boxShadow: "inset 0 0 55px rgba(139,69,19,0.2)",
+                }}
               >
-                <p className="font-mono text-[6.5px] sm:text-[7.5px] tracking-[0.45em] text-[#4A3828] uppercase font-bold opacity-85">
-                  THE COUNTY ARCHIVE
-                </p>
-                <div className="flex items-center justify-center gap-2 mt-1">
-                  <span className="text-[#8B4513]/50 text-[5px]">❖</span>
-                  <p className="font-serif text-[7.5px] sm:text-[8.5px] tracking-[0.25em] text-[#6B5B48] italic">
-                    Case No. 001
-                  </p>
-                  <span className="text-[#8B4513]/50 text-[5px]">❖</span>
-                </div>
-              </motion.div>
-
-              {/* WANTED (1.30s) */}
-              <motion.div
-                initial={{ opacity: 0, scale: 1.15 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 1.30, type: "spring", stiffness: 250, damping: 18 }}
-                className="mt-4 sm:mt-5 text-center relative"
-              >
-                <h2 
-                  className="font-serif text-[17vw] sm:text-[72px] leading-[0.8] tracking-[0.03em] text-[#1a110a] font-black uppercase"
-                  style={{ 
-                    WebkitTextStroke: "1px rgba(61,43,31,0.6)",
-                    textShadow: "1px 2px 1px rgba(255,255,255,0.4), -1px -1px 0px rgba(0,0,0,0.3)"
-                  }}
-                >
-                  WANTED
-                </h2>
-              </motion.div>
-
-              {/* Subtitle (1.55s) */}
-              <motion.div
-                initial={{ opacity: 0, filter: "blur(4px)" }}
-                animate={{ opacity: 1, filter: "blur(0px)" }}
-                transition={{ delay: 1.55, duration: 0.4 }}
-                className="flex items-center justify-center gap-2 mt-3 mb-2"
-              >
-                <div className="h-[1.5px] w-8 sm:w-10 bg-[#4A3828]/60 rounded-[50%]" />
-                <p className="font-serif text-[8.5px] sm:text-[10px] tracking-[0.3em] text-[#3D2B1F] italic font-bold">
-                  DEAD CODE OR ALIVE
-                </p>
-                <div className="h-[1.5px] w-8 sm:w-10 bg-[#4A3828]/60 rounded-[50%]" />
-              </motion.div>
-
-              {/* Portrait (1.75s plate, 2.00s develop) */}
-              <div className="flex-1 w-full relative flex justify-center items-center mt-2 mb-3 px-6">
-                <motion.div 
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 1.75, duration: 0.3 }}
-                  className="relative w-full max-w-[210px] sm:max-w-[240px] aspect-[4/5] bg-[#D2BA94] border-[2px] border-[#3D2B1F]/70 overflow-hidden shadow-[inset_0_0_20px_rgba(0,0,0,0.3)]"
-                  style={{ clipPath: "polygon(1.5% 1%, 98.5% 0%, 100% 99%, 0% 100%)" }}
-                >
-                  <motion.div
-                    initial={{ opacity: 0, filter: "blur(8px) contrast(200%) grayscale(100%) brightness(2)" }}
-                    animate={{ opacity: 0.85, filter: "blur(0px) contrast(115%) grayscale(55%) brightness(0.95)" }}
-                    transition={{ delay: 2.00, duration: 2.5, ease: "easeOut" }}
-                    className="absolute inset-0 mix-blend-multiply"
-                  >
-                    <Image
-                      src="/profile_new.jpg"
-                      alt="Arunan Kavirajan"
-                      fill
-                      className="object-cover object-top"
-                      style={{ filter: "sepia(50%) saturate(0.85) hue-rotate(-5deg)" }}
-                      priority
-                      sizes="(max-width: 640px) 70vw, 240px"
-                    />
-                  </motion.div>
-                  
-                  <div className="absolute inset-0 shadow-[inset_0_0_40px_rgba(42,28,18,0.7)] pointer-events-none mix-blend-multiply" />
-                  
-                  {/* Photo scratches */}
-                  <div className="absolute inset-0 pointer-events-none opacity-30 mix-blend-overlay">
-                    <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-                      <filter id="photo-scratch"><feTurbulence type="fractalNoise" baseFrequency="0.9 0.05" numOctaves="2" /></filter>
-                      <rect width="100%" height="100%" filter="url(#photo-scratch)" />
-                    </svg>
-                  </div>
-                </motion.div>
-
-                {/* Wax Seal (2.35s) */}
-                <motion.div
-                  initial={{ scale: 3.5, opacity: 0, rotate: -45 }}
-                  animate={{ scale: 1, opacity: 1, rotate: -15 }}
-                  transition={{ delay: 2.35, type: "spring", stiffness: 280, damping: 16, mass: 1.2 }}
-                  className="absolute bottom-1 sm:bottom-0 right-4 sm:right-6 z-30"
-                  style={{ filter: "drop-shadow(3px 5px 8px rgba(0,0,0,0.45))" }}
-                >
-                  <div 
-                    className="w-16 h-16 sm:w-18 sm:h-18 rounded-full flex items-center justify-center relative"
-                    style={{ 
-                      background: "radial-gradient(circle at 35% 30%, #BA2A1A 0%, #871408 55%, #4F0902 100%)",
-                      boxShadow: "inset -2px -2px 6px rgba(0,0,0,0.6), inset 2px 2px 8px rgba(255,255,255,0.25)",
-                      clipPath: "polygon(8% 12%, 24% 4%, 47% 1%, 74% 6%, 93% 22%, 98% 46%, 96% 75%, 83% 92%, 58% 99%, 31% 96%, 10% 82%, 1% 54%)"
-                    }}
-                  >
-                    <span className="font-serif text-2xl sm:text-3xl font-bold text-[#F0E2C8]/85 drop-shadow-md mix-blend-overlay">AK</span>
-                  </div>
-                  <div className="absolute -bottom-2.5 left-1/2 -translate-x-1/2 w-3.5 h-6 bg-[#871408] rounded-full blur-[0.5px]"
-                       style={{ background: "linear-gradient(to bottom, #871408, #4F0902)" }} />
-                </motion.div>
-              </div>
-
-              {/* Name (2.60s) */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 2.60, duration: 0.3 }}
-                className="flex flex-col items-center leading-[0.8] mb-3 relative"
-              >
-                <h1 className="font-serif text-[10vw] sm:text-[40px] tracking-tight text-[#2A1C12] uppercase font-bold"
-                    style={{ textShadow: "0.5px 0.5px 0px rgba(255,255,255,0.3)" }}>
-                  ARUNAN
-                </h1>
-                <h1 className="font-serif text-[11vw] sm:text-[44px] tracking-tighter text-[#1C1108] uppercase font-black -mt-1 sm:-mt-1.5 ml-5">
-                  KAVIRAJAN
-                </h1>
-              </motion.div>
-
-              {/* Known For (2.85s) */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 2.85, duration: 0.5 }}
-                className="flex flex-col items-center text-center gap-1 mb-3.5"
-              >
-                <span className="font-mono text-[5.5px] sm:text-[6.5px] tracking-[0.25em] text-[#6B5B48] uppercase border-b border-[#6B5B48]/30 pb-0.5 mb-0.5">
-                  KNOWN FOR
-                </span>
-                <p className="font-serif text-[9px] sm:text-[10px] text-[#3D2B1F] italic leading-snug">
-                  BUILDING THINGS<br/>
-                  TAKING THEM APART<br/>
-                  FIGURING OUT WHY
-                </p>
-              </motion.div>
-
-              {/* Classification Marks (2.85s) */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 2.85, duration: 0.5 }}
-                className="flex justify-center gap-2.5 mb-4"
-              >
-                <div className="border border-[#4A3828]/60 px-1.5 py-0.5 transform -rotate-3">
-                  <span className="font-mono text-[6.5px] sm:text-[7.5px] tracking-wider text-[#3D2B1F] uppercase font-bold">SOFTWARE</span>
-                </div>
-                <div className="border border-[#4A3828]/60 px-1.5 py-0.5 transform rotate-2 bg-[#4A3828]/5">
-                  <span className="font-mono text-[6.5px] sm:text-[7.5px] tracking-wider text-[#3D2B1F] uppercase font-bold">SECURITY</span>
-                </div>
-                <div className="border border-[#4A3828]/60 px-1.5 py-0.5 transform -rotate-1">
-                  <span className="font-mono text-[6.5px] sm:text-[7.5px] tracking-wider text-[#3D2B1F] uppercase font-bold">AI / ML</span>
-                </div>
-              </motion.div>
-
-              {/* Bottom Archival Info (3.10s) */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 3.10, duration: 0.5 }}
-                className="mt-auto pt-2 border-t-[1.5px] border-dashed border-[#3D2B1F]/30 flex justify-between items-end px-1 sm:px-2"
-              >
-                <div className="flex flex-col">
-                  <span className="font-mono text-[4.5px] sm:text-[5.5px] tracking-[0.25em] text-[#6B5B48]">LAST SEEN</span>
-                  <span className="font-serif text-[7.5px] sm:text-[8.5px] text-[#2A1C12] font-bold">CHENNAI, IN</span>
+                {/* Paper Texture */}
+                <div className="absolute inset-0 pointer-events-none opacity-[0.4] mix-blend-multiply">
+                  <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                    <filter id="paper-texture">
+                      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch" />
+                      <feColorMatrix type="saturate" values="0" />
+                    </filter>
+                    <rect width="100%" height="100%" filter="url(#paper-texture)" />
+                  </svg>
                 </div>
                 
-                <div className="flex gap-1.5 items-center pb-0.5">
-                  <span className="text-[#8B4513]/50 text-[5px]">✦</span>
-                  <span className="text-[#8B4513]/30 text-[4px]">★</span>
-                  <span className="text-[#8B4513]/50 text-[5px]">✦</span>
+                <div className="absolute inset-0 shadow-[inset_0_0_90px_rgba(61,43,31,0.25)] pointer-events-none" />
+                
+                {/* Creases */}
+                <div className="absolute top-0 right-10 w-[150%] h-[2px] -rotate-12 pointer-events-none flex flex-col opacity-75">
+                   <div className="w-full h-[1px] bg-white/45" />
+                   <div className="w-full h-[1px] bg-[#3D2B1F]/20" />
                 </div>
+                <div className="absolute top-[48%] left-0 w-full h-[3px] pointer-events-none flex flex-col opacity-55">
+                   <div className="w-full h-[1.5px] bg-[#3D2B1F]/20" />
+                   <div className="w-full h-[1.5px] bg-white/35" />
+                </div>
+                
+                {/* Burn marks */}
+                <div className="absolute -bottom-8 -left-8 w-28 h-28 bg-[radial-gradient(circle,rgba(61,43,31,0.45)_0%,transparent_70%)] mix-blend-multiply blur-[2px] pointer-events-none" />
+                <div className="absolute -top-4 -right-4 w-20 h-20 bg-[radial-gradient(circle,rgba(139,69,19,0.18)_0%,transparent_70%)] mix-blend-multiply blur-[1px] pointer-events-none" />
 
-                <div className="flex flex-col items-end">
-                  <span className="font-mono text-[4.5px] sm:text-[5.5px] tracking-[0.25em] text-[#6B5B48]">STATUS</span>
-                  <span className="font-serif text-[7.5px] sm:text-[8.5px] text-[#871408] font-black tracking-widest">ACTIVE</span>
+                {/* Nail stress tear */}
+                <div className="absolute top-[-2px] left-1/2 -translate-x-1/2 w-8 h-10 bg-[radial-gradient(ellipse,rgba(61,43,31,0.2)_0%,transparent_70%)] mix-blend-multiply pointer-events-none" />
+
+                {/* ── Poster Content ── */}
+                <div className="relative w-full h-full p-4 sm:p-5 flex flex-col z-10">
+                  
+                  <motion.div 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.8, duration: 0.5 }}
+                    className="absolute inset-[14px] sm:inset-[18px] border-[1.5px] border-[#3D2B1F]/65 pointer-events-none"
+                    style={{ clipPath: "polygon(0 0, 100% 1%, 99% 100%, 1% 99%)" }}
+                  />
+                  <motion.div 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.8, duration: 0.5 }}
+                    className="absolute inset-[18px] sm:inset-[22px] border-[0.5px] border-[#3D2B1F]/45 pointer-events-none"
+                  />
+
+                  {/* Header (1.0s) */}
+                  <motion.div
+                    initial={{ opacity: 0, y: -5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 1.0, duration: 0.4 }}
+                    className="mt-3 text-center"
+                  >
+                    <p className="font-mono text-[6.5px] sm:text-[7.5px] tracking-[0.45em] text-[#4A3828] uppercase font-bold opacity-85">
+                      THE COUNTY ARCHIVE
+                    </p>
+                    <div className="flex items-center justify-center gap-2 mt-1">
+                      <motion.span 
+                        animate={{ rotate: 360 }} 
+                        transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+                        className="text-[#8B4513]/50 text-[5px] inline-block"
+                      >❖</motion.span>
+                      <p className="font-serif text-[7.5px] sm:text-[8.5px] tracking-[0.25em] text-[#6B5B48] italic">
+                        Case No. 001
+                      </p>
+                      <motion.span 
+                        animate={{ rotate: -360 }} 
+                        transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+                        className="text-[#8B4513]/50 text-[5px] inline-block"
+                      >❖</motion.span>
+                    </div>
+                  </motion.div>
+
+                  {/* WANTED (1.1s) */}
+                  <motion.div
+                    initial={{ opacity: 0, scale: 1.15 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 1.1, type: "spring", stiffness: 250, damping: 18 }}
+                    className="mt-4 sm:mt-5 text-center relative"
+                  >
+                    <motion.h2 
+                      animate={{ opacity: [0.95, 1, 0.95] }}
+                      transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                      className="font-serif text-[17vw] sm:text-[72px] leading-[0.8] tracking-[0.03em] text-[#1a110a] font-black uppercase"
+                      style={{ 
+                        WebkitTextStroke: "1px rgba(61,43,31,0.7)",
+                        textShadow: "1px 2px 1px rgba(255,255,255,0.5), -1px -1px 0px rgba(0,0,0,0.4)"
+                      }}
+                    >
+                      WANTED
+                    </motion.h2>
+                  </motion.div>
+
+                  {/* Subtitle (1.3s) */}
+                  <motion.div
+                    initial={{ opacity: 0, filter: "blur(4px)" }}
+                    animate={{ opacity: 1, filter: "blur(0px)" }}
+                    transition={{ delay: 1.3, duration: 0.4 }}
+                    className="flex items-center justify-center gap-2 mt-3 mb-2"
+                  >
+                    <div className="h-[1.5px] w-8 sm:w-10 bg-[#4A3828]/65 rounded-[50%]" />
+                    <p className="font-serif text-[8.5px] sm:text-[10px] tracking-[0.3em] text-[#3D2B1F] italic font-bold">
+                      DEAD CODE OR ALIVE
+                    </p>
+                    <div className="h-[1.5px] w-8 sm:w-10 bg-[#4A3828]/65 rounded-[50%]" />
+                  </motion.div>
+
+                  {/* Portrait (1.5s plate, 1.7s develop) */}
+                  <div className="flex-1 w-full relative flex justify-center items-center mt-2 mb-3 px-6">
+                    <motion.div 
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 1.5, duration: 0.3 }}
+                      className="relative w-full max-w-[210px] sm:max-w-[240px] aspect-[4/5] bg-[#D2BA94] border-[2px] border-[#3D2B1F]/75 overflow-hidden shadow-[inset_0_0_20px_rgba(0,0,0,0.4)]"
+                      style={{ clipPath: "polygon(1.5% 1%, 98.5% 0%, 100% 99%, 0% 100%)" }}
+                    >
+                      <motion.div
+                        initial={{ opacity: 0, filter: "blur(8px) contrast(200%) grayscale(100%) brightness(2)" }}
+                        animate={{ opacity: 0.85, filter: "blur(0px) contrast(115%) grayscale(55%) brightness(0.95)" }}
+                        transition={{ delay: 1.7, duration: 2.5, ease: "easeOut" }}
+                        className="absolute inset-0 mix-blend-multiply"
+                      >
+                        <Image
+                          src="/profile_new.jpg"
+                          alt="Arunan Kavirajan"
+                          fill
+                          className="object-cover object-top"
+                          style={{ filter: "sepia(55%) saturate(0.85) hue-rotate(-5deg)" }}
+                          priority
+                          sizes="(max-width: 640px) 70vw, 240px"
+                        />
+                      </motion.div>
+                      
+                      {/* Ambient breathing parallax on photo */}
+                      <motion.div 
+                        className="absolute inset-0 shadow-[inset_0_0_40px_rgba(42,28,18,0.7)] pointer-events-none mix-blend-multiply"
+                        animate={{ opacity: [0.8, 1, 0.8] }}
+                        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                      />
+                      
+                      <div className="absolute inset-0 pointer-events-none opacity-30 mix-blend-overlay">
+                        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                          <filter id="photo-scratch"><feTurbulence type="fractalNoise" baseFrequency="0.9 0.05" numOctaves="2" /></filter>
+                          <rect width="100%" height="100%" filter="url(#photo-scratch)" />
+                        </svg>
+                      </div>
+                    </motion.div>
+
+                    {/* Signature instead of Wax Seal (2.0s) */}
+                    <motion.div
+                      className="absolute bottom-1 right-2 sm:right-4 z-30 transform -rotate-12"
+                      style={{ filter: "drop-shadow(1px 1px 1px rgba(255,255,255,0.4)) drop-shadow(0px 1px 2px rgba(0,0,0,0.2))" }}
+                    >
+                      <svg width="140" height="70" viewBox="0 0 140 70" className="mix-blend-multiply opacity-80">
+                        {/* A */}
+                        <motion.path
+                          d="M40,55 C40,55 50,15 55,10 C58,8 65,45 68,55 M45,40 C50,38 60,35 65,35"
+                          fill="none" stroke="#1A1108" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+                          initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ delay: 2.0, duration: 0.8, ease: "easeOut" }}
+                        />
+                        {/* K */}
+                        <motion.path
+                          d="M75,10 C75,10 75,30 73,60 M90,30 C90,30 80,45 74,45 C80,45 92,60 95,65"
+                          fill="none" stroke="#1A1108" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+                          initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ delay: 2.3, duration: 0.6, ease: "easeOut" }}
+                        />
+                        {/* Scribble tail */}
+                        <motion.path
+                          d="M95,65 C105,50 100,55 110,60 C115,62 125,50 135,55"
+                          fill="none" stroke="#1A1108" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+                          initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ delay: 2.7, duration: 0.5, ease: "easeOut" }}
+                        />
+                        {/* Underline flourish */}
+                        <motion.path
+                          d="M35,65 C60,60 100,68 135,62"
+                          fill="none" stroke="#1A1108" strokeWidth="1.5" strokeLinecap="round"
+                          initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ delay: 3.0, duration: 0.6, ease: "easeOut" }}
+                        />
+                      </svg>
+                    </motion.div>
+                  </div>
+
+                  {/* Name (2.3s) */}
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 2.3, duration: 0.3 }}
+                    className="flex flex-col items-center leading-[0.8] mb-3 relative"
+                  >
+                    <h1 className="font-serif text-[10vw] sm:text-[40px] tracking-tight text-[#2A1C12] uppercase font-bold"
+                        style={{ textShadow: "0.5px 0.5px 0px rgba(255,255,255,0.4)" }}>
+                      ARUNAN
+                    </h1>
+                    <h1 className="font-serif text-[11vw] sm:text-[44px] tracking-tighter text-[#1C1108] uppercase font-black -mt-1 sm:-mt-1.5 ml-5">
+                      KAVIRAJAN
+                    </h1>
+                  </motion.div>
+
+                  {/* Known For (2.5s) */}
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 2.5, duration: 0.5 }}
+                    className="flex flex-col items-center text-center gap-1 mb-3.5"
+                  >
+                    <span className="font-mono text-[5.5px] sm:text-[6.5px] tracking-[0.25em] text-[#6B5B48] uppercase border-b border-[#6B5B48]/40 pb-0.5 mb-0.5">
+                      KNOWN FOR
+                    </span>
+                    <p className="font-serif text-[9px] sm:text-[10px] text-[#3D2B1F] italic leading-snug">
+                      BUILDING THINGS<br/>
+                      TAKING THEM APART<br/>
+                      FIGURING OUT WHY
+                    </p>
+                  </motion.div>
+
+                  {/* Classification Marks (2.6s) */}
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 2.6, duration: 0.5 }}
+                    className="flex justify-center gap-2.5 mb-4"
+                  >
+                    <div className="border border-[#4A3828]/70 px-1.5 py-0.5 transform -rotate-3">
+                      <span className="font-mono text-[6.5px] sm:text-[7.5px] tracking-wider text-[#3D2B1F] uppercase font-bold">SOFTWARE</span>
+                    </div>
+                    <div className="border border-[#4A3828]/70 px-1.5 py-0.5 transform rotate-2 bg-[#4A3828]/5">
+                      <span className="font-mono text-[6.5px] sm:text-[7.5px] tracking-wider text-[#3D2B1F] uppercase font-bold">SECURITY</span>
+                    </div>
+                    <div className="border border-[#4A3828]/70 px-1.5 py-0.5 transform -rotate-1">
+                      <span className="font-mono text-[6.5px] sm:text-[7.5px] tracking-wider text-[#3D2B1F] uppercase font-bold">AI / ML</span>
+                    </div>
+                  </motion.div>
+
+                  {/* Bottom Archival Info (2.8s) */}
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 2.8, duration: 0.5 }}
+                    className="mt-auto pt-2 border-t-[1.5px] border-dashed border-[#3D2B1F]/40 flex justify-between items-end px-1 sm:px-2"
+                  >
+                    <div className="flex flex-col">
+                      <span className="font-mono text-[4.5px] sm:text-[5.5px] tracking-[0.25em] text-[#6B5B48]">LAST SEEN</span>
+                      <span className="font-serif text-[7.5px] sm:text-[8.5px] text-[#2A1C12] font-bold">CHENNAI, IN</span>
+                    </div>
+                    
+                    <motion.div 
+                      className="flex gap-1.5 items-center pb-0.5"
+                      animate={{ scale: [1, 1.1, 1], opacity: [0.7, 1, 0.7] }}
+                      transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                    >
+                      <span className="text-[#8B4513]/60 text-[5px]">✦</span>
+                      <span className="text-[#8B4513]/40 text-[4px]">★</span>
+                      <span className="text-[#8B4513]/60 text-[5px]">✦</span>
+                    </motion.div>
+
+                    <div className="flex flex-col items-end">
+                      <span className="font-mono text-[4.5px] sm:text-[5.5px] tracking-[0.25em] text-[#6B5B48]">STATUS</span>
+                      <motion.span 
+                        animate={{ opacity: [1, 0.6, 1] }}
+                        transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                        className="font-serif text-[7.5px] sm:text-[8.5px] text-[#871408] font-black tracking-widest"
+                      >
+                        ACTIVE
+                      </motion.span>
+                    </div>
+                  </motion.div>
                 </div>
-              </motion.div>
-            </div>
-          </div>
-        </motion.div>
-      </motion.div>
+              </div>
+            </motion.div>
+          </motion.div>
+          
+          {/* Active Scroll Hint */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 3.5, duration: 0.6 }}
+            className="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 z-50 pointer-events-none"
+          >
+            <motion.div
+              animate={{ y: [0, 6, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <div className="w-[1px] h-6 bg-gradient-to-b from-transparent via-[#F0E2C8]/60 to-transparent" />
+            </motion.div>
+            <span className="font-mono text-[6px] tracking-[0.4em] text-[#F0E2C8]/50 uppercase mt-1">
+              Scroll
+            </span>
+          </motion.div>
+        </>
+      )}
     </section>
   );
 }
