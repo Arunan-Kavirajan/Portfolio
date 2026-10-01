@@ -99,7 +99,7 @@ function TheCover() {
 
   return (
     <section 
-      className="relative h-[100dvh] w-full bg-[#1e130c] overflow-hidden flex items-center justify-center pt-[3vh] pb-[3vh] perspective-[1200px] select-none"
+      className="relative h-[100svh] w-full bg-[#1e130c] overflow-hidden flex items-center justify-center pt-[3svh] pb-[3svh] perspective-[1200px] select-none"
       onMouseMove={handleMouseMove}
       onTouchMove={handleMouseMove}
     >
@@ -157,7 +157,7 @@ function TheCover() {
             initial={{ scale: 0, y: -30, opacity: 0 }}
             animate={{ scale: 1, y: 0, opacity: 1 }}
             transition={{ delay: 0.1, type: "spring", stiffness: 500, damping: 12 }}
-            className="absolute top-[6vh] sm:top-[8vh] z-50 pointer-events-none"
+            className="absolute top-[6svh] sm:top-[8svh] z-50 pointer-events-none"
           >
             <div className="relative w-3.5 h-3.5 sm:w-4 sm:h-4 bg-[#1a110a] rounded-full shadow-[0_4px_6px_rgba(0,0,0,0.7)] border-[1.5px] border-[#36271c]">
                <div className="absolute top-[2px] left-[2px] w-1 h-1 bg-[#8c7462] rounded-full opacity-70 blur-[0.5px]" />
@@ -172,7 +172,7 @@ function TheCover() {
           <motion.div
             initial={{ y: "-100vh", rotateZ: 5, rotateX: 25, opacity: 0 }}
             animate={controls}
-            className="relative w-[88vw] max-w-[380px] sm:max-w-[420px] h-[85vh] sm:h-[88vh] z-20"
+            className="relative w-[88vw] max-w-[380px] sm:max-w-[420px] h-[85svh] sm:h-[88svh] z-20"
             style={{
               filter: "drop-shadow(15px 25px 35px rgba(0,0,0,0.7)) drop-shadow(0px 8px 12px rgba(0,0,0,0.6))",
             }}
