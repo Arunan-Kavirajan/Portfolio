@@ -63,117 +63,67 @@ export default function LoadingScreen({
    ══════════════════════════════════════════════════════════════ */
 function MobileGunshotLoading() {
   // Pre-generate particle bursts for each shot to ensure determinism and zero hydration mismatch
-  const shot1Particles = useMemo(
-    () =>
-      Array.from({ length: 8 }).map((_, i) => ({
-        id: i,
-        dx: (Math.random() - 0.5) * 110,
-        dy: (Math.random() - 0.5) * 110,
-        scale: 0.6 + Math.random() * 0.8,
-        isSpark: i % 2 === 0,
-      })),
-    []
-  );
+  // Added jump force (dy_up) and fall distance (dy_down) for gravity physics
+  const createParticles = (length: number, spreadX: number, upForce: number) =>
+    Array.from({ length }).map((_, i) => ({
+      id: i,
+      dx: (Math.random() - 0.5) * spreadX,
+      dy_up: -Math.random() * upForce,
+      dy_down: 100 + Math.random() * 200,
+      scale: 0.5 + Math.random() * 0.7,
+      isSpark: i % 2 === 0,
+    }));
 
-  const shot2Particles = useMemo(
-    () =>
-      Array.from({ length: 8 }).map((_, i) => ({
-        id: i,
-        dx: (Math.random() - 0.5) * 110,
-        dy: (Math.random() - 0.5) * 110,
-        scale: 0.6 + Math.random() * 0.8,
-        isSpark: i % 2 === 0,
-      })),
-    []
-  );
-
-  const shot3Particles = useMemo(
-    () =>
-      Array.from({ length: 12 }).map((_, i) => ({
-        id: i,
-        dx: (Math.random() - 0.5) * 160,
-        dy: (Math.random() - 0.5) * 160,
-        scale: 0.8 + Math.random() * 1.0,
-        isSpark: i % 3 !== 0,
-      })),
-    []
-  );
+  const shot1Particles = useMemo(() => createParticles(10, 140, 80), []);
+  const shot2Particles = useMemo(() => createParticles(10, 140, 80), []);
+  const shot3Particles = useMemo(() => createParticles(15, 200, 120), []);
 
   // Flying wood splinters when the tear rips open
   const tearSplinters = useMemo(
     () =>
-      Array.from({ length: 10 }).map((_, i) => ({
+      Array.from({ length: 14 }).map((_, i) => ({
         id: i,
         x: 45 + Math.random() * 10,
         y: 20 + Math.random() * 60,
-        dx: (Math.random() - 0.5) * 180,
-        dy: (Math.random() - 0.5) * 220,
-        rot: (Math.random() - 0.5) * 540,
-        width: 3 + Math.random() * 6,
-        height: 10 + Math.random() * 18,
+        dx: (Math.random() - 0.5) * 250,
+        dy_up: -50 - Math.random() * 100,
+        dy_down: 400 + Math.random() * 300,
+        rot: (Math.random() - 0.5) * 720,
+        width: 3 + Math.random() * 8,
+        height: 10 + Math.random() * 25,
       })),
     []
   );
 
-  // Complementary jagged seam connecting bullet coordinates (Top-Left: 26%,28% -> Center: 50%,46% -> Bottom-Right: 72%,68%)
+  // Ragged, brutal seam connecting bullet coordinates (Top-Left: 26%,28% -> Center: 50%,46% -> Bottom-Right: 72%,68%)
   const leftFlapClip =
-    "polygon(0% 0%, 50% 0%, 52% 14%, 26% 28%, 40% 36%, 50% 46%, 58% 56%, 72% 68%, 54% 82%, 48% 100%, 0% 100%)";
+    "polygon(0% 0%, 48% 0%, 53% 8%, 46% 15%, 54% 20%, 26% 28%, 34% 32%, 40% 36%, 36% 40%, 50% 46%, 60% 51%, 52% 57%, 62% 61%, 72% 68%, 65% 74%, 58% 78%, 54% 82%, 45% 90%, 52% 95%, 48% 100%, 0% 100%)";
   const rightFlapClip =
-    "polygon(50% 0%, 100% 0%, 100% 100%, 48% 100%, 54% 82%, 72% 68%, 58% 56%, 50% 46%, 40% 36%, 26% 28%, 52% 14%)";
+    "polygon(48% 0%, 100% 0%, 100% 100%, 48% 100%, 52% 95%, 45% 90%, 54% 82%, 58% 78%, 65% 74%, 72% 68%, 62% 61%, 52% 57%, 60% 51%, 50% 46%, 36% 40%, 40% 36%, 34% 32%, 26% 28%, 54% 20%, 46% 15%, 53% 8%)";
 
   return (
     <motion.div
       key="mobile-loading"
-      className="fixed inset-0 z-[9998] overflow-hidden select-none bg-[#120B07] perspective-[1200px]"
+      // bg-transparent ensures it directly reveals the MobileHero poster already waiting underneath
+      className="fixed inset-0 z-[9998] overflow-hidden select-none bg-transparent perspective-[1200px]"
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.25, ease: "easeInOut" }}
+      transition={{ duration: 0.1 }}
     >
-      {/* ── Revealed Wall Behind (visible as flaps tear open) ── */}
-      <div className="absolute inset-0 bg-[#3D2B1F]">
-        <div className="absolute inset-0 opacity-[0.22] mix-blend-overlay pointer-events-none">
-          <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-            <filter id="revealed-wood">
-              <feTurbulence type="fractalNoise" baseFrequency="0.015 0.12" numOctaves="6" seed="5" />
-              <feColorMatrix type="saturate" values="0" />
-            </filter>
-            <rect width="100%" height="100%" filter="url(#revealed-wood)" />
-          </svg>
-        </div>
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_15%,rgba(16,9,5,0.92)_100%)]" />
-        {/* Warm lantern glow waiting inside */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_550px_at_50%_50%,rgba(255,200,140,0.18),transparent)]" />
-      </div>
-
       {/* ── Screen Recoil Wrapper (Shakes violently on each gunshot) ── */}
       <motion.div
         className="w-full h-full relative"
         animate={{
           x: [
             0,
-            // Shot 1 (0.34s)
             0, -12, 10, -6, 3, 0,
-            // Shot 2 (0.74s)
             0, 14, -12, 8, -4, 0,
-            // Shot 3 (1.14s - violent recoil)
             0, -22, 20, -15, 10, -5, 2, 0,
           ],
           y: [
             0,
-            // Shot 1
             0, 8, -9, 5, -2, 0,
-            // Shot 2
             0, -10, 11, -6, 3, 0,
-            // Shot 3
             0, 16, -17, 12, -7, 3, 0,
-          ],
-          rotateZ: [
-            0,
-            // Shot 1
-            0, -0.6, 0.4, 0,
-            // Shot 2
-            0, 0.7, -0.5, 0,
-            // Shot 3
-            0, -1.4, 1.2, -0.6, 0.2, 0,
           ],
         }}
         transition={{
@@ -190,22 +140,23 @@ function MobileGunshotLoading() {
       >
         {/* ══════════════ LEFT FLAP ══════════════ */}
         <motion.div
-          className="absolute inset-0 bg-[#241710] origin-left"
+          className="absolute inset-0 bg-[#241710] origin-top-left"
           style={{
             clipPath: leftFlapClip,
             transformStyle: "preserve-3d",
           }}
           animate={{
-            x: ["0%", "0%", "-115%"],
-            rotateY: [0, 0, -42],
-            rotateZ: [0, 0, -4],
-            opacity: [1, 1, 0],
+            // Flap physically falls down and rotates off the hinges
+            x: ["0%", "-5%", "-15%"],
+            y: ["0%", "30%", "120%"],
+            rotateZ: [0, -15, -35],
+            rotateX: [0, 20, 45],
+            opacity: [1, 1, 0.8],
           }}
           transition={{
-            duration: 0.62,
+            duration: 0.65,
             delay: 1.48,
-            times: [0, 0.05, 1],
-            ease: [0.32, 0, 0.24, 1],
+            ease: [0.5, 0, 0.7, 0.2], // Gravity acceleration ease
           }}
         >
           <BarricadeSurface idPrefix="left" />
@@ -213,67 +164,62 @@ function MobileGunshotLoading() {
 
         {/* ══════════════ RIGHT FLAP ══════════════ */}
         <motion.div
-          className="absolute inset-0 bg-[#241710] origin-right"
+          className="absolute inset-0 bg-[#241710] origin-top-right"
           style={{
             clipPath: rightFlapClip,
             transformStyle: "preserve-3d",
           }}
           animate={{
-            x: ["0%", "0%", "115%"],
-            rotateY: [0, 0, 42],
-            rotateZ: [0, 0, 4],
-            opacity: [1, 1, 0],
+            x: ["0%", "5%", "15%"],
+            y: ["0%", "25%", "120%"],
+            rotateZ: [0, 10, 28],
+            rotateX: [0, 20, 45],
+            opacity: [1, 1, 0.8],
           }}
           transition={{
-            duration: 0.62,
+            duration: 0.65,
             delay: 1.48,
-            times: [0, 0.05, 1],
-            ease: [0.32, 0, 0.24, 1],
+            ease: [0.5, 0, 0.7, 0.2],
           }}
         >
           <BarricadeSurface idPrefix="right" />
         </motion.div>
 
         {/* ══════════════ THE CONNECTING FRACTURE CRACK ══════════════ */}
-        {/* Violently appears on Shot 3 (1.14s) and glows right before tearing */}
         <div className="absolute inset-0 pointer-events-none z-20">
           <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-            {/* Outer crack glow */}
             <motion.path
-              d="M 50,0 Q 52,14 26,28 Q 40,36 50,46 Q 58,56 72,68 Q 54,82 48,100"
+              d="M 48,0 L 53,8 L 46,15 L 54,20 L 26,28 L 34,32 L 40,36 L 36,40 L 50,46 L 60,51 L 52,57 L 62,61 L 72,68 L 65,74 L 58,78 L 54,82 L 45,90 L 52,95 L 48,100"
               fill="none"
               stroke="#FFAA44"
-              strokeWidth="1.2"
+              strokeWidth="1.5"
               className="blur-[2px]"
               initial={{ pathLength: 0, opacity: 0 }}
-              animate={{ pathLength: 1, opacity: [0, 1, 0.8] }}
-              transition={{ delay: 1.14, duration: 0.15, ease: "easeOut" }}
+              animate={{ pathLength: 1, opacity: [0, 1, 0] }}
+              transition={{ delay: 1.14, duration: 0.35, ease: "easeOut" }}
             />
-            {/* Dark jagged fault line */}
             <motion.path
-              d="M 50,0 Q 52,14 26,28 Q 40,36 50,46 Q 58,56 72,68 Q 54,82 48,100"
+              d="M 48,0 L 53,8 L 46,15 L 54,20 L 26,28 L 34,32 L 40,36 L 36,40 L 50,46 L 60,51 L 52,57 L 62,61 L 72,68 L 65,74 L 58,78 L 54,82 L 45,90 L 52,95 L 48,100"
               fill="none"
               stroke="#0A0503"
-              strokeWidth="0.8"
+              strokeWidth="1.2"
               initial={{ pathLength: 0, opacity: 0 }}
               animate={{ pathLength: 1, opacity: 1 }}
               transition={{ delay: 1.14, duration: 0.12, ease: "easeOut" }}
             />
-            {/* Radiating micro-fractures */}
             <motion.path
-              d="M 26,28 L 18,34 M 50,46 L 40,54 M 50,46 L 62,42 M 72,68 L 82,62 M 72,68 L 78,76"
+              d="M 26,28 L 18,34 M 50,46 L 40,54 M 50,46 L 62,42 M 72,68 L 82,62 M 72,68 L 78,76 M 40,36 L 32,32"
               fill="none"
               stroke="#0A0503"
-              strokeWidth="0.5"
+              strokeWidth="0.8"
               initial={{ opacity: 0 }}
-              animate={{ opacity: 0.8 }}
-              transition={{ delay: 1.16, duration: 0.1 }}
+              animate={{ opacity: [0, 0.8, 0] }}
+              transition={{ delay: 1.16, duration: 0.32 }}
             />
           </svg>
         </div>
 
         {/* ══════════════ BULLET HOLES ══════════════ */}
-        {/* SHOT 1: Top-Left (340ms) */}
         <BulletHole
           x="26%"
           y="28%"
@@ -282,8 +228,6 @@ function MobileGunshotLoading() {
           scale={0.95}
           particles={shot1Particles}
         />
-
-        {/* SHOT 2: Bottom-Right (740ms) */}
         <BulletHole
           x="72%"
           y="68%"
@@ -292,8 +236,6 @@ function MobileGunshotLoading() {
           scale={1.05}
           particles={shot2Particles}
         />
-
-        {/* SHOT 3: Center-Lethal (1140ms) */}
         <BulletHole
           x="50%"
           y="46%"
@@ -304,22 +246,23 @@ function MobileGunshotLoading() {
           isHeavy
         />
 
-        {/* ══════════════ FLYING SPLINTERS ON TEAR ══════════════ */}
+        {/* ══════════════ FLYING SPLINTERS ON TEAR (GRAVITY ARC) ══════════════ */}
         <div className="absolute inset-0 pointer-events-none z-30">
           {tearSplinters.map((s) => (
             <motion.div
               key={s.id}
               initial={{ opacity: 0, x: 0, y: 0, rotate: 0 }}
               animate={{
-                opacity: [0, 1, 0],
+                opacity: [0, 1, 1, 0],
                 x: [0, s.dx],
-                y: [0, s.dy],
+                y: [0, s.dy_up, s.dy_down], // Arc: jump up then fall down
                 rotate: [0, s.rot],
               }}
               transition={{
                 delay: 1.48,
-                duration: 0.55,
-                ease: "easeOut",
+                duration: 0.6,
+                times: [0, 0.2, 0.8, 1],
+                ease: "easeInOut",
               }}
               className="absolute bg-[#1B110A] border border-[#4A2D1A] rounded-sm"
               style={{
@@ -420,7 +363,8 @@ function BulletHole({
   particles: Array<{
     id: number;
     dx: number;
-    dy: number;
+    dy_up?: number;
+    dy_down?: number;
     scale: number;
     isSpark: boolean;
   }>;
@@ -502,14 +446,19 @@ function BulletHole({
         </svg>
       </motion.div>
 
-      {/* 4. Burst of sparks and wood particles */}
+      {/* 4. Burst of sparks and wood particles (Gravity Arc) */}
       <div className="absolute pointer-events-none z-30" style={{ left: x, top: y }}>
         {particles.map((p) => (
           <motion.div
             key={p.id}
             initial={{ x: 0, y: 0, opacity: 1, scale: p.scale }}
-            animate={{ x: p.dx, y: p.dy, opacity: 0, scale: 0 }}
-            transition={{ delay, duration: 0.42, ease: "easeOut" }}
+            animate={{ 
+              x: p.dx, 
+              y: [0, p.dy_up || -20, p.dy_down || 100], 
+              opacity: [1, 1, 0], 
+              scale: [p.scale, p.scale, 0] 
+            }}
+            transition={{ delay, duration: 0.5, times: [0, 0.3, 1], ease: "easeOut" }}
             className="absolute rounded-full"
             style={{
               width: p.isSpark ? "3px" : "4.5px",

@@ -44,11 +44,9 @@ function TheCover() {
   const controls = useAnimation();
 
   useEffect(() => {
-    if (!isLoading) {
-      const t = setTimeout(() => setStart(true), 150);
-      return () => clearTimeout(t);
-    }
-  }, [isLoading]);
+    // Start immediately on mount so the poster is waiting behind the loading screen
+    setStart(true);
+  }, []);
 
   useEffect(() => {
     if (start) {
@@ -515,23 +513,7 @@ function TheCover() {
                     </p>
                   </motion.div>
 
-                  {/* Classification Marks (2.6s) */}
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 2.6, duration: 0.5 }}
-                    className="flex justify-center gap-2.5 mb-4"
-                  >
-                    <div className="border border-[#4A3828]/70 px-1.5 py-0.5 transform -rotate-3">
-                      <span className="font-mono text-[6.5px] sm:text-[7.5px] tracking-wider text-[#3D2B1F] uppercase font-bold">SOFTWARE</span>
-                    </div>
-                    <div className="border border-[#4A3828]/70 px-1.5 py-0.5 transform rotate-2 bg-[#4A3828]/5">
-                      <span className="font-mono text-[6.5px] sm:text-[7.5px] tracking-wider text-[#3D2B1F] uppercase font-bold">SECURITY</span>
-                    </div>
-                    <div className="border border-[#4A3828]/70 px-1.5 py-0.5 transform -rotate-1">
-                      <span className="font-mono text-[6.5px] sm:text-[7.5px] tracking-wider text-[#3D2B1F] uppercase font-bold">AI / ML</span>
-                    </div>
-                  </motion.div>
+
 
                   {/* Bottom Archival Info (2.8s) */}
                   <motion.div
