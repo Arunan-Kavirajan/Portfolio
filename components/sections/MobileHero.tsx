@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useLoading } from "@/components/layout/LoadingProvider";
 import MobileFieldNotes from "@/components/sections/MobileFieldNotes";
 import MobileStatementOfIntent from "@/components/sections/MobileStatementOfIntent";
+import MobileRecordedActivities from "@/components/sections/MobileRecordedActivities";
 
 /* ═══════════════════════════════════════════════════════════
    COMPACT HOMEPAGE — A Personal Field Journal
@@ -569,35 +570,6 @@ function TheCover() {
 }
 
 /* ──────────────────────────────────────────────────────────
-   04 — THINGS I'M CHASING
-   ────────────────────────────────────────────────────────── */
-function ThingsImChasing() {
-  const interests = ["SOFTWARE", "CYBERSECURITY", "AI / ML", "SYSTEMS", "EXPERIMENTATION", "BUILDING"];
-
-  return (
-    <section className="px-6 md:px-12 py-32 md:py-48 bg-[#F0E2C8] border-t border-[#8B4513]/10">
-      <div className="max-w-xl mx-auto md:max-w-3xl">
-        <ChapterMark number="04" title="Things I'm Chasing" />
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-10 gap-x-12">
-          {interests.map((item, i) => (
-            <motion.div
-              key={item}
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true, margin: "-30px" }}
-              transition={{ duration: 0.5, delay: i * 0.08 }}
-            >
-              <span className="font-serif text-xl sm:text-2xl text-[#1C1108] tracking-tight">{item}</span>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ──────────────────────────────────────────────────────────
    05 — THE WORKBENCH
    ────────────────────────────────────────────────────────── */
 function TheWorkbench() {
@@ -835,7 +807,7 @@ export default function CompactHomeHero() {
       <TheCover />
       <MobileFieldNotes />
       <MobileStatementOfIntent />
-      <ThingsImChasing />
+      <MobileRecordedActivities />
       <TheWorkbench />
       <RecentSpecimens />
       <Records />
