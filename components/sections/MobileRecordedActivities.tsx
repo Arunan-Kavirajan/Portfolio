@@ -25,6 +25,9 @@ function TornEdgeBottom() {
 }
 
 function SharedVintageBackground({ seed = 4, burnTopRight = false, burnBottomLeft = false }) {
+  // Use seed to determine if we should show a blood stain
+  const showBloodStain = seed % 3 === 0;
+  
   return (
     <>
       {/* Subtle Document Surface Grain */}
@@ -48,21 +51,25 @@ function SharedVintageBackground({ seed = 4, burnTopRight = false, burnBottomLef
       {burnBottomLeft && (
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-[radial-gradient(circle,rgba(20,5,0,0.35)_0%,transparent_60%)] blur-lg pointer-events-none mix-blend-multiply translate-y-1/4 -translate-x-1/4 z-0" />
       )}
+      
+      {/* Subtle Blood Stain */}
+      {showBloodStain && (
+        <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-[radial-gradient(circle,rgba(110,20,10,0.15)_0%,rgba(110,20,10,0.03)_40%,transparent_70%)] blur-md pointer-events-none mix-blend-multiply z-0" />
+      )}
     </>
   );
 }
 
 import { forwardRef } from "react";
 
-const PaperBlock = forwardRef(({ children, seed, burnTopRight = false, burnBottomLeft = false, className = "" }: any, ref: any) => {
+const PaperBlock = forwardRef(({ children, seed, burnTopRight = false, burnBottomLeft = false, rotationClass = "", className = "" }: any, ref: any) => {
   return (
-    <div ref={ref} className={`relative w-[94%] mx-auto bg-[#E5D4B8] my-16 shadow-[0_20px_50px_rgba(0,0,0,0.5)] ${className}`}>
-      <TornEdgeTop />
+    <div ref={ref} className={`relative w-[92%] sm:w-[85%] mx-auto bg-[#E5D4B8] my-10 sm:my-14 shadow-[0_20px_50px_rgba(0,0,0,0.5)] ${rotationClass} ${className}`}>
       <SharedVintageBackground seed={seed} burnTopRight={burnTopRight} burnBottomLeft={burnBottomLeft} />
-      <div className="relative z-10 flex flex-col px-6 sm:px-12 py-16 sm:py-24 overflow-hidden">
+      {/* Removed overflow-hidden so content doesn't get cut off vertically */}
+      <div className="relative z-10 flex flex-col px-6 sm:px-12 py-16 sm:py-24">
         {children}
       </div>
-      <TornEdgeBottom />
     </div>
   );
 });
@@ -85,7 +92,7 @@ function ProjectAlgo() {
   const opacity = useTransform(scrollYProgress, [0.85, 1], [1, 0]);
 
   return (
-    <PaperBlock ref={ref} seed={1} burnTopRight={true}>
+    <PaperBlock ref={ref} seed={1} burnTopRight={true} rotationClass="rotate-[1deg]">
       <Link href="/projects/algorithm-laboratory" className="relative z-20 block group flex-shrink-0">
         <motion.div 
           initial={{ opacity: 0, y: 10 }}
@@ -189,7 +196,7 @@ function ProjectCertiva() {
   const docOpacity = useTransform(scrollYProgress, [0.1, 0.3], [0, 1]);
 
   return (
-    <PaperBlock ref={ref} seed={2} burnBottomLeft={true}>
+    <PaperBlock ref={ref} seed={2} burnBottomLeft={true} rotationClass="rotate-[-1deg]">
       <Link href="/projects/certiva" className="relative z-20 block group flex-shrink-0">
           <motion.div 
             initial={{ opacity: 0, y: 10 }}
@@ -298,7 +305,7 @@ function ProjectBilling() {
   const contentOpacity = useTransform(scrollYProgress, [0.4, 0.55], [0, 1]);
 
   return (
-    <PaperBlock ref={ref} seed={3} burnTopRight={true}>
+    <PaperBlock ref={ref} seed={3} burnTopRight={true} rotationClass="rotate-[0.5deg]">
       <Link href="/projects/android-billing-app" className="relative z-20 block group flex-shrink-0">
         <motion.div 
             initial={{ opacity: 0, y: 10 }}
@@ -392,15 +399,12 @@ function ProjectBilling() {
   );
 }
 
-/* =========================================================================
-   MAIN COMPONENT EXPORT
-   ========================================================================= */
 export default function MobileRecordedActivities() {
   return (
-    <section className="relative w-full z-20 bg-[#0c0805] py-24">
+    <section className="relative w-full z-20 bg-[#0c0805] py-12 overflow-x-hidden">
       
       {/* Intro Header */}
-      <PaperBlock seed={4}>
+      <PaperBlock seed={4} rotationClass="rotate-[-1deg]">
         <motion.div 
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -426,7 +430,7 @@ export default function MobileRecordedActivities() {
       <ProjectBilling />
 
       {/* Outro Archival Link */}
-      <PaperBlock seed={5}>
+      <PaperBlock seed={5} rotationClass="rotate-[1deg]">
         <motion.div 
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}

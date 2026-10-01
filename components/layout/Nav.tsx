@@ -13,21 +13,12 @@ export default function Nav() {
   const [pastHero, setPastHero] = useState(false);
 
   useEffect(() => {
-    if (!mounted || !isMobile || !isHome) {
-      setPastHero(true);
-      return;
-    }
+    // Nav behavior relies on the mobile environment checking, but we want it sticky ALWAYS as requested.
+    setPastHero(true);
+  }, []);
 
-    const onScroll = () => {
-      setPastHero(window.scrollY > window.innerHeight * 0.85);
-    };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [mounted, isMobile, isHome]);
-
-  /* On mobile homepage: completely hidden until you scroll past the hero */
-  const shouldShow = !mounted || !isMobile || !isHome || pastHero;
+  /* Always show the nav now to remain strictly sticky */
+  const shouldShow = true;
 
   return (
     <AnimatePresence>

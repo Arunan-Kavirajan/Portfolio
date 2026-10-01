@@ -39,7 +39,7 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} ${fraunces.variable} antialiased`}
     >
-      <body className="min-h-screen flex flex-col bg-bg text-ink">
+      <body className="min-h-screen flex flex-col bg-bg text-ink overflow-x-hidden">
         <LoadingProvider>
           <HeroHoverProvider>
             <Cursor />
