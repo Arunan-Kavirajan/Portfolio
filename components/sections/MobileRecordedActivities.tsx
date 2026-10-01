@@ -332,7 +332,7 @@ export default function MobileRecordedActivities() {
           viewport={{ once: true }}
           className="font-mono text-[9px] tracking-[0.3em] text-[#5C3A21]/70 uppercase mb-4"
         >
-          FULL EXHIBIT
+          ALL RECORDED ACTIVITY
         </motion.div>
         <motion.p 
           initial={{ opacity: 0, y: 10 }}
@@ -343,18 +343,17 @@ export default function MobileRecordedActivities() {
         >
           The complete collection of recorded work.
         </motion.p>
-        <motion.a 
-          href="https://github.com/Arunan-Kavirajan/project-exhibit" 
-          target="_blank" 
-          rel="noopener noreferrer" 
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.2 }}
-          className="font-mono text-[10px] tracking-widest text-[#2A1C12] border border-[#3D2B1F]/30 px-6 py-3 uppercase hover:bg-[#3D2B1F]/5 transition-colors inline-block"
-        >
-          [ FULL EXHIBIT ↗ ]
-        </motion.a>
+        <Link href="/projects" passHref legacyBehavior>
+          <motion.a 
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="font-mono text-[10px] tracking-widest text-[#2A1C12] border border-[#3D2B1F]/30 px-6 py-3 uppercase hover:bg-[#3D2B1F]/5 transition-colors inline-block"
+          >
+            [ ALL RECORDED ACTIVITY ↗ ]
+          </motion.a>
+        </Link>
       </div>
 
     </section>
