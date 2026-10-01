@@ -267,6 +267,21 @@ function TheCover() {
                 {/* Nail stress tear */}
                 <div className="absolute top-[-2px] left-1/2 -translate-x-1/2 w-10 h-14 bg-[radial-gradient(ellipse,rgba(61,43,31,0.3)_0%,transparent_70%)] mix-blend-multiply pointer-events-none" />
 
+                {/* Blood stains — aged, dried, subtle */}
+                <div className="absolute top-[58%] left-[8%] w-6 h-8 pointer-events-none mix-blend-multiply opacity-40"
+                  style={{ background: "radial-gradient(ellipse at 40% 50%, rgba(100,15,15,0.5) 0%, rgba(80,10,10,0.2) 40%, transparent 70%)" }} />
+                <div className="absolute top-[62%] left-[10%] w-3 h-2 rounded-full bg-[#5C0E0E]/20 blur-[0.5px] pointer-events-none rotate-[25deg]" />
+                <div className="absolute top-[55%] left-[12%] w-1.5 h-1 rounded-full bg-[#6B1212]/15 pointer-events-none" />
+                
+                <div className="absolute top-[35%] right-[12%] w-4 h-5 pointer-events-none mix-blend-multiply opacity-30"
+                  style={{ background: "radial-gradient(ellipse at 60% 40%, rgba(90,12,12,0.45) 0%, transparent 65%)" }} />
+                <div className="absolute top-[37%] right-[10%] w-2 h-1.5 rounded-full bg-[#5C0E0E]/15 blur-[0.5px] pointer-events-none rotate-[-15deg]" />
+                
+                {/* Tiny spatter dots */}
+                <div className="absolute top-[56%] left-[5%] w-1 h-1 rounded-full bg-[#6B1212]/18 pointer-events-none" />
+                <div className="absolute top-[60%] left-[14%] w-0.5 h-0.5 rounded-full bg-[#5C0E0E]/20 pointer-events-none" />
+                <div className="absolute top-[33%] right-[8%] w-1 h-0.5 rounded-full bg-[#6B1212]/12 pointer-events-none rotate-45" />
+
                 {/* ── Poster Content ── */}
                 <div className="relative w-full h-full p-4 sm:p-5 flex flex-col z-10">
                   
@@ -401,27 +416,67 @@ function TheCover() {
                       </div>
                     </motion.div>
 
-                    {/* Ink stamp mark (2.0s) */}
+                    {/* Wax Seal — realistic maroon (2.0s) */}
                     <motion.div
-                      initial={{ opacity: 0, scale: 1.6, rotate: -30 }}
-                      animate={{ opacity: 1, scale: 1, rotate: -18 }}
-                      transition={{ delay: 2.0, type: "spring", stiffness: 200, damping: 14 }}
-                      className="absolute -bottom-4 -right-2 sm:-right-1 z-30 mix-blend-multiply"
+                      initial={{ opacity: 0, scale: 2.5, rotate: -40 }}
+                      animate={{ opacity: 1, scale: 1, rotate: -12 }}
+                      transition={{ delay: 2.0, type: "spring", stiffness: 220, damping: 15, mass: 1.1 }}
+                      className="absolute -bottom-5 -right-3 sm:-right-2 z-30"
+                      style={{ filter: "drop-shadow(3px 5px 8px rgba(0,0,0,0.5)) drop-shadow(1px 2px 3px rgba(0,0,0,0.3))" }}
                     >
-                      <div className="relative w-20 h-20 sm:w-24 sm:h-24">
-                        {/* Ink bleed behind stamp */}
-                        <div className="absolute inset-0 rounded-full border-[3px] border-[#3D2B1F]/15 blur-[2px]" />
-                        {/* Outer ring — uneven */}
-                        <div className="absolute inset-0 rounded-full border-[2.5px] border-[#1a110a]/70" style={{ clipPath: "polygon(0% 5%, 8% 0%, 25% 2%, 45% 0%, 60% 1%, 80% 0%, 95% 3%, 100% 15%, 98% 40%, 100% 60%, 99% 80%, 100% 95%, 92% 100%, 75% 98%, 50% 100%, 30% 99%, 10% 100%, 0% 90%, 2% 70%, 0% 50%, 1% 30%)" }} />
-                        {/* Inner ring */}
-                        <div className="absolute inset-2 rounded-full border-[1.5px] border-[#1a110a]/50" />
-                        {/* AK text */}
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <span className="font-serif text-xl sm:text-2xl font-black text-[#1a110a]/65 tracking-tight" style={{ textShadow: "0 0 2px rgba(28,17,8,0.2)" }}>AK</span>
+                      <div className="relative w-[72px] h-[72px] sm:w-[84px] sm:h-[84px]">
+                        {/* Wax body — maroon with 3D radial gradient */}
+                        <div 
+                          className="absolute inset-0 rounded-full"
+                          style={{ 
+                            background: "radial-gradient(circle at 38% 32%, #9E2A2B 0%, #7B1A1A 35%, #5C0E0E 65%, #3D0808 100%)",
+                            clipPath: "polygon(5% 15%, 12% 3%, 28% 1%, 42% 5%, 55% 0%, 72% 4%, 88% 8%, 96% 20%, 100% 38%, 98% 55%, 100% 72%, 95% 85%, 88% 96%, 72% 100%, 55% 97%, 40% 100%, 25% 96%, 12% 92%, 3% 80%, 0% 62%, 2% 42%, 0% 25%)",
+                          }}
+                        >
+                          {/* Wax surface texture — noise */}
+                          <div className="absolute inset-0 rounded-full overflow-hidden opacity-30 mix-blend-overlay">
+                            <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                              <filter id="wax-grain">
+                                <feTurbulence type="fractalNoise" baseFrequency="1.2" numOctaves="4" seed="9" />
+                                <feColorMatrix type="saturate" values="0" />
+                              </filter>
+                              <rect width="100%" height="100%" filter="url(#wax-grain)" />
+                            </svg>
+                          </div>
+
+                          {/* Light catch — top-left highlight */}
+                          <div className="absolute top-[15%] left-[18%] w-[35%] h-[25%] rounded-full bg-white/10 blur-[4px]" />
+                          
+                          {/* Shadow depth — bottom-right */}
+                          <div className="absolute bottom-[10%] right-[10%] w-[45%] h-[35%] rounded-full bg-black/20 blur-[5px]" />
+
+                          {/* Embossed star relief in center */}
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <svg viewBox="0 0 40 40" className="w-[55%] h-[55%] opacity-50" xmlns="http://www.w3.org/2000/svg">
+                              <polygon
+                                points="20,4 24,14 35,14 26,21 29,32 20,25 11,32 14,21 5,14 16,14"
+                                fill="none"
+                                stroke="rgba(240,226,200,0.35)"
+                                strokeWidth="1.2"
+                              />
+                              <circle cx="20" cy="20" r="16" fill="none" stroke="rgba(240,226,200,0.2)" strokeWidth="0.8" />
+                            </svg>
+                          </div>
+
+                          {/* Ring impression around edge */}
+                          <div className="absolute inset-[6px] rounded-full border border-[#F0E2C8]/10" />
                         </div>
-                        {/* Faded patches on stamp */}
-                        <div className="absolute top-[30%] left-[20%] w-5 h-3 bg-[#F0E2C8]/40 blur-[1px] rounded-full" />
-                        <div className="absolute bottom-[25%] right-[15%] w-4 h-4 bg-[#F0E2C8]/30 blur-[1px] rounded-full" />
+
+                        {/* Wax drip — bottom */}
+                        <div 
+                          className="absolute -bottom-2 left-[35%] w-4 h-5 rounded-b-full"
+                          style={{ background: "linear-gradient(to bottom, #5C0E0E, #3D0808)" }}
+                        />
+                        {/* Small secondary drip */}
+                        <div 
+                          className="absolute -bottom-1 left-[55%] w-2 h-3 rounded-b-full"
+                          style={{ background: "linear-gradient(to bottom, #6B1212, #4A0A0A)" }}
+                        />
                       </div>
                     </motion.div>
                   </div>
