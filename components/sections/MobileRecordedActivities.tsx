@@ -123,7 +123,7 @@ function ProjectAlgo() {
       </Link>
 
       {/* The Detailed Algorithm Visual */}
-      <div className="w-full relative mt-16 flex flex-col items-center justify-center pointer-events-none min-h-[30vh]">
+      <div className="flex-1 w-full relative mt-8 flex flex-col items-center justify-center pointer-events-none min-h-[45vh]">
         <motion.div 
           style={{ scaleY, opacity }}
           className="relative w-full max-w-[280px] sm:max-w-[320px] aspect-square flex items-center justify-center origin-bottom"
@@ -227,7 +227,7 @@ function ProjectCertiva() {
         </Link>
 
         {/* The Detailed Certiva Visual */}
-        <div className="flex-1 w-full relative mt-8 flex flex-col items-center justify-center pointer-events-none perspective-[1000px]">
+        <div className="flex-1 w-full relative mt-8 flex flex-col items-center justify-center pointer-events-none perspective-[1000px] min-h-[45vh]">
           
           {/* Layer 1: The Template Background */}
           <motion.div 
@@ -336,7 +336,7 @@ function ProjectBilling() {
         </Link>
 
         {/* Vintage Archival Receipt Visual */}
-        <div className="flex-1 w-full relative mt-8 flex flex-col items-center justify-start pointer-events-none">
+        <div className="flex-1 w-full relative mt-8 flex flex-col items-center justify-start pointer-events-none min-h-[45vh]">
           
           {/* Vintage Archival Clip / Folder edge */}
           <div className="w-[200px] h-3 bg-[#3D2B1F]/10 border-b border-[#3D2B1F]/20 relative z-20 shadow-[0_4px_10px_rgba(0,0,0,0.05)]" />
