@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useLoading } from "@/components/layout/LoadingProvider";
 import MobileFieldNotes from "@/components/sections/MobileFieldNotes";
+import MobileStatementOfIntent from "@/components/sections/MobileStatementOfIntent";
 
 /* ═══════════════════════════════════════════════════════════
    COMPACT HOMEPAGE — A Personal Field Journal
@@ -568,37 +569,6 @@ function TheCover() {
 }
 
 /* ──────────────────────────────────────────────────────────
-   03 — UNDER THE SURFACE
-   ────────────────────────────────────────────────────────── */
-function UnderTheSurface() {
-  const stages = ["MAKE", "TAKE APART", "UNDERSTAND", "MAKE AGAIN"];
-
-  return (
-    <section className="px-6 md:px-12 py-32 md:py-48 bg-[#EBD9BC] border-t border-[#8B4513]/10">
-      <div className="max-w-xl mx-auto md:max-w-3xl">
-        <ChapterMark number="03" title="Under the Surface" />
-
-        <div className="flex flex-col gap-12 md:gap-16">
-          {stages.map((stage, i) => (
-            <motion.div
-              key={stage}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.6, delay: i * 0.1 }}
-              className="flex items-baseline gap-6"
-            >
-              <span className="font-mono text-[10px] text-[#8B4513]/40 tracking-widest">{String(i + 1).padStart(2, "0")}</span>
-              <span className="font-serif text-3xl sm:text-4xl md:text-5xl text-[#1C1108] tracking-tight">{stage}</span>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ──────────────────────────────────────────────────────────
    04 — THINGS I'M CHASING
    ────────────────────────────────────────────────────────── */
 function ThingsImChasing() {
@@ -864,7 +834,7 @@ export default function CompactHomeHero() {
     <main className="bg-[#F0E2C8] text-[#1C1108] selection:bg-[#8B4513]/25">
       <TheCover />
       <MobileFieldNotes />
-      <UnderTheSurface />
+      <MobileStatementOfIntent />
       <ThingsImChasing />
       <TheWorkbench />
       <RecentSpecimens />
