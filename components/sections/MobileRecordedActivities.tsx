@@ -14,6 +14,34 @@ function TornEdge() {
   );
 }
 
+function SharedVintageBackground({ seed = 4, burnTopRight = false, burnBottomLeft = false }) {
+  return (
+    <>
+      {/* Subtle Document Surface Grain */}
+      <div className="absolute inset-0 pointer-events-none mix-blend-multiply opacity-30 z-0">
+        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+          <filter id={`shared-grain-${seed}`}>
+            <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="4" seed={seed} />
+            <feColorMatrix type="matrix" values="1 0 0 0 0  0 0.9 0 0 0  0 0.8 0 0 0  0 0 0 0.5 0" />
+          </filter>
+          <rect width="100%" height="100%" filter={`url(#shared-grain-${seed})`} />
+        </svg>
+      </div>
+      
+      {/* Vignette matching Statement of Intent */}
+      <div className="absolute inset-0 pointer-events-none shadow-[inset_0_0_80px_rgba(139,69,19,0.15)] z-0" />
+
+      {/* Optional Subtle Burn Marks matching Statement of Intent */}
+      {burnTopRight && (
+        <div className="absolute top-0 right-0 w-64 h-64 bg-[radial-gradient(circle,rgba(30,10,0,0.3)_0%,rgba(60,20,5,0.05)_40%,transparent_70%)] blur-xl pointer-events-none mix-blend-multiply -translate-y-1/4 translate-x-1/4 z-0" />
+      )}
+      {burnBottomLeft && (
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-[radial-gradient(circle,rgba(20,5,0,0.35)_0%,transparent_60%)] blur-lg pointer-events-none mix-blend-multiply translate-y-1/4 -translate-x-1/4 z-0" />
+      )}
+    </>
+  );
+}
+
 /* =========================================================================
    PROJECT 01: ALGORITHM LABORATORY
    ========================================================================= */
@@ -35,14 +63,7 @@ function ProjectAlgo() {
     <div ref={ref} className="relative h-[120vh] w-full bg-[#E5D4B8] z-10">
       <div className="sticky top-0 h-[100svh] w-full flex flex-col px-6 sm:px-12 py-16 sm:py-24 overflow-hidden">
         <TornEdge />
-        
-        {/* Archival Texture */}
-        <div className="absolute inset-0 pointer-events-none mix-blend-multiply opacity-20">
-          <svg width="100%" height="100%">
-            <filter id="noise-1"><feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="3" /></filter>
-            <rect width="100%" height="100%" filter="url(#noise-1)" />
-          </svg>
-        </div>
+        <SharedVintageBackground seed={1} burnTopRight={true} />
 
         <Link href="/projects/algorithm-laboratory" className="relative z-20 block group flex-shrink-0">
           <motion.div 
@@ -151,13 +172,7 @@ function ProjectCertiva() {
     <div ref={ref} className="relative h-[120vh] w-full bg-[#E5D4B8] z-20">
       <div className="sticky top-0 h-[100svh] w-full flex flex-col px-6 sm:px-12 py-16 sm:py-24 overflow-hidden">
         <TornEdge />
-        
-        <div className="absolute inset-0 pointer-events-none mix-blend-multiply opacity-25">
-          <svg width="100%" height="100%">
-            <filter id="noise-2"><feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" /></filter>
-            <rect width="100%" height="100%" filter="url(#noise-2)" />
-          </svg>
-        </div>
+        <SharedVintageBackground seed={2} burnBottomLeft={true} />
 
         <Link href="/projects/certiva" className="relative z-20 block group flex-shrink-0">
           <motion.div 
@@ -271,13 +286,7 @@ function ProjectBilling() {
     <div ref={ref} className="relative h-[120vh] w-full bg-[#E5D4B8] z-30">
       <div className="sticky top-0 h-[100svh] w-full flex flex-col px-6 sm:px-12 py-16 sm:py-24 overflow-hidden">
         <TornEdge />
-        
-        <div className="absolute inset-0 pointer-events-none mix-blend-multiply opacity-30">
-          <svg width="100%" height="100%">
-            <filter id="noise-3"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="4" /></filter>
-            <rect width="100%" height="100%" filter="url(#noise-3)" />
-          </svg>
-        </div>
+        <SharedVintageBackground seed={3} burnTopRight={true} />
 
         <Link href="/projects/android-billing-app" className="relative z-20 block group flex-shrink-0">
           <motion.div 
@@ -382,24 +391,28 @@ export default function MobileRecordedActivities() {
     <section className="relative w-full z-20">
       
       {/* Intro Header */}
-      <div className="bg-[#E5D4B8] pt-32 pb-16 px-8 sm:px-12 relative z-10">
-        <motion.div 
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="font-mono text-[9px] tracking-[0.3em] text-[#5C3A21]/70 uppercase mb-4"
-        >
-          RECORDED ACTIVITIES
-        </motion.div>
-        <motion.div 
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.1 }}
-          className="font-serif text-lg text-[#2A1C12]/60 italic"
-        >
-          3 SELECTED RECORDS
-        </motion.div>
+      <div className="bg-[#E5D4B8] pt-32 pb-16 px-8 sm:px-12 relative z-10 overflow-hidden">
+        <SharedVintageBackground seed={4} />
+        
+        <div className="relative z-10">
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="font-mono text-[9px] tracking-[0.3em] text-[#5C3A21]/70 uppercase mb-4"
+          >
+            RECORDED ACTIVITIES
+          </motion.div>
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="font-serif text-lg text-[#2A1C12]/60 italic"
+          >
+            3 SELECTED RECORDS
+          </motion.div>
+        </div>
       </div>
 
       {/* The Parallax Project Pages */}
@@ -408,35 +421,40 @@ export default function MobileRecordedActivities() {
       <ProjectBilling />
 
       {/* Outro Archival Link */}
-      <div className="bg-[#E8DCC4] pt-24 pb-48 px-8 sm:px-12 relative z-40 shadow-[0_-20px_50px_rgba(0,0,0,0.03)] border-t border-[#3D2B1F]/5">
-        <motion.div 
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="font-mono text-[9px] tracking-[0.3em] text-[#5C3A21]/70 uppercase mb-4"
-        >
-          ALL RECORDED ACTIVITY
-        </motion.div>
-        <motion.p 
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.1 }}
-          className="font-serif text-base text-[#2A1C12]/80 mb-10"
-        >
-          The complete collection of recorded work.
-        </motion.p>
-        <Link href="/projects" passHref legacyBehavior>
-          <motion.a 
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
+      <div className="bg-[#E5D4B8] pt-24 pb-48 px-8 sm:px-12 relative z-40 overflow-hidden">
+        <TornEdge />
+        <SharedVintageBackground seed={5} />
+        
+        <div className="relative z-10">
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="font-mono text-[10px] tracking-widest text-[#2A1C12] border border-[#3D2B1F]/30 px-6 py-3 uppercase hover:bg-[#3D2B1F]/5 transition-colors inline-block"
+            className="font-mono text-[9px] tracking-[0.3em] text-[#5C3A21]/70 uppercase mb-4"
           >
-            [ ALL RECORDED ACTIVITY ↗ ]
-          </motion.a>
-        </Link>
+            ALL RECORDED ACTIVITY
+          </motion.div>
+          <motion.p 
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="font-serif text-base text-[#2A1C12]/80 mb-10"
+          >
+            The complete collection of recorded work.
+          </motion.p>
+          <Link href="/projects" passHref legacyBehavior>
+            <motion.a 
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              className="font-mono text-[10px] tracking-widest text-[#2A1C12] border border-[#3D2B1F]/30 px-6 py-3 uppercase hover:bg-[#3D2B1F]/5 transition-colors inline-block"
+            >
+              [ ALL RECORDED ACTIVITY ↗ ]
+            </motion.a>
+          </Link>
+        </div>
       </div>
 
     </section>

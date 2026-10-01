@@ -34,13 +34,19 @@ export default function MobileKnownToUse() {
        <div className="sticky top-0 h-[100svh] w-full flex flex-col pt-24 pb-12 overflow-hidden">
          <TornEdge />
          
-         {/* Noise Texture */}
-         <div className="absolute inset-0 pointer-events-none mix-blend-multiply opacity-20">
-            <svg width="100%" height="100%">
-              <filter id="noise-ktu"><feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="3" /></filter>
-              <rect width="100%" height="100%" filter="url(#noise-ktu)" />
-            </svg>
+         {/* Subtle Document Surface Grain */}
+         <div className="absolute inset-0 pointer-events-none mix-blend-multiply opacity-30 z-0">
+           <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+             <filter id="shared-grain-ktu">
+               <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="4" seed="6" />
+               <feColorMatrix type="matrix" values="1 0 0 0 0  0 0.9 0 0 0  0 0.8 0 0 0  0 0 0 0.5 0" />
+             </filter>
+             <rect width="100%" height="100%" filter="url(#shared-grain-ktu)" />
+           </svg>
          </div>
+         
+         {/* Vignette matching Statement of Intent */}
+         <div className="absolute inset-0 pointer-events-none shadow-[inset_0_0_80px_rgba(139,69,19,0.15)] z-0" />
 
          {/* Header */}
          <div className="flex flex-col items-center text-center px-6 mb-12 relative z-20">
