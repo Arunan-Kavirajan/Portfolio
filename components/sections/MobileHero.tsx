@@ -5,6 +5,7 @@ import { motion, useAnimation } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useLoading } from "@/components/layout/LoadingProvider";
+import MobileFieldNotes from "@/components/sections/MobileFieldNotes";
 
 /* ═══════════════════════════════════════════════════════════
    COMPACT HOMEPAGE — A Personal Field Journal
@@ -567,31 +568,6 @@ function TheCover() {
 }
 
 /* ──────────────────────────────────────────────────────────
-   02 — A NOTE TO SELF
-   ────────────────────────────────────────────────────────── */
-function ANoteToSelf() {
-  return (
-    <section className="px-6 md:px-12 py-32 md:py-48 bg-[#F0E2C8]">
-      <div className="max-w-xl mx-auto md:max-w-2xl">
-        <ChapterMark number="02" title="A Note to Self" />
-
-        <div className="flex flex-col gap-8 md:gap-10">
-          <p className="font-serif text-2xl sm:text-3xl md:text-4xl text-[#1C1108] leading-relaxed">
-            I&apos;ve always wanted to know what&apos;s underneath.
-          </p>
-          <p className="font-sans text-base sm:text-lg md:text-xl text-[#6B5B48] leading-relaxed font-light">
-            How things work. Why they fail. What happens when you start pulling them apart.
-          </p>
-          <p className="font-sans text-base sm:text-lg md:text-xl text-[#6B5B48] leading-relaxed font-light">
-            That curiosity is probably what keeps me building.
-          </p>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ──────────────────────────────────────────────────────────
    03 — UNDER THE SURFACE
    ────────────────────────────────────────────────────────── */
 function UnderTheSurface() {
@@ -887,7 +863,7 @@ export default function CompactHomeHero() {
   return (
     <main className="bg-[#F0E2C8] text-[#1C1108] selection:bg-[#8B4513]/25">
       <TheCover />
-      <ANoteToSelf />
+      <MobileFieldNotes />
       <UnderTheSurface />
       <ThingsImChasing />
       <TheWorkbench />
