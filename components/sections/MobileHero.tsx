@@ -383,7 +383,7 @@ function TheCover() {
                         className="absolute inset-0 mix-blend-multiply"
                       >
                         <Image
-                          src="/profile_new.jpg"
+                          src="/bounty-profile.jpg"
                           alt="Arunan Kavirajan"
                           fill
                           className="object-cover object-top"
