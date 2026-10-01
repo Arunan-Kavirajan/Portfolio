@@ -194,35 +194,78 @@ function TheCover() {
                   boxShadow: "inset 0 0 55px rgba(139,69,19,0.2)",
                 }}
               >
-                {/* Paper Texture */}
-                <div className="absolute inset-0 pointer-events-none opacity-[0.4] mix-blend-multiply">
+                {/* Paper Texture — coarse grain, cranked up */}
+                <div className="absolute inset-0 pointer-events-none opacity-[0.6] mix-blend-multiply">
                   <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
                     <filter id="paper-texture">
-                      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch" />
+                      <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="5" stitchTiles="stitch" seed="2" />
                       <feColorMatrix type="saturate" values="0" />
                     </filter>
                     <rect width="100%" height="100%" filter="url(#paper-texture)" />
                   </svg>
                 </div>
                 
-                <div className="absolute inset-0 shadow-[inset_0_0_90px_rgba(61,43,31,0.25)] pointer-events-none" />
-                
-                {/* Creases */}
-                <div className="absolute top-0 right-10 w-[150%] h-[2px] -rotate-12 pointer-events-none flex flex-col opacity-75">
-                   <div className="w-full h-[1px] bg-white/45" />
-                   <div className="w-full h-[1px] bg-[#3D2B1F]/20" />
+                {/* Second fiber layer — finer, more visible */}
+                <div className="absolute inset-0 pointer-events-none opacity-[0.25] mix-blend-multiply">
+                  <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                    <filter id="paper-fiber">
+                      <feTurbulence type="fractalNoise" baseFrequency="1.2 0.4" numOctaves="3" seed="8" />
+                      <feColorMatrix type="saturate" values="0" />
+                    </filter>
+                    <rect width="100%" height="100%" filter="url(#paper-fiber)" />
+                  </svg>
                 </div>
-                <div className="absolute top-[48%] left-0 w-full h-[3px] pointer-events-none flex flex-col opacity-55">
-                   <div className="w-full h-[1.5px] bg-[#3D2B1F]/20" />
-                   <div className="w-full h-[1.5px] bg-white/35" />
+                
+                {/* Foxing spots / age speckles */}
+                <div className="absolute inset-0 pointer-events-none opacity-[0.18] mix-blend-darken">
+                  <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                    <filter id="foxing">
+                      <feTurbulence type="fractalNoise" baseFrequency="3" numOctaves="2" seed="14" />
+                      <feColorMatrix type="matrix" values="0.3 0 0 0 0.2  0.15 0 0 0 0.1  0 0 0 0 0  0 0 0 0.6 0" />
+                    </filter>
+                    <rect width="100%" height="100%" filter="url(#foxing)" />
+                  </svg>
                 </div>
                 
-                {/* Burn marks */}
-                <div className="absolute -bottom-8 -left-8 w-28 h-28 bg-[radial-gradient(circle,rgba(61,43,31,0.45)_0%,transparent_70%)] mix-blend-multiply blur-[2px] pointer-events-none" />
-                <div className="absolute -top-4 -right-4 w-20 h-20 bg-[radial-gradient(circle,rgba(139,69,19,0.18)_0%,transparent_70%)] mix-blend-multiply blur-[1px] pointer-events-none" />
+                {/* Edge darkening / yellowing — thick inner shadow */}
+                <div className="absolute inset-0 shadow-[inset_0_0_100px_rgba(61,43,31,0.45)] pointer-events-none" />
+                <div className="absolute inset-0 shadow-[inset_0_0_50px_rgba(100,70,30,0.2)] pointer-events-none" />
+                
+                {/* Creases — thick, visible, weathered */}
+                <div className="absolute top-[15%] -right-4 w-[160%] h-[3px] -rotate-[14deg] pointer-events-none flex flex-col opacity-90">
+                   <div className="w-full h-[1.5px] bg-white/50" />
+                   <div className="w-full h-[1.5px] bg-[#3D2B1F]/30" />
+                </div>
+                <div className="absolute top-[48%] -left-2 w-[110%] h-[4px] rotate-[0.5deg] pointer-events-none flex flex-col opacity-70">
+                   <div className="w-full h-[2px] bg-[#3D2B1F]/25" />
+                   <div className="w-full h-[2px] bg-white/40" />
+                </div>
+                <div className="absolute top-[72%] left-4 w-[80%] h-[2px] rotate-[2deg] pointer-events-none flex flex-col opacity-50">
+                   <div className="w-full h-[1px] bg-[#3D2B1F]/15" />
+                   <div className="w-full h-[1px] bg-white/25" />
+                </div>
+                
+                {/* Burn marks — heavy, multiple, irregular */}
+                <div className="absolute -bottom-6 -left-6 w-36 h-36 pointer-events-none mix-blend-multiply blur-[3px]"
+                  style={{ background: "radial-gradient(ellipse at 70% 70%, rgba(30,15,5,0.6) 0%, rgba(60,35,15,0.3) 35%, transparent 70%)" }} />
+                <div className="absolute -top-3 -right-3 w-28 h-28 pointer-events-none mix-blend-multiply blur-[2px]"
+                  style={{ background: "radial-gradient(ellipse at 80% 20%, rgba(40,20,5,0.4) 0%, rgba(80,45,15,0.15) 40%, transparent 65%)" }} />
+                <div className="absolute bottom-[10%] -right-4 w-20 h-24 pointer-events-none mix-blend-multiply blur-[1px]"
+                  style={{ background: "radial-gradient(ellipse at 90% 50%, rgba(50,25,8,0.35) 0%, transparent 60%)" }} />
+                <div className="absolute top-[30%] -left-2 w-14 h-16 pointer-events-none mix-blend-multiply blur-[1px]"
+                  style={{ background: "radial-gradient(ellipse at 10% 50%, rgba(45,22,6,0.2) 0%, transparent 55%)" }} />
+                
+                {/* Coffee ring stain */}
+                <div className="absolute top-[20%] right-[15%] w-16 h-16 rounded-full pointer-events-none mix-blend-multiply opacity-25"
+                  style={{ background: "radial-gradient(ellipse, transparent 40%, rgba(120,70,20,0.35) 50%, rgba(120,70,20,0.15) 60%, transparent 70%)" }} />
+                
+                {/* Scattered dark spots — old ink drips */}
+                <div className="absolute top-[65%] left-[22%] w-2 h-2 rounded-full bg-[#3D2B1F]/15 blur-[1px] pointer-events-none" />
+                <div className="absolute top-[38%] left-[72%] w-1.5 h-1 rounded-full bg-[#3D2B1F]/12 blur-[0.5px] pointer-events-none rotate-45" />
+                <div className="absolute top-[82%] left-[55%] w-1 h-1.5 rounded-full bg-[#3D2B1F]/10 blur-[0.5px] pointer-events-none" />
 
                 {/* Nail stress tear */}
-                <div className="absolute top-[-2px] left-1/2 -translate-x-1/2 w-8 h-10 bg-[radial-gradient(ellipse,rgba(61,43,31,0.2)_0%,transparent_70%)] mix-blend-multiply pointer-events-none" />
+                <div className="absolute top-[-2px] left-1/2 -translate-x-1/2 w-10 h-14 bg-[radial-gradient(ellipse,rgba(61,43,31,0.3)_0%,transparent_70%)] mix-blend-multiply pointer-events-none" />
 
                 {/* ── Poster Content ── */}
                 <div className="relative w-full h-full p-4 sm:p-5 flex flex-col z-10">
@@ -275,13 +318,20 @@ function TheCover() {
                     transition={{ delay: 1.1, type: "spring", stiffness: 250, damping: 18 }}
                     className="mt-4 sm:mt-5 text-center relative"
                   >
+                    {/* Ink bleed ghost — slightly offset, blurred duplicate */}
+                    <h2 
+                      className="absolute inset-0 font-serif text-[17vw] sm:text-[72px] leading-[0.8] tracking-[0.03em] text-[#1a110a]/20 font-black uppercase blur-[1.5px] translate-x-[0.5px] translate-y-[0.3px]"
+                      aria-hidden="true"
+                    >
+                      WANTED
+                    </h2>
                     <motion.h2 
-                      animate={{ opacity: [0.95, 1, 0.95] }}
-                      transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                      className="font-serif text-[17vw] sm:text-[72px] leading-[0.8] tracking-[0.03em] text-[#1a110a] font-black uppercase"
+                      animate={{ opacity: [0.92, 1, 0.94, 1, 0.93] }}
+                      transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                      className="relative font-serif text-[17vw] sm:text-[72px] leading-[0.8] tracking-[0.03em] text-[#1a110a] font-black uppercase"
                       style={{ 
-                        WebkitTextStroke: "1px rgba(61,43,31,0.7)",
-                        textShadow: "1px 2px 1px rgba(255,255,255,0.5), -1px -1px 0px rgba(0,0,0,0.4)"
+                        WebkitTextStroke: "1.5px rgba(61,43,31,0.8)",
+                        textShadow: "2px 2px 0px rgba(255,255,255,0.4), -1px -1px 0px rgba(0,0,0,0.5), 0 0 4px rgba(28,17,8,0.15)"
                       }}
                     >
                       WANTED
@@ -297,7 +347,7 @@ function TheCover() {
                   >
                     <div className="h-[1.5px] w-8 sm:w-10 bg-[#4A3828]/65 rounded-[50%]" />
                     <p className="font-serif text-[8.5px] sm:text-[10px] tracking-[0.3em] text-[#3D2B1F] italic font-bold">
-                      DEAD CODE OR ALIVE
+                      DEAD OR ALIVE
                     </p>
                     <div className="h-[1.5px] w-8 sm:w-10 bg-[#4A3828]/65 rounded-[50%]" />
                   </motion.div>
@@ -308,12 +358,12 @@ function TheCover() {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ delay: 1.5, duration: 0.3 }}
-                      className="relative w-full max-w-[210px] sm:max-w-[240px] aspect-[4/5] bg-[#D2BA94] border-[2px] border-[#3D2B1F]/75 overflow-hidden shadow-[inset_0_0_20px_rgba(0,0,0,0.4)]"
+                      className="relative w-full max-w-[210px] sm:max-w-[240px] aspect-[4/5] bg-[#C8AD85] border-[3px] border-[#3D2B1F]/80 overflow-hidden shadow-[inset_0_0_25px_rgba(0,0,0,0.5)]"
                       style={{ clipPath: "polygon(1.5% 1%, 98.5% 0%, 100% 99%, 0% 100%)" }}
                     >
                       <motion.div
                         initial={{ opacity: 0, filter: "blur(8px) contrast(200%) grayscale(100%) brightness(2)" }}
-                        animate={{ opacity: 0.85, filter: "blur(0px) contrast(115%) grayscale(55%) brightness(0.95)" }}
+                        animate={{ opacity: 0.9, filter: "blur(0px) contrast(120%) grayscale(50%) brightness(0.9)" }}
                         transition={{ delay: 1.7, duration: 2.5, ease: "easeOut" }}
                         className="absolute inset-0 mix-blend-multiply"
                       >
@@ -322,58 +372,57 @@ function TheCover() {
                           alt="Arunan Kavirajan"
                           fill
                           className="object-cover object-top"
-                          style={{ filter: "sepia(55%) saturate(0.85) hue-rotate(-5deg)" }}
+                          style={{ filter: "sepia(60%) saturate(0.8) hue-rotate(-5deg)" }}
                           priority
                           sizes="(max-width: 640px) 70vw, 240px"
                         />
                       </motion.div>
                       
-                      {/* Ambient breathing parallax on photo */}
+                      {/* Heavy vignette */}
                       <motion.div 
-                        className="absolute inset-0 shadow-[inset_0_0_40px_rgba(42,28,18,0.7)] pointer-events-none mix-blend-multiply"
-                        animate={{ opacity: [0.8, 1, 0.8] }}
+                        className="absolute inset-0 shadow-[inset_0_0_50px_rgba(30,19,12,0.8)] pointer-events-none mix-blend-multiply"
+                        animate={{ opacity: [0.85, 1, 0.85] }}
                         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
                       />
                       
-                      <div className="absolute inset-0 pointer-events-none opacity-30 mix-blend-overlay">
+                      {/* Photo grain — heavy */}
+                      <div className="absolute inset-0 pointer-events-none opacity-40 mix-blend-overlay">
                         <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-                          <filter id="photo-scratch"><feTurbulence type="fractalNoise" baseFrequency="0.9 0.05" numOctaves="2" /></filter>
+                          <filter id="photo-scratch"><feTurbulence type="fractalNoise" baseFrequency="0.9 0.05" numOctaves="3" seed="7" /></filter>
                           <rect width="100%" height="100%" filter="url(#photo-scratch)" />
+                        </svg>
+                      </div>
+                      {/* Fine photo noise */}
+                      <div className="absolute inset-0 pointer-events-none opacity-25 mix-blend-multiply">
+                        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                          <filter id="photo-noise"><feTurbulence type="fractalNoise" baseFrequency="1.5" numOctaves="2" seed="22" /><feColorMatrix type="saturate" values="0" /></filter>
+                          <rect width="100%" height="100%" filter="url(#photo-noise)" />
                         </svg>
                       </div>
                     </motion.div>
 
-                    {/* Signature instead of Wax Seal (2.0s) */}
+                    {/* Ink stamp mark (2.0s) */}
                     <motion.div
-                      className="absolute bottom-1 right-2 sm:right-4 z-30 transform -rotate-12"
-                      style={{ filter: "drop-shadow(1px 1px 1px rgba(255,255,255,0.4)) drop-shadow(0px 1px 2px rgba(0,0,0,0.2))" }}
+                      initial={{ opacity: 0, scale: 1.6, rotate: -30 }}
+                      animate={{ opacity: 1, scale: 1, rotate: -18 }}
+                      transition={{ delay: 2.0, type: "spring", stiffness: 200, damping: 14 }}
+                      className="absolute -bottom-4 -right-2 sm:-right-1 z-30 mix-blend-multiply"
                     >
-                      <svg width="140" height="70" viewBox="0 0 140 70" className="mix-blend-multiply opacity-80">
-                        {/* A */}
-                        <motion.path
-                          d="M40,55 C40,55 50,15 55,10 C58,8 65,45 68,55 M45,40 C50,38 60,35 65,35"
-                          fill="none" stroke="#1A1108" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
-                          initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ delay: 2.0, duration: 0.8, ease: "easeOut" }}
-                        />
-                        {/* K */}
-                        <motion.path
-                          d="M75,10 C75,10 75,30 73,60 M90,30 C90,30 80,45 74,45 C80,45 92,60 95,65"
-                          fill="none" stroke="#1A1108" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
-                          initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ delay: 2.3, duration: 0.6, ease: "easeOut" }}
-                        />
-                        {/* Scribble tail */}
-                        <motion.path
-                          d="M95,65 C105,50 100,55 110,60 C115,62 125,50 135,55"
-                          fill="none" stroke="#1A1108" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
-                          initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ delay: 2.7, duration: 0.5, ease: "easeOut" }}
-                        />
-                        {/* Underline flourish */}
-                        <motion.path
-                          d="M35,65 C60,60 100,68 135,62"
-                          fill="none" stroke="#1A1108" strokeWidth="1.5" strokeLinecap="round"
-                          initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ delay: 3.0, duration: 0.6, ease: "easeOut" }}
-                        />
-                      </svg>
+                      <div className="relative w-20 h-20 sm:w-24 sm:h-24">
+                        {/* Ink bleed behind stamp */}
+                        <div className="absolute inset-0 rounded-full border-[3px] border-[#3D2B1F]/15 blur-[2px]" />
+                        {/* Outer ring — uneven */}
+                        <div className="absolute inset-0 rounded-full border-[2.5px] border-[#1a110a]/70" style={{ clipPath: "polygon(0% 5%, 8% 0%, 25% 2%, 45% 0%, 60% 1%, 80% 0%, 95% 3%, 100% 15%, 98% 40%, 100% 60%, 99% 80%, 100% 95%, 92% 100%, 75% 98%, 50% 100%, 30% 99%, 10% 100%, 0% 90%, 2% 70%, 0% 50%, 1% 30%)" }} />
+                        {/* Inner ring */}
+                        <div className="absolute inset-2 rounded-full border-[1.5px] border-[#1a110a]/50" />
+                        {/* AK text */}
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <span className="font-serif text-xl sm:text-2xl font-black text-[#1a110a]/65 tracking-tight" style={{ textShadow: "0 0 2px rgba(28,17,8,0.2)" }}>AK</span>
+                        </div>
+                        {/* Faded patches on stamp */}
+                        <div className="absolute top-[30%] left-[20%] w-5 h-3 bg-[#F0E2C8]/40 blur-[1px] rounded-full" />
+                        <div className="absolute bottom-[25%] right-[15%] w-4 h-4 bg-[#F0E2C8]/30 blur-[1px] rounded-full" />
+                      </div>
                     </motion.div>
                   </div>
 
@@ -385,10 +434,11 @@ function TheCover() {
                     className="flex flex-col items-center leading-[0.8] mb-3 relative"
                   >
                     <h1 className="font-serif text-[10vw] sm:text-[40px] tracking-tight text-[#2A1C12] uppercase font-bold"
-                        style={{ textShadow: "0.5px 0.5px 0px rgba(255,255,255,0.4)" }}>
+                        style={{ textShadow: "1px 1px 0px rgba(255,255,255,0.35), -0.5px -0.5px 0px rgba(0,0,0,0.3), 0 0 3px rgba(28,17,8,0.1)", WebkitTextStroke: "0.5px rgba(42,28,18,0.4)" }}>
                       ARUNAN
                     </h1>
-                    <h1 className="font-serif text-[11vw] sm:text-[44px] tracking-tighter text-[#1C1108] uppercase font-black -mt-1 sm:-mt-1.5 ml-5">
+                    <h1 className="font-serif text-[11vw] sm:text-[44px] tracking-tighter text-[#1C1108] uppercase font-black -mt-1 sm:-mt-1.5 ml-5"
+                        style={{ textShadow: "1px 1px 0px rgba(255,255,255,0.3), -0.5px -0.5px 0px rgba(0,0,0,0.4), 0 0 3px rgba(28,17,8,0.12)", WebkitTextStroke: "0.5px rgba(28,17,8,0.5)" }}>
                       KAVIRAJAN
                     </h1>
                   </motion.div>
