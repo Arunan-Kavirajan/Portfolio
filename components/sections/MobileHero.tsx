@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useLoading } from "@/components/layout/LoadingProvider";
 import MobileFieldNotes from "@/components/sections/MobileFieldNotes";
 import MobileStatementOfIntent from "@/components/sections/MobileStatementOfIntent";
+import MobileKnownToUse from "@/components/sections/MobileKnownToUse";
 import MobileRecordedActivities from "@/components/sections/MobileRecordedActivities";
 
 /* ═══════════════════════════════════════════════════════════
@@ -569,60 +570,7 @@ function TheCover() {
   );
 }
 
-/* ──────────────────────────────────────────────────────────
-   05 — THE WORKBENCH
-   ────────────────────────────────────────────────────────── */
-function TheWorkbench() {
-  const categories = [
-    { label: "Languages", items: ["C", "Python", "JavaScript", "TypeScript", "Bash"] },
-    { label: "Frameworks / Software", items: ["React", "Next.js", "Node.js", "Flutter", "Tailwind CSS"] },
-    { label: "Data / Backend", items: ["Supabase", "Firebase", "SQLite"] },
-    { label: "Tools", items: ["Git", "GitHub", "Linux", "VS Code", "Vercel"] },
-  ];
 
-  return (
-    <section className="px-6 md:px-12 py-32 md:py-48 bg-[#EBD9BC] border-t border-[#8B4513]/10">
-      <div className="max-w-xl mx-auto md:max-w-3xl">
-        <ChapterMark number="05" title="The Workbench" />
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-16 md:gap-12 mb-20">
-          {categories.map((cat, ci) => (
-            <motion.div
-              key={cat.label}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.6, delay: ci * 0.1 }}
-            >
-              <h3 className="font-mono text-[10px] text-[#8B4513] tracking-[0.2em] uppercase mb-6 pb-3 border-b border-[#8B4513]/20">{cat.label}</h3>
-              <div className="flex flex-col gap-3">
-                {cat.items.map((item) => (
-                  <span key={item} className="font-sans text-lg sm:text-xl text-[#1C1108] font-light">{item}</span>
-                ))}
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Current experiments */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true, margin: "-50px" }}
-          transition={{ duration: 0.6 }}
-          className="pt-12 border-t border-[#8B4513]/10"
-        >
-          <h3 className="font-serif italic text-lg text-[#6B5B48] mb-6">Current Experiments</h3>
-          <div className="flex flex-wrap gap-x-8 gap-y-4">
-            {["Cybersecurity", "AI/ML", "AI Agents", "Cloud"].map((item) => (
-              <span key={item} className="font-mono text-xs text-[#6B5B48] tracking-[0.15em] uppercase">{item}</span>
-            ))}
-          </div>
-        </motion.div>
-      </div>
-    </section>
-  );
-}
 
 /* ──────────────────────────────────────────────────────────
    06 — RECENT SPECIMENS
@@ -807,8 +755,8 @@ export default function CompactHomeHero() {
       <TheCover />
       <MobileFieldNotes />
       <MobileStatementOfIntent />
+      <MobileKnownToUse />
       <MobileRecordedActivities />
-      <TheWorkbench />
       <RecentSpecimens />
       <Records />
       <Marginalia />

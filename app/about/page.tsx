@@ -3,6 +3,7 @@
 import { motion, useScroll, useTransform, useSpring, type Transition } from "framer-motion";
 import { useRef, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
+import { techStackData } from "@/lib/data/techStack";
 
 import type { MotionValue } from "framer-motion";
 
@@ -608,7 +609,7 @@ function WhatIWorkWith() {
             <motion.div variants={item} className="flex flex-col">
               <h3 className="font-mono text-[10px] text-[#36D9E6] tracking-[0.2em] uppercase mb-8 border-b border-[#69737D]/20 pb-4">Languages</h3>
               <div className="flex flex-col gap-5">
-                {["C", "Python", "JavaScript", "TypeScript", "Bash"].map(tech => (
+                {techStackData.languages.map(tech => (
                   <div key={tech} className="font-sans text-2xl md:text-3xl text-[#E8EDF2] font-light tracking-tight">{tech}</div>
                 ))}
               </div>
@@ -618,7 +619,7 @@ function WhatIWorkWith() {
             <motion.div variants={item} className="flex flex-col">
               <h3 className="font-mono text-[10px] text-[#36D9E6] tracking-[0.2em] uppercase mb-8 border-b border-[#69737D]/20 pb-4">Software</h3>
               <div className="flex flex-col gap-5">
-                {["React", "Next.js", "Node.js", "Flutter", "Tailwind CSS"].map(tech => (
+                {techStackData.software.map(tech => (
                   <div key={tech} className="font-sans text-2xl md:text-3xl text-[#E8EDF2] font-light tracking-tight">{tech}</div>
                 ))}
               </div>
@@ -628,7 +629,7 @@ function WhatIWorkWith() {
             <motion.div variants={item} className="flex flex-col">
               <h3 className="font-mono text-[10px] text-[#36D9E6] tracking-[0.2em] uppercase mb-8 border-b border-[#69737D]/20 pb-4">Backend & Data</h3>
               <div className="flex flex-col gap-5">
-                {["Supabase", "Firebase", "SQLite"].map(tech => (
+                {techStackData.backend.map(tech => (
                   <div key={tech} className="font-sans text-2xl md:text-3xl text-[#E8EDF2] font-light tracking-tight">{tech}</div>
                 ))}
               </div>
@@ -638,7 +639,7 @@ function WhatIWorkWith() {
             <motion.div variants={item} className="flex flex-col">
               <h3 className="font-mono text-[10px] text-[#36D9E6] tracking-[0.2em] uppercase mb-8 border-b border-[#69737D]/20 pb-4">Tools</h3>
               <div className="flex flex-col gap-5">
-                {["Git", "GitHub", "Linux", "VS Code", "Vercel"].map(tech => (
+                {techStackData.tools.map(tech => (
                   <div key={tech} className="font-sans text-2xl md:text-3xl text-[#E8EDF2] font-light tracking-tight">{tech}</div>
                 ))}
               </div>
@@ -649,7 +650,7 @@ function WhatIWorkWith() {
           <motion.div variants={item} className="pt-16 border-t border-[#69737D]/20">
             <h3 className="font-serif italic text-xl md:text-2xl text-[#69737D] mb-8">Exploring</h3>
             <div className="flex flex-wrap gap-x-12 gap-y-6">
-              {["Cybersecurity", "AI/ML", "AI Agents", "Cloud"].map(tech => (
+              {techStackData.exploring.map(tech => (
                 <div key={tech} className="font-mono text-xs md:text-sm text-[#69737D] uppercase tracking-[0.2em]">{tech}</div>
               ))}
             </div>
