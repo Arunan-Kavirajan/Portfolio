@@ -58,17 +58,21 @@ export default function LoadingScreen({
    and stark typography instead of cartoonish physics/SVGs.
    ══════════════════════════════════════════════════════════════ */
 function MobileCinematicLoading() {
-  // Generate realistic dust motes that float in the light beam
+  // Generate realistic dust motes that float in the light beam, including out-of-focus lens dust
   const dustMotes = useMemo(
     () =>
-      Array.from({ length: 25 }).map((_, i) => ({
-        id: i,
-        x: Math.random() * 100,
-        y: Math.random() * 100,
-        size: 0.5 + Math.random() * 2.5,
-        duration: 3 + Math.random() * 4,
-        delay: Math.random() * 2,
-      })),
+      Array.from({ length: 30 }).map((_, i) => {
+        const isForeground = i % 5 === 0; // 1 in 5 dust motes are huge and blurred (hitting lens)
+        return {
+          id: i,
+          x: Math.random() * 100,
+          y: Math.random() * 100,
+          size: isForeground ? 3 + Math.random() * 5 : 0.5 + Math.random() * 2,
+          blur: isForeground ? 2 + Math.random() * 3 : 0.5,
+          duration: isForeground ? 5 + Math.random() * 3 : 3 + Math.random() * 4,
+          delay: Math.random() * 2,
+        };
+      }),
     []
   );
 
@@ -111,12 +115,13 @@ function MobileCinematicLoading() {
         {dustMotes.map((mote) => (
           <motion.div
             key={mote.id}
-            className="absolute rounded-full bg-[#FFEEDD] blur-[1px]"
+            className="absolute rounded-full bg-[#FFEEDD]"
             style={{
               left: `${mote.x}%`,
               top: `${mote.y}%`,
               width: `${mote.size}px`,
               height: `${mote.size}px`,
+              filter: `blur(${mote.blur}px)`,
             }}
             animate={{
               y: [0, -30 - Math.random() * 20],
@@ -138,6 +143,8 @@ function MobileCinematicLoading() {
         <motion.div
           animate={{
             opacity: [0, 0, 0.7, 0.1, 0.9, 0.9, 0],
+            filter: ["blur(4px)", "blur(4px)", "blur(0px)", "blur(1px)", "blur(0px)", "blur(0px)", "blur(4px)"],
+            scale: [0.95, 0.95, 1, 1, 1, 1.02, 1.05],
           }}
           transition={{
             duration: 2.1,
@@ -149,11 +156,11 @@ function MobileCinematicLoading() {
           {/* Faint Redacted Bar */}
           <div className="w-12 h-[2px] bg-[#8A3A20] mb-4 opacity-70" />
           
-          <h2 className="font-serif text-[10px] tracking-[0.4em] text-[#D4C3A3] uppercase mb-1 drop-shadow-[0_0_8px_rgba(255,190,120,0.5)]">
-            Warrant Issued
+          <h2 className="font-serif text-[11px] tracking-[0.5em] text-[#E5D3B3] uppercase mb-1 drop-shadow-[0_0_12px_rgba(255,200,140,0.5)] font-bold">
+            CASE FILE ACTIVE
           </h2>
-          <p className="font-mono text-[8px] tracking-[0.2em] text-[#8C7A60]">
-            DOSSIER NO. 001
+          <p className="font-mono text-[7px] tracking-[0.4em] text-[#9E8A70]">
+            SUBJECT: A. KAVIRAJAN
           </p>
           
           <div className="w-12 h-[2px] bg-[#8A3A20] mt-4 opacity-70" />
