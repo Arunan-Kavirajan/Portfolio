@@ -416,69 +416,82 @@ function TheCover() {
                       </div>
                     </motion.div>
 
-                    {/* Wax Seal — realistic maroon (2.0s) */}
-                    <motion.div
-                      initial={{ opacity: 0, scale: 2.5, rotate: -40 }}
-                      animate={{ opacity: 1, scale: 1, rotate: -12 }}
-                      transition={{ delay: 2.0, type: "spring", stiffness: 220, damping: 15, mass: 1.1 }}
-                      className="absolute -bottom-5 -right-3 sm:-right-2 z-30"
-                      style={{ filter: "drop-shadow(3px 5px 8px rgba(0,0,0,0.5)) drop-shadow(1px 2px 3px rgba(0,0,0,0.3))" }}
-                    >
-                      <div className="relative w-[72px] h-[72px] sm:w-[84px] sm:h-[84px]">
-                        {/* Wax body — maroon with 3D radial gradient */}
+                    {/* Wax Seal — Ultra-realistic glossy blood red (2.0s) */}
+                    <div className="absolute -bottom-6 -right-4 sm:-right-3 z-30">
+                      {/* SVG Filters for realistic wax melting and grain */}
+                      <svg width="0" height="0" className="absolute">
+                        <filter id="wax-melt">
+                          <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" result="noise" />
+                          <feDisplacementMap in="SourceGraphic" in2="noise" scale="5" xChannelSelector="R" yChannelSelector="G" />
+                        </filter>
+                      </svg>
+
+                      <motion.div
+                        initial={{ opacity: 0, scale: 2.5, y: -20, rotate: -40 }}
+                        animate={{ opacity: 1, scale: 1, y: 0, rotate: -8 }}
+                        transition={{ delay: 2.0, type: "spring", stiffness: 220, damping: 15, mass: 1.1 }}
+                        style={{ filter: "drop-shadow(3px 6px 6px rgba(0,0,0,0.6)) drop-shadow(1px 2px 2px rgba(0,0,0,0.4))" }}
+                      >
+                        {/* Melted Wax Body Container */}
                         <div 
-                          className="absolute inset-0 rounded-full"
+                          className="relative w-[85px] h-[85px] sm:w-[100px] sm:h-[100px] rounded-full flex items-center justify-center"
                           style={{ 
-                            background: "radial-gradient(circle at 38% 32%, #9E2A2B 0%, #7B1A1A 35%, #5C0E0E 65%, #3D0808 100%)",
-                            clipPath: "polygon(5% 15%, 12% 3%, 28% 1%, 42% 5%, 55% 0%, 72% 4%, 88% 8%, 96% 20%, 100% 38%, 98% 55%, 100% 72%, 95% 85%, 88% 96%, 72% 100%, 55% 97%, 40% 100%, 25% 96%, 12% 92%, 3% 80%, 0% 62%, 2% 42%, 0% 25%)",
+                            filter: "url(#wax-melt)",
+                            background: "radial-gradient(circle at 35% 25%, #e3262e 0%, #b8151b 30%, #75060b 75%, #2a0002 100%)",
+                            boxShadow: "inset 4px 8px 12px rgba(255,140,140,0.4), inset -5px -10px 15px rgba(0,0,0,0.6)"
                           }}
                         >
-                          {/* Wax surface texture — noise */}
-                          <div className="absolute inset-0 rounded-full overflow-hidden opacity-30 mix-blend-overlay">
+                          {/* Deep Recessed Center Bowl */}
+                          <div 
+                            className="absolute w-[65%] h-[65%] rounded-full flex items-center justify-center overflow-hidden"
+                            style={{
+                              background: "radial-gradient(circle at 45% 45%, #940a0e 0%, #520205 100%)",
+                              boxShadow: "inset 4px 6px 12px rgba(0,0,0,0.85), inset -2px -2px 6px rgba(255,100,100,0.15)"
+                            }}
+                          >
+                             {/* 3D Embossed Emblem (Laurel + Crown) */}
+                             <svg viewBox="0 0 100 100" className="w-[85%] h-[85%]" style={{ filter: "drop-shadow(2px 3px 2px rgba(0,0,0,0.9)) drop-shadow(-1px -1.5px 1px rgba(255,150,150,0.5))" }}>
+                               {/* Left Laurel */}
+                               <path d="M 45,90 C 20,85 10,60 15,40 C 18,30 25,22 30,22 C 22,30 22,45 28,52 C 22,58 26,72 38,78 C 30,72 30,62 38,55 C 32,55 35,45 42,42 C 38,48 40,58 48,60 C 45,70 45,80 45,90 Z" fill="#cc141a" />
+                               {/* Right Laurel */}
+                               <path d="M 55,90 C 80,85 90,60 85,40 C 82,30 75,22 70,22 C 78,30 78,45 72,52 C 78,58 74,72 62,78 C 70,72 70,62 62,55 C 68,55 65,45 58,42 C 62,48 60,58 52,60 C 55,70 55,80 55,90 Z" fill="#cc141a" />
+                               
+                               {/* Center Base / Ribbon */}
+                               <rect x="40" y="72" width="20" height="8" rx="2" fill="#cc141a" />
+                               <rect x="42" y="68" width="16" height="3" rx="1" fill="#cc141a" />
+                               
+                               {/* Center Crown / Flame */}
+                               <path d="M 42,65 L 45,35 L 50,45 L 55,35 L 58,65 Z" fill="#cc141a" />
+                               <path d="M 46,30 Q 50,12 54,30 Z" fill="#cc141a" />
+                             </svg>
+                          </div>
+                          
+                          {/* Main Rim Specular Highlight */}
+                          <div className="absolute top-[8%] left-[18%] w-[25%] h-[12%] rounded-[50%] bg-white/40 blur-[2px] transform -rotate-12" />
+                          <div className="absolute top-[20%] left-[8%] w-[12%] h-[25%] rounded-[50%] bg-white/30 blur-[2px] transform -rotate-12" />
+                          
+                          {/* Inner Bowl Specular Highlight */}
+                          <div className="absolute top-[20%] left-[25%] w-[15%] h-[8%] rounded-[50%] bg-white/15 blur-[1px] transform -rotate-12" />
+
+                          {/* Wax Surface Grain */}
+                          <div className="absolute inset-0 rounded-full opacity-[0.15] mix-blend-overlay pointer-events-none">
                             <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                              <filter id="wax-grain">
-                                <feTurbulence type="fractalNoise" baseFrequency="1.2" numOctaves="4" seed="9" />
+                              <filter id="wax-grain-new">
+                                <feTurbulence type="fractalNoise" baseFrequency="1.5" numOctaves="4" seed="12" />
                                 <feColorMatrix type="saturate" values="0" />
                               </filter>
-                              <rect width="100%" height="100%" filter="url(#wax-grain)" />
+                              <rect width="100%" height="100%" filter="url(#wax-grain-new)" />
                             </svg>
                           </div>
-
-                          {/* Light catch — top-left highlight */}
-                          <div className="absolute top-[15%] left-[18%] w-[35%] h-[25%] rounded-full bg-white/10 blur-[4px]" />
-                          
-                          {/* Shadow depth — bottom-right */}
-                          <div className="absolute bottom-[10%] right-[10%] w-[45%] h-[35%] rounded-full bg-black/20 blur-[5px]" />
-
-                          {/* Embossed star relief in center */}
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <svg viewBox="0 0 40 40" className="w-[55%] h-[55%] opacity-50" xmlns="http://www.w3.org/2000/svg">
-                              <polygon
-                                points="20,4 24,14 35,14 26,21 29,32 20,25 11,32 14,21 5,14 16,14"
-                                fill="none"
-                                stroke="rgba(240,226,200,0.35)"
-                                strokeWidth="1.2"
-                              />
-                              <circle cx="20" cy="20" r="16" fill="none" stroke="rgba(240,226,200,0.2)" strokeWidth="0.8" />
-                            </svg>
-                          </div>
-
-                          {/* Ring impression around edge */}
-                          <div className="absolute inset-[6px] rounded-full border border-[#F0E2C8]/10" />
                         </div>
 
-                        {/* Wax drip — bottom */}
+                        {/* Extra Organic Wax Drips below */}
                         <div 
-                          className="absolute -bottom-2 left-[35%] w-4 h-5 rounded-b-full"
-                          style={{ background: "linear-gradient(to bottom, #5C0E0E, #3D0808)" }}
+                          className="absolute -bottom-3 left-[35%] w-5 h-7 rounded-b-full transform rotate-6"
+                          style={{ filter: "url(#wax-melt)", background: "linear-gradient(to bottom, #75060b, #3e0104)" }}
                         />
-                        {/* Small secondary drip */}
-                        <div 
-                          className="absolute -bottom-1 left-[55%] w-2 h-3 rounded-b-full"
-                          style={{ background: "linear-gradient(to bottom, #6B1212, #4A0A0A)" }}
-                        />
-                      </div>
-                    </motion.div>
+                      </motion.div>
+                    </div>
                   </div>
 
                   {/* Name (2.3s) */}
