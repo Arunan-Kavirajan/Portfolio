@@ -54,8 +54,12 @@ export default function MobileStatementOfIntent() {
             </svg>
           </div>
 
+          {/* Burn Marks */}
+          <div className="absolute bottom-0 left-[80vw] w-40 h-40 bg-[radial-gradient(circle,rgba(20,5,0,0.5)_0%,transparent_60%)] blur-lg pointer-events-none mix-blend-multiply translate-y-1/2" />
+          <div className="absolute top-0 left-[350vw] w-72 h-72 bg-[radial-gradient(circle,rgba(30,10,0,0.4)_0%,rgba(60,20,5,0.1)_40%,transparent_70%)] blur-2xl pointer-events-none mix-blend-multiply -translate-y-1/3" />
+
           {/* Faint Horizontal Registration Lines across the whole document */}
-          <div className="absolute top-[8%] bottom-[8%] left-0 w-full border-y border-[#3D2B1F]/10 pointer-events-none" />
+          <div className="absolute top-[8%] bottom-[8%] left-0 w-full border-y border-[#3D2B1F]/10 pointer-events-none z-10" />
           
           {/* OPENING */}
           <div className="w-[75vw] sm:w-[60vw] flex-shrink-0 flex flex-col justify-center relative z-10">
