@@ -96,7 +96,7 @@ export default function MobileFieldNotes() {
           </p>
           <h2 className="font-serif text-3xl tracking-tight text-[#2A1C12] uppercase font-bold"
               style={{ textShadow: "0.5px 0.5px 0px rgba(255,255,255,0.5)" }}>
-            Field Notes
+            Investigation Log
           </h2>
           {/* Stamped Date */}
           <div className="absolute top-2 right-0 border-2 border-[#8A3A20]/40 text-[#8A3A20]/60 font-mono text-[8px] tracking-widest px-2 py-1 rotate-[4deg] mix-blend-multiply">
