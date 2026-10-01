@@ -2,9 +2,11 @@
 
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
+import { useIsMobile } from "@/lib/hooks/useIsMobile";
 
 export default function MobileStatementOfIntent() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const { isMobile } = useIsMobile();
   
   // Track vertical scroll across a 600vh container to drive the horizontal sequence
   const { scrollYProgress } = useScroll({
@@ -12,15 +14,17 @@ export default function MobileStatementOfIntent() {
     offset: ["start start", "end end"]
   });
 
-  // Map vertical scroll progress to horizontal translation
-  // It moves from 0% to approximately -85% to slide all panels through the viewport
-  const x = useTransform(scrollYProgress, [0, 1], ["0%", "-83%"]);
+  // Calculate precise horizontal scroll based on total width minus 100vw viewport
+  // Mobile Total: 590vw -> Max Scroll: -490vw
+  // Tablet Total: 485vw -> Max Scroll: -385vw
+  const maxScroll = isMobile ? "-490vw" : "-385vw";
+  const x = useTransform(scrollYProgress, [0, 1], ["0vw", maxScroll]);
 
   return (
     <section ref={containerRef} className="h-[600vh] bg-[#120B07] relative z-20">
       
       {/* Sticky container holds the viewport and horizontal scrolling document */}
-      <div className="sticky top-0 h-[100svh] w-full overflow-hidden flex flex-col justify-center items-center">
+      <div className="sticky top-0 h-[100svh] w-full overflow-hidden flex flex-col justify-center items-start">
         
         {/* Background Desk Dust/Grain */}
         <div className="absolute inset-0 pointer-events-none opacity-20 mix-blend-screen">
@@ -37,7 +41,7 @@ export default function MobileStatementOfIntent() {
         {/* The Continuous Horizontal Document Surface */}
         <motion.div 
           style={{ x }}
-          className="flex h-[75svh] sm:h-[70svh] items-center px-[15vw] sm:px-[20vw] gap-[20vw] sm:gap-[25vw] bg-[#E5D4B8] shadow-[0_30px_60px_rgba(0,0,0,0.6),inset_0_0_80px_rgba(139,69,19,0.1)] relative"
+          className="flex h-[75svh] sm:h-[70svh] w-max items-center px-[15vw] sm:px-[20vw] gap-[20vw] sm:gap-[25vw] bg-[#E5D4B8] shadow-[0_30px_60px_rgba(0,0,0,0.6),inset_0_0_80px_rgba(139,69,19,0.1)] relative"
         >
           {/* Subtle Document Surface Grain */}
           <div className="absolute inset-0 pointer-events-none mix-blend-multiply opacity-30">
