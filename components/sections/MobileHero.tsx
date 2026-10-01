@@ -44,9 +44,11 @@ function TheCover() {
   const controls = useAnimation();
 
   useEffect(() => {
-    // Start immediately on mount so the poster is waiting behind the loading screen
-    setStart(true);
-  }, []);
+    if (!isLoading) {
+      const t = setTimeout(() => setStart(true), 150);
+      return () => clearTimeout(t);
+    }
+  }, [isLoading]);
 
   useEffect(() => {
     if (start) {
