@@ -96,7 +96,7 @@ function MobileCinematicLoading() {
 
       {/* ── Faulty Archive Light (Harsh, flickering warm spotlight) ── */}
       <motion.div
-        className="absolute inset-0 pointer-events-none z-10"
+        className="absolute inset-0 pointer-events-none z-10 mix-blend-screen"
         animate={{
           opacity: [0, 0, 0.8, 0.2, 0.9, 1, 0.95, 1, 0.3, 0.8, 0],
         }}
@@ -106,9 +106,23 @@ function MobileCinematicLoading() {
           ease: "linear",
         }}
         style={{
-          background: "radial-gradient(circle 350px at 50% 45%, rgba(255, 190, 120, 0.25), rgba(20, 10, 5, 0.8) 60%, transparent 100%)",
+          background: "radial-gradient(circle 350px at 50% 45%, rgba(255, 190, 120, 0.25), rgba(40, 20, 10, 0.1) 60%, transparent 100%)",
         }}
       />
+
+      {/* ── Film Scratches (Vintage Projector Damage) ── */}
+      <div className="absolute inset-0 z-40 pointer-events-none overflow-hidden mix-blend-screen opacity-30">
+        <motion.div 
+          className="absolute top-0 bottom-0 w-[1px] bg-white"
+          animate={{ x: ["10%", "15%", "15%", "85%", "85%", "30%"], opacity: [0, 0.6, 0, 0.5, 0, 0.3] }}
+          transition={{ duration: 2.1, times: [0, 0.1, 0.15, 0.6, 0.65, 0.9], ease: "linear" }}
+        />
+        <motion.div 
+          className="absolute top-0 bottom-0 w-[2px] bg-[#FFDDAA]"
+          animate={{ x: ["70%", "72%", "72%", "25%", "25%", "60%"], opacity: [0, 0, 0.4, 0, 0.5, 0] }}
+          transition={{ duration: 2.1, times: [0, 0.3, 0.35, 0.4, 0.8, 0.85], ease: "linear" }}
+        />
+      </div>
 
       {/* ── Floating Dust Motes (Only visible in the light) ── */}
       <div className="absolute inset-0 z-20 pointer-events-none mix-blend-screen opacity-70">
@@ -156,11 +170,13 @@ function MobileCinematicLoading() {
           {/* Faint Redacted Bar */}
           <div className="w-12 h-[2px] bg-[#8A3A20] mb-4 opacity-70" />
           
-          <h2 className="font-serif text-[11px] tracking-[0.5em] text-[#E5D3B3] uppercase mb-1 drop-shadow-[0_0_12px_rgba(255,200,140,0.5)] font-bold">
-            CASE FILE ACTIVE
+          <h2 className="font-serif text-[11px] tracking-[0.4em] text-[#E5D3B3] uppercase mb-1 drop-shadow-[0_0_12px_rgba(255,200,140,0.5)] font-bold"
+              style={{ textShadow: "1px 0px 1px rgba(255,0,0,0.6), -1px 0px 1px rgba(0,200,255,0.6)" }}>
+            BOUNTY POSTED
           </h2>
-          <p className="font-mono text-[7px] tracking-[0.4em] text-[#9E8A70]">
-            SUBJECT: A. KAVIRAJAN
+          <p className="font-serif text-[9px] tracking-[0.25em] text-[#9E8A70] uppercase"
+             style={{ textShadow: "0.5px 0px 0.5px rgba(255,0,0,0.4), -0.5px 0px 0.5px rgba(0,200,255,0.4)" }}>
+            ARUNAN KAVIRAJAN
           </p>
           
           <div className="w-12 h-[2px] bg-[#8A3A20] mt-4 opacity-70" />
