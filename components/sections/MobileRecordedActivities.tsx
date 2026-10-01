@@ -4,11 +4,21 @@ import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Link from "next/link";
 
-function TornEdge() {
+function TornEdgeTop() {
   return (
-    <div className="absolute top-0 left-0 w-full h-[15px] sm:h-[25px] overflow-hidden pointer-events-none -translate-y-full z-30 drop-shadow-[0_-5px_5px_rgba(0,0,0,0.05)]">
+    <div className="absolute top-0 left-0 w-full h-[15px] sm:h-[25px] overflow-hidden pointer-events-none -translate-y-full z-30 drop-shadow-[0_-5px_5px_rgba(0,0,0,0.15)]">
       <svg viewBox="0 0 1000 20" preserveAspectRatio="none" className="w-full h-full text-[#E5D4B8] fill-current">
         <path d="M0,20 L0,10 L25,18 L50,8 L75,15 L100,5 L125,12 L150,2 L175,18 L200,7 L225,16 L250,9 L275,19 L300,10 L325,17 L350,6 L375,14 L400,3 L425,16 L450,8 L475,19 L500,10 L525,15 L550,4 L575,12 L600,6 L625,18 L650,9 L675,16 L700,5 L725,14 L750,2 L775,18 L800,7 L825,15 L850,9 L875,17 L900,4 L925,13 L950,8 L975,19 L1000,10 L1000,20 Z" />
+      </svg>
+    </div>
+  );
+}
+
+function TornEdgeBottom() {
+  return (
+    <div className="absolute bottom-0 left-0 w-full h-[15px] sm:h-[25px] overflow-hidden pointer-events-none translate-y-full z-30 drop-shadow-[0_5px_5px_rgba(0,0,0,0.15)]">
+      <svg viewBox="0 0 1000 20" preserveAspectRatio="none" className="w-full h-full text-[#E5D4B8] fill-current">
+        <path d="M0,0 L0,10 L25,2 L50,12 L75,5 L100,15 L125,8 L150,18 L175,2 L200,13 L225,4 L250,11 L275,1 L300,10 L325,3 L350,14 L375,6 L400,17 L425,4 L450,12 L475,1 L500,10 L525,5 L550,16 L575,8 L600,14 L625,2 L650,11 L675,4 L700,15 L725,6 L750,18 L775,2 L800,13 L825,5 L850,11 L875,3 L900,16 L925,7 L950,12 L975,1 L1000,10 L1000,0 Z" />
       </svg>
     </div>
   );
@@ -42,6 +52,21 @@ function SharedVintageBackground({ seed = 4, burnTopRight = false, burnBottomLef
   );
 }
 
+import { forwardRef } from "react";
+
+const PaperBlock = forwardRef(({ children, seed, burnTopRight = false, burnBottomLeft = false, className = "" }: any, ref: any) => {
+  return (
+    <div ref={ref} className={`relative w-[94%] mx-auto bg-[#E5D4B8] my-16 shadow-[0_20px_50px_rgba(0,0,0,0.5)] ${className}`}>
+      <TornEdgeTop />
+      <SharedVintageBackground seed={seed} burnTopRight={burnTopRight} burnBottomLeft={burnBottomLeft} />
+      <div className="relative z-10 flex flex-col px-6 sm:px-12 py-16 sm:py-24 overflow-hidden">
+        {children}
+      </div>
+      <TornEdgeBottom />
+    </div>
+  );
+});
+
 /* =========================================================================
    PROJECT 01: ALGORITHM LABORATORY
    ========================================================================= */
@@ -60,94 +85,89 @@ function ProjectAlgo() {
   const opacity = useTransform(scrollYProgress, [0.85, 1], [1, 0]);
 
   return (
-    <div ref={ref} className="relative h-[120vh] w-full bg-[#E5D4B8] z-10">
-      <div className="sticky top-0 h-[100svh] w-full flex flex-col px-6 sm:px-12 py-16 sm:py-24 overflow-hidden">
-        <TornEdge />
-        <SharedVintageBackground seed={1} burnTopRight={true} />
+    <PaperBlock ref={ref} seed={1} burnTopRight={true}>
+      <Link href="/projects/algorithm-laboratory" className="relative z-20 block group flex-shrink-0">
+        <motion.div 
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false, margin: "-10%" }}
+          className="font-mono text-[9px] text-[#5C3A21]/60 tracking-[0.2em] mb-6 sm:mb-8"
+        >
+          RECORD 01 / SELECTED WORK
+        </motion.div>
+        <motion.h3 
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false, margin: "-10%" }}
+          transition={{ delay: 0.1 }}
+          className="font-serif text-3xl sm:text-4xl text-[#2A1C12] mb-4 sm:mb-6 tracking-tight group-hover:text-[#5C3A21] transition-colors"
+        >
+          ALGORITHM LABORATORY
+        </motion.h3>
+        <motion.p 
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false, margin: "-10%" }}
+          transition={{ delay: 0.2 }}
+          className="font-sans text-base sm:text-lg text-[#2A1C12]/80 font-light max-w-sm leading-relaxed"
+        >
+          An interactive space for learning, visualizing, experimenting with, and comparing algorithms.
+        </motion.p>
+      </Link>
 
-        <Link href="/projects/algorithm-laboratory" className="relative z-20 block group flex-shrink-0">
+      {/* The Detailed Algorithm Visual */}
+      <div className="w-full relative mt-16 flex flex-col items-center justify-center pointer-events-none min-h-[30vh]">
+        <motion.div 
+          style={{ scaleY, opacity }}
+          className="relative w-full max-w-[280px] sm:max-w-[320px] aspect-square flex items-center justify-center origin-bottom"
+        >
+          
+          {/* Complex Archival Geometry Background */}
+          <div className="absolute inset-2 border border-dashed border-[#3D2B1F]/20 rounded-full animate-[spin_60s_linear_infinite]" />
+          <div className="absolute inset-12 border border-[#3D2B1F]/10 rounded-full" />
+          <div className="absolute top-1/2 left-0 right-0 h-[1px] bg-[#3D2B1F]/10" />
+          <div className="absolute left-1/2 top-0 bottom-0 w-[1px] bg-[#3D2B1F]/10" />
+          
+          <svg viewBox="0 0 200 200" className="w-full h-full absolute inset-0 overflow-visible">
+            
+            {/* Complex sweeping traversal paths */}
+            <motion.path 
+              d="M 100,100 L 160,60 L 140,150 L 60,160 L 40,80 L 100,100 Z"
+              fill="none" stroke="#5C3A21" strokeWidth="0.75"
+              style={{ pathLength: draw }}
+            />
+            <motion.path 
+              d="M 100,100 L 180,100 M 100,100 L 20,100 M 100,100 L 100,20 M 100,100 L 100,180"
+              fill="none" stroke="#5C3A21" strokeWidth="0.3" strokeDasharray="2 4"
+              style={{ pathLength: draw }}
+            />
+            <motion.path 
+              d="M 40,80 L 100,20 L 160,60"
+              fill="none" stroke="#5C3A21" strokeWidth="0.5" strokeDasharray="1 3"
+              style={{ pathLength: draw }}
+            />
+            
+            {/* Node plotting */}
+            {[
+              [100,100], [160,60], [140,150], [60,160], [40,80], [100,20], [180,100], [20,100], [100,180]
+            ].map((pos, i) => (
+              <motion.g key={i} style={{ opacity: nodeOpacity }}>
+                <circle cx={pos[0]} cy={pos[1]} r="5" fill="#E5D4B8" stroke="#5C3A21" strokeWidth="1" />
+                <circle cx={pos[0]} cy={pos[1]} r="1.5" fill="#5C3A21" />
+              </motion.g>
+            ))}
+          </svg>
+          
+          {/* Readout Text */}
           <motion.div 
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, margin: "-10%" }}
-            className="font-mono text-[9px] text-[#5C3A21]/60 tracking-[0.2em] mb-6 sm:mb-8"
+            style={{ opacity: nodeOpacity }} 
+            className="absolute bottom-0 left-1/2 -translate-x-1/2 font-mono text-[8px] text-[#5C3A21]/80 bg-[#E5D4B8] px-3 border border-[#3D2B1F]/10 py-1 tracking-widest shadow-sm"
           >
-            RECORD 01 / SELECTED WORK
+            TRAVERSAL O(N log N)
           </motion.div>
-          <motion.h3 
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, margin: "-10%" }}
-            transition={{ delay: 0.1 }}
-            className="font-serif text-3xl sm:text-4xl text-[#2A1C12] mb-4 sm:mb-6 tracking-tight group-hover:text-[#5C3A21] transition-colors"
-          >
-            ALGORITHM LABORATORY
-          </motion.h3>
-          <motion.p 
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, margin: "-10%" }}
-            transition={{ delay: 0.2 }}
-            className="font-sans text-base sm:text-lg text-[#2A1C12]/80 font-light max-w-sm leading-relaxed"
-          >
-            An interactive space for learning, visualizing, experimenting with, and comparing algorithms.
-          </motion.p>
-        </Link>
-
-        {/* The Detailed Algorithm Visual */}
-        <div className="flex-1 w-full relative mt-8 flex flex-col items-center justify-center pointer-events-none">
-          <motion.div 
-            style={{ scaleY, opacity }}
-            className="relative w-full max-w-[280px] sm:max-w-[320px] aspect-square flex items-center justify-center origin-bottom"
-          >
-            
-            {/* Complex Archival Geometry Background */}
-            <div className="absolute inset-2 border border-dashed border-[#3D2B1F]/20 rounded-full animate-[spin_60s_linear_infinite]" />
-            <div className="absolute inset-12 border border-[#3D2B1F]/10 rounded-full" />
-            <div className="absolute top-1/2 left-0 right-0 h-[1px] bg-[#3D2B1F]/10" />
-            <div className="absolute left-1/2 top-0 bottom-0 w-[1px] bg-[#3D2B1F]/10" />
-            
-            <svg viewBox="0 0 200 200" className="w-full h-full absolute inset-0 overflow-visible">
-              
-              {/* Complex sweeping traversal paths */}
-              <motion.path 
-                d="M 100,100 L 160,60 L 140,150 L 60,160 L 40,80 L 100,100 Z"
-                fill="none" stroke="#5C3A21" strokeWidth="0.75"
-                style={{ pathLength: draw }}
-              />
-              <motion.path 
-                d="M 100,100 L 180,100 M 100,100 L 20,100 M 100,100 L 100,20 M 100,100 L 100,180"
-                fill="none" stroke="#5C3A21" strokeWidth="0.3" strokeDasharray="2 4"
-                style={{ pathLength: draw }}
-              />
-              <motion.path 
-                d="M 40,80 L 100,20 L 160,60"
-                fill="none" stroke="#5C3A21" strokeWidth="0.5" strokeDasharray="1 3"
-                style={{ pathLength: draw }}
-              />
-              
-              {/* Node plotting */}
-              {[
-                [100,100], [160,60], [140,150], [60,160], [40,80], [100,20], [180,100], [20,100], [100,180]
-              ].map((pos, i) => (
-                <motion.g key={i} style={{ opacity: nodeOpacity }}>
-                  <circle cx={pos[0]} cy={pos[1]} r="5" fill="#E5D4B8" stroke="#5C3A21" strokeWidth="1" />
-                  <circle cx={pos[0]} cy={pos[1]} r="1.5" fill="#5C3A21" />
-                </motion.g>
-              ))}
-            </svg>
-            
-            {/* Readout Text */}
-            <motion.div 
-              style={{ opacity: nodeOpacity }} 
-              className="absolute bottom-0 left-1/2 -translate-x-1/2 font-mono text-[8px] text-[#5C3A21]/80 bg-[#E5D4B8] px-3 border border-[#3D2B1F]/10 py-1 tracking-widest shadow-sm"
-            >
-              TRAVERSAL O(N log N)
-            </motion.div>
-          </motion.div>
-        </div>
+        </motion.div>
       </div>
-    </div>
+    </PaperBlock>
   );
 }
 
@@ -169,12 +189,8 @@ function ProjectCertiva() {
   const docOpacity = useTransform(scrollYProgress, [0.1, 0.3], [0, 1]);
 
   return (
-    <div ref={ref} className="relative h-[120vh] w-full bg-[#E5D4B8] z-20">
-      <div className="sticky top-0 h-[100svh] w-full flex flex-col px-6 sm:px-12 py-16 sm:py-24 overflow-hidden">
-        <TornEdge />
-        <SharedVintageBackground seed={2} burnBottomLeft={true} />
-
-        <Link href="/projects/certiva" className="relative z-20 block group flex-shrink-0">
+    <PaperBlock ref={ref} seed={2} burnBottomLeft={true}>
+      <Link href="/projects/certiva" className="relative z-20 block group flex-shrink-0">
           <motion.div 
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -262,8 +278,7 @@ function ProjectCertiva() {
             </motion.div>
           </motion.div>
         </div>
-      </div>
-    </div>
+    </PaperBlock>
   );
 }
 
@@ -283,13 +298,9 @@ function ProjectBilling() {
   const contentOpacity = useTransform(scrollYProgress, [0.4, 0.55], [0, 1]);
 
   return (
-    <div ref={ref} className="relative h-[120vh] w-full bg-[#E5D4B8] z-30">
-      <div className="sticky top-0 h-[100svh] w-full flex flex-col px-6 sm:px-12 py-16 sm:py-24 overflow-hidden">
-        <TornEdge />
-        <SharedVintageBackground seed={3} burnTopRight={true} />
-
-        <Link href="/projects/android-billing-app" className="relative z-20 block group flex-shrink-0">
-          <motion.div 
+    <PaperBlock ref={ref} seed={3} burnTopRight={true}>
+      <Link href="/projects/android-billing-app" className="relative z-20 block group flex-shrink-0">
+        <motion.div 
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: false, margin: "-10%" }}
@@ -376,10 +387,8 @@ function ProjectBilling() {
               </motion.div>
             </div>
           </motion.div>
-
         </div>
-      </div>
-    </div>
+    </PaperBlock>
   );
 }
 
@@ -388,32 +397,28 @@ function ProjectBilling() {
    ========================================================================= */
 export default function MobileRecordedActivities() {
   return (
-    <section className="relative w-full z-20">
+    <section className="relative w-full z-20 bg-[#0c0805] py-24">
       
       {/* Intro Header */}
-      <div className="bg-[#E5D4B8] pt-32 pb-16 px-8 sm:px-12 relative z-10 overflow-hidden">
-        <SharedVintageBackground seed={4} />
-        
-        <div className="relative z-10">
-          <motion.div 
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="font-mono text-[9px] tracking-[0.3em] text-[#5C3A21]/70 uppercase mb-4"
-          >
-            RECORDED ACTIVITIES
-          </motion.div>
-          <motion.div 
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="font-serif text-lg text-[#2A1C12]/60 italic"
-          >
-            3 SELECTED RECORDS
-          </motion.div>
-        </div>
-      </div>
+      <PaperBlock seed={4}>
+        <motion.div 
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="font-mono text-[9px] tracking-[0.3em] text-[#5C3A21]/70 uppercase mb-4"
+        >
+          RECORDED ACTIVITIES
+        </motion.div>
+        <motion.div 
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.1 }}
+          className="font-serif text-lg text-[#2A1C12]/60 italic"
+        >
+          3 SELECTED RECORDS
+        </motion.div>
+      </PaperBlock>
 
       {/* The Parallax Project Pages */}
       <ProjectAlgo />
@@ -421,41 +426,36 @@ export default function MobileRecordedActivities() {
       <ProjectBilling />
 
       {/* Outro Archival Link */}
-      <div className="bg-[#E5D4B8] pt-24 pb-48 px-8 sm:px-12 relative z-40 overflow-hidden">
-        <TornEdge />
-        <SharedVintageBackground seed={5} />
-        
-        <div className="relative z-10">
-          <motion.div 
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
+      <PaperBlock seed={5}>
+        <motion.div 
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="font-mono text-[9px] tracking-[0.3em] text-[#5C3A21]/70 uppercase mb-4"
+        >
+          ALL RECORDED ACTIVITY
+        </motion.div>
+        <motion.p 
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.1 }}
+          className="font-serif text-base text-[#2A1C12]/80 mb-10"
+        >
+          The complete collection of recorded work.
+        </motion.p>
+        <Link href="/projects" passHref legacyBehavior>
+          <motion.a 
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="font-mono text-[9px] tracking-[0.3em] text-[#5C3A21]/70 uppercase mb-4"
+            transition={{ delay: 0.2 }}
+            className="font-mono text-[10px] tracking-widest text-[#2A1C12] border border-[#3D2B1F]/30 px-6 py-3 uppercase hover:bg-[#3D2B1F]/5 transition-colors inline-block"
           >
-            ALL RECORDED ACTIVITY
-          </motion.div>
-          <motion.p 
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="font-serif text-base text-[#2A1C12]/80 mb-10"
-          >
-            The complete collection of recorded work.
-          </motion.p>
-          <Link href="/projects" passHref legacyBehavior>
-            <motion.a 
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-              className="font-mono text-[10px] tracking-widest text-[#2A1C12] border border-[#3D2B1F]/30 px-6 py-3 uppercase hover:bg-[#3D2B1F]/5 transition-colors inline-block"
-            >
-              [ ALL RECORDED ACTIVITY ↗ ]
-            </motion.a>
-          </Link>
-        </div>
-      </div>
+            [ ALL RECORDED ACTIVITY ↗ ]
+          </motion.a>
+        </Link>
+      </PaperBlock>
 
     </section>
   );

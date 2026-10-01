@@ -3,15 +3,65 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 
-function TornEdge() {
+import { forwardRef } from "react";
+
+function TornEdgeTop() {
   return (
-    <div className="absolute top-0 left-0 w-full h-[15px] sm:h-[25px] overflow-hidden pointer-events-none -translate-y-full z-30 drop-shadow-[0_-5px_5px_rgba(0,0,0,0.05)]">
+    <div className="absolute top-0 left-0 w-full h-[15px] sm:h-[25px] overflow-hidden pointer-events-none -translate-y-full z-30 drop-shadow-[0_-5px_5px_rgba(0,0,0,0.15)]">
       <svg viewBox="0 0 1000 20" preserveAspectRatio="none" className="w-full h-full text-[#E5D4B8] fill-current">
         <path d="M0,20 L0,10 L25,18 L50,8 L75,15 L100,5 L125,12 L150,2 L175,18 L200,7 L225,16 L250,9 L275,19 L300,10 L325,17 L350,6 L375,14 L400,3 L425,16 L450,8 L475,19 L500,10 L525,15 L550,4 L575,12 L600,6 L625,18 L650,9 L675,16 L700,5 L725,14 L750,2 L775,18 L800,7 L825,15 L850,9 L875,17 L900,4 L925,13 L950,8 L975,19 L1000,10 L1000,20 Z" />
       </svg>
     </div>
   );
 }
+
+function TornEdgeBottom() {
+  return (
+    <div className="absolute bottom-0 left-0 w-full h-[15px] sm:h-[25px] overflow-hidden pointer-events-none translate-y-full z-30 drop-shadow-[0_5px_5px_rgba(0,0,0,0.15)]">
+      <svg viewBox="0 0 1000 20" preserveAspectRatio="none" className="w-full h-full text-[#E5D4B8] fill-current">
+        <path d="M0,0 L0,10 L25,2 L50,12 L75,5 L100,15 L125,8 L150,18 L175,2 L200,13 L225,4 L250,11 L275,1 L300,10 L325,3 L350,14 L375,6 L400,17 L425,4 L450,12 L475,1 L500,10 L525,5 L550,16 L575,8 L600,14 L625,2 L650,11 L675,4 L700,15 L725,6 L750,18 L775,2 L800,13 L825,5 L850,11 L875,3 L900,16 L925,7 L950,12 L975,1 L1000,10 L1000,0 Z" />
+      </svg>
+    </div>
+  );
+}
+
+function SharedVintageBackground({ seed = 4, burnTopRight = false, burnBottomLeft = false }) {
+  return (
+    <>
+      <div className="absolute inset-0 pointer-events-none mix-blend-multiply opacity-30 z-0">
+        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+          <filter id={`shared-grain-${seed}`}>
+            <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="4" seed={seed} />
+            <feColorMatrix type="matrix" values="1 0 0 0 0  0 0.9 0 0 0  0 0.8 0 0 0  0 0 0 0.5 0" />
+          </filter>
+          <rect width="100%" height="100%" filter={`url(#shared-grain-${seed})`} />
+        </svg>
+      </div>
+      
+      <div className="absolute inset-0 pointer-events-none shadow-[inset_0_0_80px_rgba(139,69,19,0.15)] z-0" />
+
+      {burnTopRight && (
+        <div className="absolute top-0 right-0 w-64 h-64 bg-[radial-gradient(circle,rgba(30,10,0,0.3)_0%,rgba(60,20,5,0.05)_40%,transparent_70%)] blur-xl pointer-events-none mix-blend-multiply -translate-y-1/4 translate-x-1/4 z-0" />
+      )}
+      {burnBottomLeft && (
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-[radial-gradient(circle,rgba(20,5,0,0.35)_0%,transparent_60%)] blur-lg pointer-events-none mix-blend-multiply translate-y-1/4 -translate-x-1/4 z-0" />
+      )}
+    </>
+  );
+}
+
+const PaperBlock = forwardRef(({ children, seed, burnTopRight = false, burnBottomLeft = false, className = "" }: any, ref: any) => {
+  return (
+    <div ref={ref} className={`relative w-[94%] mx-auto bg-[#E5D4B8] my-16 shadow-[0_20px_50px_rgba(0,0,0,0.5)] ${className}`}>
+      <TornEdgeTop />
+      <SharedVintageBackground seed={seed} burnTopRight={burnTopRight} burnBottomLeft={burnBottomLeft} />
+      <div className="relative z-10 flex flex-col pt-24 pb-12 overflow-hidden">
+        {children}
+      </div>
+      <TornEdgeBottom />
+    </div>
+  );
+});
 
 export default function MobileKnownToUse() {
   const ref = useRef<HTMLDivElement>(null);
@@ -30,23 +80,8 @@ export default function MobileKnownToUse() {
   const recordedOpacity = useTransform(scrollYProgress, [0.8, 0.9], [0, 1]);
 
   return (
-    <div ref={ref} className="relative h-[200vh] bg-[#E5D4B8] z-10">
-       <div className="sticky top-0 h-[100svh] w-full flex flex-col pt-24 pb-12 overflow-hidden">
-         <TornEdge />
-         
-         {/* Subtle Document Surface Grain */}
-         <div className="absolute inset-0 pointer-events-none mix-blend-multiply opacity-30 z-0">
-           <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-             <filter id="shared-grain-ktu">
-               <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="4" seed="6" />
-               <feColorMatrix type="matrix" values="1 0 0 0 0  0 0.9 0 0 0  0 0.8 0 0 0  0 0 0 0.5 0" />
-             </filter>
-             <rect width="100%" height="100%" filter="url(#shared-grain-ktu)" />
-           </svg>
-         </div>
-         
-         {/* Vignette matching Statement of Intent */}
-         <div className="absolute inset-0 pointer-events-none shadow-[inset_0_0_80px_rgba(139,69,19,0.15)] z-0" />
+    <section className="bg-[#0c0805] w-full py-16">
+      <PaperBlock ref={ref} seed={6} burnBottomLeft={true}>
 
          {/* Header */}
          <div className="flex flex-col items-center text-center px-6 mb-12 relative z-20">
@@ -154,9 +189,9 @@ export default function MobileKnownToUse() {
              </div>
            </motion.div>
 
-         </div>
-       </div>
-    </div>
+          </div>
+      </PaperBlock>
+    </section>
   );
 }
 
