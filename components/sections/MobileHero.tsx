@@ -755,8 +755,8 @@ export default function CompactHomeHero() {
       <TheCover />
       <MobileFieldNotes />
       <MobileStatementOfIntent />
-      <MobileKnownToUse />
       <MobileRecordedActivities />
+      <MobileKnownToUse />
       <RecentSpecimens />
       <Records />
       <Marginalia />
